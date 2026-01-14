@@ -24,25 +24,37 @@ public class AccountEntity {
     String password;
     Long balanceInPipsOfReal;
 
+    public AccountEntity(UUID id, String identificationNumber, String fullName, String email, String password, Long balanceInPipsOfReal) {
+        this.id = id;
+        this.identificationNumber = identificationNumber;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.balanceInPipsOfReal = balanceInPipsOfReal;
+
+    }
+
     public static AccountEntity fromDomainToEntity(Account account) {
-        AccountEntity accountEntity = new AccountEntity();
-        accountEntity.setId(account.getId());
-        accountEntity.setIdentificationNumber(account.getIdentificationNumber());
-        accountEntity.setFullName(account.getFullName());
-        accountEntity.setEmail(account.getEmail());
-        accountEntity.setPassword(account.getPassword());
-        accountEntity.setBalanceInPipsOfReal(account.getBalanceInPipsOfReal());
+        AccountEntity accountEntity = new AccountEntity(
+            account.getId(),
+            account.getIdentificationNumber(),
+            account.getFullName(),
+            account.getEmail(),
+            account.getPassword(),
+            account.getBalanceInPipsOfReal()
+        );
         return accountEntity;
     }
 
-    public static Account fromEntityToDomain(AccountEntity accountEntity) {
-        Account account = new Account();
-        account.setId(accountEntity.getId());
-        account.setIdentificationNumber(accountEntity.getIdentificationNumber());
-        account.setFullName(accountEntity.getFullName());
-        account.setEmail(accountEntity.getEmail());
-        account.setPassword(accountEntity.getPassword());
-        account.setBalanceInPipsOfReal(accountEntity.getBalanceInPipsOfReal());
+    public static Account fromEntityTo1Domain(AccountEntity accountEntity) {
+        Account account = new Account(
+            accountEntity.getId(),
+            accountEntity.getIdentificationNumber(),
+            accountEntity.getFullName(),
+            accountEntity.getEmail(),
+            accountEntity.getPassword(),
+            accountEntity.getBalanceInPipsOfReal()
+        );
         return account;
     }
 }
