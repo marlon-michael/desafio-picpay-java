@@ -22,12 +22,6 @@ public class AccountController {
     @PostMapping
     public ResponseEntity<String> createAccount(@RequestBody Account account) {
         Account createdAccount = createAccountUseCase.execute(account);
-        System.out.println(account.getId());
-        System.out.println(account.getIdentificationNumber());
-        System.out.println(account.getFullName());
-        System.out.println(account.getEmail());
-        System.out.println(account.getPassword());
-        System.out.println(account.getBalanceInPipsOfReal());
         return ResponseEntity.status(201).body("Account " + createdAccount.getFullName() + " created successfully");
     }
 }
