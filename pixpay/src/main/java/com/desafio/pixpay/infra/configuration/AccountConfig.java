@@ -4,8 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.desafio.pixpay.core.gateways.AccountGateway;
+import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
 import com.desafio.pixpay.infra.persistence.JpaAccountRepository;
+import com.desafio.pixpay.infra.validation.JMailValidator;
 import com.desafio.pixpay.infra.persistence.AccountRepository;
 
 @Configuration
@@ -17,7 +19,12 @@ public class AccountConfig {
     }
 
     @Bean
-    public CreateAccountUseCase createAccountUseCase(AccountGateway accountGateway) {
-        return new CreateAccountUseCase(accountGateway);
+    public EmailValidatorGateway emailValidatorGateway(){
+        return new JMailValidator();
+    }
+
+    @Bean
+    public CreateAccountUseCase createAccountUseCase(AccountGateway accountGateway, EmailValidatorGateway emailValidatorGateway){
+        return new CreateAccountUseCase(accountGateway, emailValidatorGateway);
     }
 }
