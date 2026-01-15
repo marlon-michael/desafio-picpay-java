@@ -2,6 +2,8 @@ package com.desafio.pixpay.core.domain;
 
 import java.util.UUID;
 
+import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
+
 
 public class Account {
     UUID id;
@@ -11,17 +13,22 @@ public class Account {
     String password;
     Long balanceInPipsOfReal;
 
-    public Account(UUID id, String identificationNumber, String fullName, String email, String password, Long balanceInPipsOfReal) {
+    public Account(UUID id, String identificationNumber, String fullName, String email, String password, Long balanceInPipsOfReal, EmailValidatorGateway emailValidator) {
         setId(id);
         setIdentificationNumber(identificationNumber);
         setFullName(fullName);
-        setEmail(email);
+        setEmail(email, emailValidator);
         setPassword(password);
         setBalanceInPipsOfReal(balanceInPipsOfReal);
     }
 
-    public boolean isEmailValid(String email) {
-        return false;
+    public Account(UUID id, String identificationNumber, String fullName, String email, String password, Long balanceInPipsOfReal) {
+        this.id = id;
+        this.identificationNumber = identificationNumber;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.balanceInPipsOfReal = balanceInPipsOfReal;
     }
 
     public boolean isPasswordValid(String password) {
@@ -86,9 +93,12 @@ public class Account {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email, EmailValidatorGateway emailValidator) {
         if (email.length() < 3 || email.length() > 254) {
             throw new IllegalArgumentException("The email must be between 3 and 254 characters long.");
+        }
+        if (!emailValidator.isEmailValid(email)){
+            throw new IllegalArgumentException("The email format is invalid.");
         }
         this.email = email;
     }
