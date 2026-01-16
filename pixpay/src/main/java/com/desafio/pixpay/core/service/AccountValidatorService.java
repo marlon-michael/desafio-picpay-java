@@ -21,15 +21,23 @@ public class AccountValidatorService {
     }
 
     public boolean isAccountEmailValid(String email) {
-        return emailValidator.isEmailValid(email);
+        boolean isValid = emailValidator.isEmailValid(email);
+        if(!isValid){
+            throw new IllegalArgumentException("Invalid email format.");
+        }
+        return isValid;
     }
 
     public boolean isAccountIdentificationValid(IdentificationTypeEnum identificationType, String identificationCode) {
+        boolean isValid = false;
         if (identificationType.getValue().equals("CadastroDePessoaFisica")) {
-            return identificationValidator.isCPFValid(identificationCode);
+            isValid = identificationValidator.isCPFValid(identificationCode);
         } else if (identificationType.getValue().equals("CadastroNacionalDePessoaJuridica")) {
-            return identificationValidator.isCNPJValid(identificationCode);
+            isValid = identificationValidator.isCNPJValid(identificationCode);
         }
-        return false;
+        if(!isValid){
+            throw new IllegalArgumentException("Invalid Identification number.");
+        }
+        return isValid;
     }
 }
