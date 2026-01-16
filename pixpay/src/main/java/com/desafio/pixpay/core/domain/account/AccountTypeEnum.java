@@ -1,4 +1,4 @@
-package com.desafio.pixpay.core.domain;
+package com.desafio.pixpay.core.domain.account;
 
 public enum AccountTypeEnum {
     PERSONAL("PERSONAL"),
