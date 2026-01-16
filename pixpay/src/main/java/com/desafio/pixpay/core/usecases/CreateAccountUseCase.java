@@ -2,19 +2,19 @@ package com.desafio.pixpay.core.usecases;
 
 
 import com.desafio.pixpay.adapters.dtos.SaveAccountDTO;
-import com.desafio.pixpay.core.domain.Account;
-import com.desafio.pixpay.core.domain.AccountTypeEnum;
+import com.desafio.pixpay.core.domain.account.Account;
+import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.gateways.AccountGateway;
-import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
+import com.desafio.pixpay.core.service.AccountValidatorService;
 
 public class CreateAccountUseCase {
     private final AccountGateway accountGateway;
-    private final EmailValidatorGateway emailValidator;
+    private final AccountValidatorService accountValidatorService;
 
-    public CreateAccountUseCase(AccountGateway accountGateway, EmailValidatorGateway emailValidator) {
+    public CreateAccountUseCase(AccountGateway accountGateway, AccountValidatorService accountValidatorService) {
         this.accountGateway = accountGateway;
-        this.emailValidator = emailValidator;
+        this.accountValidatorService = accountValidatorService;
     }
 
     public Account execute(SaveAccountDTO saveAccountDTO) {
@@ -24,9 +24,9 @@ public class CreateAccountUseCase {
             saveAccountDTO.identificationNumber(),
             saveAccountDTO.fullName(),
             saveAccountDTO.email(),
-            saveAccountDTO.password(),
-            emailValidator
+            saveAccountDTO.password()
         );
+        accountValidatorService.isAccountValid(account);
         accountGateway.saveAccount(account);
         return account;
     }
