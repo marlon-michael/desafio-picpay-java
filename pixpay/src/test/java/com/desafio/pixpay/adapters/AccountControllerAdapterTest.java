@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+// import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -54,7 +54,7 @@ public class AccountControllerAdapterTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(accountJson))
             .andExpect(status().isCreated())
-            .andExpect(content().string("Account John Doe created successfully"));
+            .andExpect(content().string("Account Marlon Michael created successfully"));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class AccountControllerAdapterTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(accountJson))
             .andExpect(status().isBadRequest())
-            .andExpect(content().string("CPF Invalid"));
+            .andExpect(content().string("Invalid Identification number."));
     }
 
 }
