@@ -4,11 +4,11 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.hibernate.validator.constraints.br.CPF;
 
-import com.desafio.pixpay.core.gateways.IdentificationValidator;
+import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 
 import org.hibernate.validator.constraints.br.CNPJ;
 
-public class JakartaIdentificationValidator implements IdentificationValidator {
+public class JakartaIdentificationValidator implements IdentificationValidatorGateway {
 
     private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
