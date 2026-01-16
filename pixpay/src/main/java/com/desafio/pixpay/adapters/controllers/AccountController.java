@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.pixpay.adapters.dtos.SaveAccountDTO;
-import com.desafio.pixpay.core.domain.Account;
+import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
