@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.desafio.pixpay.adapters.dtos.SaveAccountDTO;
 import com.desafio.pixpay.core.domain.Account;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +21,8 @@ public class AccountController {
 
     
     @PostMapping
-    public ResponseEntity<String> createAccount(@RequestBody Account account) {
-        Account createdAccount = createAccountUseCase.execute(account);
+    public ResponseEntity<String> createAccount(@RequestBody SaveAccountDTO saveAccountDTO) {
+        Account createdAccount = createAccountUseCase.execute(saveAccountDTO);
         return ResponseEntity.status(201).body("Account " + createdAccount.getFullName() + " created successfully");
     }
 }
