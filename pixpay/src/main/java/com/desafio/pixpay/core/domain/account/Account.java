@@ -1,11 +1,10 @@
-package com.desafio.pixpay.core.domain;
+package com.desafio.pixpay.core.domain.account;
 
 import java.util.UUID;
 
 import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.domain.identification.IdentificationNumber;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
-import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 
 
 public class Account {
@@ -20,13 +19,13 @@ public class Account {
 
     public Account(){}
 
-    public Account(AccountTypeEnum accountType, IdentificationTypeEnum identificationType, String identificationNumber, String fullName, String email, String password, EmailValidatorGateway emailValidator) {
+    public Account(AccountTypeEnum accountType, IdentificationTypeEnum identificationType, String identificationNumber, String fullName, String email, String password) {
         setId(UUID.randomUUID());
         setAccountType(accountType);
         setIdentificationType(identificationType);
         setIdentificationNumber(identificationType, identificationNumber);
         setFullName(fullName);
-        setEmail(email, emailValidator);
+        setEmail(email);
         setPassword(password);
         setBalanceInPipsOfReal(0L);
     }
@@ -126,12 +125,9 @@ public class Account {
         return email;
     }
 
-    public void setEmail(String email, EmailValidatorGateway emailValidator) {
+    public void setEmail(String email) {
         if (email.length() < 3 || email.length() > 254) {
             throw new IllegalArgumentException("The email must be between 3 and 254 characters long.");
-        }
-        if (!emailValidator.isEmailValid(email)){
-            throw new IllegalArgumentException("The email format is invalid.");
         }
         this.email = email;
     }
