@@ -1,5 +1,8 @@
 package com.desafio.pixpay.infra.persistence;
 
+import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.stereotype.Repository;
 
 import com.desafio.pixpay.core.domain.account.Account;
@@ -18,6 +21,17 @@ public class AccountRepository implements AccountGateway {
     @Override
     public void saveAccount(Account account) {
         jpaAccountRepository.save(accountMapper.fromDomainToEntity(account));
+    }
+
+    @Override
+    public Account findAccountById(UUID id) {
+        Optional<AccountEntity> optionalAccount = jpaAccountRepository.findById(id);
+        if(optionalAccount.isEmpty()){
+            throw new IllegalArgumentException("The account was not found using the provided UUID.");
+        }
+        
+        AccountEntity account = optionalAccount.get();
+        return accountMapper.fromEntityToDomain(account);
     }
     
 }
