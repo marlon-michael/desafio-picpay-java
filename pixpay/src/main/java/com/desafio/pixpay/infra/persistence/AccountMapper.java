@@ -13,7 +13,7 @@ public class AccountMapper {
     }
 
     public AccountEntity fromDomainToEntity(Account account) {
-        if (!accountValidatorService.isAccountValid(account)){
+        if (!accountValidatorService.validateAccount(account)){
             throw  new IllegalArgumentException("Invalid account");
         }
         AccountEntity accountEntity = new AccountEntity(
