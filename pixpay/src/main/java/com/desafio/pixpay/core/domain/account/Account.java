@@ -16,6 +16,7 @@ public class Account {
     String email;
     String password;
     Long balanceInPipsOfReal;
+    boolean isValidated = false;
 
     public Account(){}
 
@@ -82,9 +83,11 @@ public class Account {
     }
 
     public void setId(UUID id) {
+        isValidated = false;
         this.id = id;
     }
     public void setAccountType(AccountTypeEnum accountType) {
+        isValidated = false;
         this.accountType = accountType;
     }
 
@@ -97,6 +100,7 @@ public class Account {
     }
 
     public void setIdentificationNumber(IdentificationTypeEnum identificationType, String identificationNumber) {
+        isValidated = false;
         isStringValid(identificationNumber);
         this.identificationNumber = IdentificationFactory.createIdentification(identificationType, identificationNumber);
     }
@@ -106,6 +110,7 @@ public class Account {
     }
 
     public void setIdentificationType(IdentificationTypeEnum identificationType) {
+        isValidated = false;
         this.identificationType = identificationType;
     }
 
@@ -114,6 +119,7 @@ public class Account {
     }
 
     public void setFullName(String fullName) {
+        isValidated = false;
         isFullNameValid(fullName);
         if (fullName.length() < 1 || fullName.length() > 40) {
             throw new IllegalArgumentException("The full name must be between 1 and 40 characters long.");
@@ -126,6 +132,7 @@ public class Account {
     }
 
     public void setEmail(String email) {
+        isValidated = false;
         if (email.length() < 3 || email.length() > 254) {
             throw new IllegalArgumentException("The email must be between 3 and 254 characters long.");
         }
@@ -137,6 +144,7 @@ public class Account {
     }
 
     public void setPassword(String password) {
+        isValidated = false;
         isStringValid(password);
         isPasswordValid(password);
         if (password.length() < 8 || password.length() > 18) {
@@ -150,6 +158,15 @@ public class Account {
     }
 
     public void setBalanceInPipsOfReal(Long balanceInPipsOfReal) {
+        isValidated = false;
         this.balanceInPipsOfReal = balanceInPipsOfReal;
+    }
+
+    public boolean isValidated(){
+        return isValidated;
+    }
+    
+    public void validate(){
+        this.isValidated= true;
     }
 }
