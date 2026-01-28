@@ -26,7 +26,10 @@ public class CreateAccountUseCase {
             saveAccountDTO.email(),
             saveAccountDTO.password()
         );
-        accountValidatorService.isAccountValid(account);
+        accountValidatorService.validateAccount(account);
+        if(!account.isValidated()) {
+            throw new IllegalArgumentException("Account coudn't be validated, check all fields and try again.");
+        }
         accountGateway.saveAccount(account);
         return account;
     }
