@@ -14,9 +14,12 @@ public class AccountValidatorService {
         this.emailValidator = emailValidator;
     }
 
-    public boolean isAccountValid(Account account) {
+    public boolean validateAccount(Account account) {
         boolean isEmailValid = isAccountEmailValid(account.getEmail());
         boolean isIdentificationValid = isAccountIdentificationValid(account.getIdentificationType(), account.getIdentificationNumber());
+        if(isEmailValid && isIdentificationValid) {
+            account.validate();
+        }
         return isEmailValid && isIdentificationValid;
     }
 
