@@ -6,15 +6,18 @@ import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.gateways.AccountGateway;
+import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 import com.desafio.pixpay.core.service.AccountValidatorService;
 
 public class CreateAccountUseCase {
     private final AccountGateway accountGateway;
     private final AccountValidatorService accountValidatorService;
+    private final PasswordEncoderGateway passwordEncoder;
 
-    public CreateAccountUseCase(AccountGateway accountGateway, AccountValidatorService accountValidatorService) {
+    public CreateAccountUseCase(AccountGateway accountGateway, AccountValidatorService accountValidatorService, PasswordEncoderGateway passwordEncoder) {
         this.accountGateway = accountGateway;
         this.accountValidatorService = accountValidatorService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public Account execute(SaveAccountDTO saveAccountDTO) {
@@ -24,7 +27,8 @@ public class CreateAccountUseCase {
             saveAccountDTO.identificationNumber(),
             saveAccountDTO.fullName(),
             saveAccountDTO.email(),
-            saveAccountDTO.password()
+            saveAccountDTO.password(),
+            passwordEncoder
         );
         accountValidatorService.validateAccount(account);
         if(!account.isValidated()) {
