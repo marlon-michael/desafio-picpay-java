@@ -1,5 +1,6 @@
 package com.desafio.pixpay.infra.persistence;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,6 +33,14 @@ public class AccountRepository implements AccountGateway {
         
         AccountEntity account = optionalAccount.get();
         return accountMapper.fromEntityToDomain(account);
+    }
+
+    public AccountEntity findAccountByEmail(String email){
+        return jpaAccountRepository.findByEmail(email);
+    }
+
+    public List<AccountEntity> findAll() {
+        return jpaAccountRepository.findAll();
     }
     
 }
