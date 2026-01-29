@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.domain.identification.IdentificationNumber;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
+import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 
 
 public class Account {
@@ -20,14 +21,14 @@ public class Account {
 
     public Account(){}
 
-    public Account(AccountTypeEnum accountType, IdentificationTypeEnum identificationType, String identificationNumber, String fullName, String email, String password) {
+    public Account(AccountTypeEnum accountType, IdentificationTypeEnum identificationType, String identificationNumber, String fullName, String email, String password, PasswordEncoderGateway passwordEncoder) {
         setId(UUID.randomUUID());
         setAccountType(accountType);
         setIdentificationType(identificationType);
         setIdentificationNumber(identificationType, identificationNumber);
         setFullName(fullName);
         setEmail(email);
-        setPassword(password);
+        setPassword(password, passwordEncoder);
         setBalanceInPipsOfReal(0L);
     }
 
@@ -143,14 +144,15 @@ public class Account {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password, PasswordEncoderGateway passwordEncoder) {
         isValidated = false;
         isStringValid(password);
         isPasswordValid(password);
         if (password.length() < 8 || password.length() > 18) {
             throw new IllegalArgumentException("The password must be between 8 and 18 characters long.");
         }
-        this.password = password;
+        String encodedPassword = passwordEncoder.encode(password);
+        this.password = encodedPassword;
     }
 
     public Long getBalanceInPipsOfReal() {
