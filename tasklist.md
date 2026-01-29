@@ -9,22 +9,24 @@
   - [x] validate account
     - [x] email
     - [x] password
-    - [ ] cpf e cnpj
-- [ ] domain
-  - [ ] restful
-  - [ ] PF e PJ
+    - [x] cpf e cnpj
+- [ ] kafka
   - [ ] registro transações
   - [ ] converter dinheiro
-  - [ ] error handling
+- [x] controller
+  - [ ] restful
+  - [x] error handling
+- [x] spring security - jwt
+  - [ ] jwt http only
 
 
 ## Requisitos
 - [x] clean arch
 - [x] postgre
 - [x] lombok
+- [x] spring security
 - [ ] kafka
 - [ ] reddis
-- [ ] spring security
 - [ ] flyway
 - [ ] swagger
 - [ ] testes
