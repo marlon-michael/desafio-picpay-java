@@ -21,36 +21,37 @@ import com.desafio.pixpay.infra.persistence.AccountRepository;
 public class AccountConfig {
 
     @Bean
-    public PasswordEncoderGateway passwordEncoderGateway(PasswordEncoder passwordEncoder) {
-        return new PasswordEncoderImpl(passwordEncoder); 
+    PasswordEncoderGateway passwordEncoderGateway(PasswordEncoder passwordEncoder) {
+        return new PasswordEncoderImpl(passwordEncoder);
     }
 
     @Bean
-    public AccountMapper accountMapper(AccountValidatorService accountValidatorService){
+    AccountMapper accountMapper(AccountValidatorService accountValidatorService){
         return new AccountMapper(accountValidatorService);
     }
 
     @Bean
-    public AccountGateway accountGateway(JpaAccountRepository jpaAccountRepository, AccountMapper accountMapper){
+    AccountGateway accountGateway(JpaAccountRepository jpaAccountRepository, AccountMapper accountMapper){
         return new AccountRepository(jpaAccountRepository, accountMapper);
     }
 
-    @Bean AccountValidatorService accountValidatorService(EmailValidatorGateway emailValidatorGateway, IdentificationValidatorGateway identificationValidatorGateway){
+    @Bean
+    AccountValidatorService accountValidatorService(EmailValidatorGateway emailValidatorGateway, IdentificationValidatorGateway identificationValidatorGateway){
         return new AccountValidatorService(identificationValidatorGateway, emailValidatorGateway);
-    }   
+    }
 
     @Bean
-    public EmailValidatorGateway emailValidatorGateway(){
+    EmailValidatorGateway emailValidatorGateway(){
         return new JMailValidator();
     }
 
     @Bean
-    public IdentificationValidatorGateway identificationValidator(){
+    IdentificationValidatorGateway identificationValidator(){
         return new JakartaIdentificationValidator();
     }
 
     @Bean
-    public CreateAccountUseCase createAccountUseCase(AccountGateway  accountGateway, AccountValidatorService accountValidatorService, PasswordEncoderGateway passwordEncoderGateway){
+    CreateAccountUseCase createAccountUseCase(AccountGateway  accountGateway, AccountValidatorService accountValidatorService, PasswordEncoderGateway passwordEncoderGateway){
         return new CreateAccountUseCase(accountGateway, accountValidatorService, passwordEncoderGateway);
     }
 }
