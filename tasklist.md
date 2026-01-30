@@ -12,12 +12,15 @@
     - [x] cpf e cnpj
 - [ ] kafka
   - [ ] registro transações
-  - [ ] converter dinheiro
 - [x] controller
   - [ ] restful
   - [x] error handling
 - [x] spring security - jwt
-  - [ ] jwt http only
+  - [x] jwt http only
+  - [ ] implementar id-based-auth
+- [ ] classe money pips
+  - [ ] converter reais para pips
+  - [ ] converter pips para reais
 
 
 ## Requisitos
