@@ -38,7 +38,7 @@ public class AuthenticationController {
             .sameSite("Lax")
             .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.ok().body("Autenticado com sucesso!");
+        return ResponseEntity.ok().body("Authenticated");
     }
     
     @PostMapping("signup")
