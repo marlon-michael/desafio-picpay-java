@@ -37,12 +37,12 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [x] Validação de senha (requisitos de complexidade)
 - [x] Persistência de contas no banco de dados
 - [x] Testes de integração com PostgreSQL via Testcontainers
+- [x] Autenticação e autorização (JWT)
 
 ### Funcionalidades Planejadas
 - [ ] Transferências entre contas (POST /transacoes, JSON com valor e payee)
 - [ ] Pagamentos e recebimentos
 - [ ] Notificações via POST (com retry em fila se falhar)
-- [ ] Autenticação e autorização (JWT)
 - [ ] Filas para processamento assíncrono (RabbitMQ)
 - [ ] Cache com Redis (salvamento de transações)
 - [ ] Containerização com Docker
