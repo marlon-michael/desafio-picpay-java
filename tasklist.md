@@ -2,6 +2,7 @@
 ## Tarefas
 
 - [ ] crud account
+  - [ ] paginação
   - [x] post account
   - [ ] get account
   - [ ] delete(disable) account
@@ -18,9 +19,9 @@
 - [x] spring security - jwt
   - [x] jwt http only
   - [ ] implementar id-based-auth
-- [ ] classe money pips
-  - [ ] converter reais para pips
-  - [ ] converter pips para reais
+- [x] classe money pips
+  - [x] converter reais para pips
+  - [x] converter pips para reais
 
 
 ## Requisitos
@@ -33,6 +34,7 @@
 - [ ] flyway
 - [ ] swagger
 - [ ] testes
+- [ ] logs?
 - [ ] micrometer, prometheus, grafana
 - [ ] nginx
 - [ ] docker
