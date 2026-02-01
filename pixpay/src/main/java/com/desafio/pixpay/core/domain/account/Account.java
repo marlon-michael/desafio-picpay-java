@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.domain.identification.IdentificationNumber;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
+import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 
 
@@ -16,7 +17,7 @@ public class Account {
     String fullName;
     String email;
     String password;
-    Long balanceInPipsOfReal;
+    Money balanceInPipsOfReal;
     boolean isValidated = false;
 
     public Account(){}
@@ -29,7 +30,7 @@ public class Account {
         setFullName(fullName);
         setEmail(email);
         setPassword(password, passwordEncoder);
-        setBalanceInPipsOfReal(0L);
+        setBalanceInPipsOfReal(0.0);
     }
 
     public Account(UUID id, AccountTypeEnum accountType, IdentificationTypeEnum identificationType, String identificationNumber, String fullName, String email, String password, Long balanceInPipsOfReal) {
@@ -40,7 +41,7 @@ public class Account {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.balanceInPipsOfReal = balanceInPipsOfReal;
+        this.balanceInPipsOfReal.setMoneyInPips(balanceInPipsOfReal);
     }
 
     public boolean isPasswordValid(String password) {
@@ -156,12 +157,16 @@ public class Account {
     }
 
     public Long getBalanceInPipsOfReal() {
-        return balanceInPipsOfReal;
+        return balanceInPipsOfReal.getMoneyInPips();
     }
 
-    public void setBalanceInPipsOfReal(Long balanceInPipsOfReal) {
+    public Double getBalanceInReal() {
+        return balanceInPipsOfReal.getMoneyInDouble();
+    }
+
+    public void setBalanceInPipsOfReal(Double balanceInReal) {
         isValidated = false;
-        this.balanceInPipsOfReal = balanceInPipsOfReal;
+        this.balanceInPipsOfReal.setMoneyInDouble(balanceInReal);
     }
 
     public boolean isValidated(){
@@ -169,6 +174,6 @@ public class Account {
     }
     
     public void validate(){
-        this.isValidated= true;
+        this.isValidated = true;
     }
 }
