@@ -21,10 +21,14 @@ public class TransferMoneyUseCase {
         this.transferGateway = transferGateway;
     }
 
-    public boolean execute(TransferInput transferInput){
+    public boolean execute(String authentication, TransferInput transferInput){
         Account payer = accountGateway.findAccountById(transferInput.getPayer());
         Account payee = accountGateway.findAccountById(transferInput.getPayee());
         Double value = Math.ceil(transferInput.getValue()*100) / 100.0;
+
+        if (!authentication.equals(payer.getEmail())) {
+            throw new IllegalArgumentException("Authenticated account is different from payer account");
+        }
         
         if (payee.getAccountType() == AccountTypeEnum.BUSINESS){
             throw new IllegalArgumentException("Account type business cannot transfer money to other accounts.");

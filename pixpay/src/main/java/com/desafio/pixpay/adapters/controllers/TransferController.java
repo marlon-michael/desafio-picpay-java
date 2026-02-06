@@ -2,6 +2,7 @@ package com.desafio.pixpay.adapters.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,14 +19,14 @@ public class TransferController {
     @Autowired
     TransferMoneyUseCase transferMoneyUseCase;
     
-    @PostMapping("transfer")
-    public ResponseEntity<String> transferMoney(@RequestBody TransferDTO transferDTO){
+    @PostMapping
+    public ResponseEntity<String> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
         TransferInput transferInput = new TransferInput(
             transferDTO.value(),
             transferDTO.payer(),
             transferDTO.payee()
         );
-        transferMoneyUseCase.execute(transferInput);
+        transferMoneyUseCase.execute(auth.getName(), transferInput);
         return ResponseEntity.ok().build();
     }
 
