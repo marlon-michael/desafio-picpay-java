@@ -27,7 +27,7 @@ public class TransferMoneyUseCase {
         Double value = Math.ceil(transferInput.getValue()*100) / 100.0;
 
         if (!authentication.equals(payer.getEmail())) {
-            throw new IllegalArgumentException("Authenticated account is different from payer account");
+            throw new IllegalArgumentException("Authenticated account is different from payer account.");
         }
         
         if (payee.getAccountType() == AccountTypeEnum.BUSINESS){
