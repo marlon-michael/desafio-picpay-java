@@ -9,6 +9,7 @@ import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 import com.desafio.pixpay.core.service.AccountValidatorService;
 
+
 public class CreateAccountUseCase {
     private final AccountGateway accountGateway;
     private final AccountValidatorService accountValidatorService;
