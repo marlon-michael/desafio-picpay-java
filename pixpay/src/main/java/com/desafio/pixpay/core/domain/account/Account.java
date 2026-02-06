@@ -17,7 +17,7 @@ public class Account {
     String fullName;
     String email;
     String password;
-    Money balanceInPipsOfReal;
+    Money balance = new Money();
     boolean isValidated = false;
 
     public Account(){}
@@ -30,7 +30,7 @@ public class Account {
         setFullName(fullName);
         setEmail(email);
         setPassword(password, passwordEncoder);
-        setBalanceInPipsOfReal(0.0);
+        setBalanceInReal(0.0);
     }
 
     public Account(UUID id, AccountTypeEnum accountType, IdentificationTypeEnum identificationType, String identificationNumber, String fullName, String email, String password, Long balanceInPipsOfReal) {
@@ -41,7 +41,7 @@ public class Account {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.balanceInPipsOfReal.setMoneyInPips(balanceInPipsOfReal);
+        this.balance.setMoneyInPips(balanceInPipsOfReal);
     }
 
     public boolean isPasswordValid(String password) {
@@ -156,17 +156,25 @@ public class Account {
         this.password = encodedPassword;
     }
 
+    public Money getBalance(){
+        return this.balance;
+    }
+
     public Long getBalanceInPipsOfReal() {
-        return balanceInPipsOfReal.getMoneyInPips();
+        return balance.getMoneyInPips();
+    }
+
+    public void setBalanceInPipsOfReal(Long balanceInPips){
+        this.balance.setMoneyInPips(balanceInPips);
     }
 
     public Double getBalanceInReal() {
-        return balanceInPipsOfReal.getMoneyInDouble();
+        return balance.getMoneyInCurrency();
     }
 
-    public void setBalanceInPipsOfReal(Double balanceInReal) {
+    public void setBalanceInReal(Double balanceInReal) {
         isValidated = false;
-        this.balanceInPipsOfReal.setMoneyInDouble(balanceInReal);
+        this.balance.setMoneyInCurrency(balanceInReal);
     }
 
     public boolean isValidated(){
