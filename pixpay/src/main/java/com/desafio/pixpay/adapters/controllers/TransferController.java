@@ -27,7 +27,7 @@ public class TransferController {
             transferDTO.payee()
         );
         transferMoneyUseCase.execute(auth.getName(), transferInput);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(transferDTO.toString());
     }
 
 }
