@@ -1,4 +1,4 @@
-package com.desafio.pixpay.infra.persistence;
+package com.desafio.pixpay.infra.persistence.repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -7,32 +7,41 @@ import java.util.UUID;
 import org.springframework.stereotype.Repository;
 
 import com.desafio.pixpay.core.domain.account.Account;
+import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.gateways.AccountGateway;
+import com.desafio.pixpay.infra.persistence.entity.AccountEntity;
+import com.desafio.pixpay.infra.persistence.jpa.JpaAccountRepository;
+import com.desafio.pixpay.infra.persistence.mapper.AccountMapper;
 
 @Repository
 public class AccountRepository implements AccountGateway {
     private final JpaAccountRepository jpaAccountRepository;
-    private final AccountMapper accountMapper;
 
-    public AccountRepository(JpaAccountRepository jpaAccountRepository, AccountMapper accountMapper) {
+    public AccountRepository(JpaAccountRepository jpaAccountRepository) {
         this.jpaAccountRepository = jpaAccountRepository;
-        this.accountMapper = accountMapper;
     }
 
     @Override
     public void saveAccount(Account account) {
-        jpaAccountRepository.save(accountMapper.fromDomainToEntity(account));
+        jpaAccountRepository.save(AccountMapper.fromDomainToEntity(account));
     }
+
+    @Override
+    public int updateAccountBalanceById(UUID id, Money money){
+        Long balance = money.getMoneyInPips();
+        return jpaAccountRepository.updateAccountBalanceById(id, balance);
+    }
+
 
     @Override
     public Account findAccountById(UUID id) {
         Optional<AccountEntity> optionalAccount = jpaAccountRepository.findById(id);
         if(optionalAccount.isEmpty()){
-            throw new IllegalArgumentException("The account was not found using the provided UUID.");
+            throw new IllegalArgumentException("The account was not found with provided UUID.");
         }
         
         AccountEntity account = optionalAccount.get();
-        return accountMapper.fromEntityToDomain(account);
+        return AccountMapper.fromEntityToDomain(account);
     }
 
     public AccountEntity findAccountByEmail(String email){

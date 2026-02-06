@@ -1,25 +1,32 @@
-package com.desafio.pixpay.infra.persistence;
+package com.desafio.pixpay.infra.persistence.entity;
 
 import java.util.UUID;
+
+import org.springframework.data.domain.Persistable;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
 @Table(name = "accounts")
 @Entity
-public class AccountEntity {
+public class AccountEntity implements Persistable<UUID> {
+
     @Id()
-    UUID id;
-    String accountType;
-    String identificationType;
-    String identificationNumber;
-    String fullName;
-    String email;
-    String password;
-    Long balanceInPipsOfReal;
+    private UUID id;
+    private String accountType;
+    private String identificationType;
+    private String identificationNumber;
+    private String fullName;
+    private String email;
+    private String password;
+    private Long balanceInPipsOfReal;
+
+    @Transient
+    private boolean isNew;
 
     public AccountEntity(){}
 
@@ -32,5 +39,10 @@ public class AccountEntity {
         this.email = email;
         this.password = password;
         this.balanceInPipsOfReal = balanceInPipsOfReal;
+    }
+
+    @Override
+    public boolean isNew() {
+        return this.isNew;
     }
 }

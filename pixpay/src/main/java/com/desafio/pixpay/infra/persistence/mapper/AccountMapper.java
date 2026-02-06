@@ -1,9 +1,10 @@
-package com.desafio.pixpay.infra.persistence;
+package com.desafio.pixpay.infra.persistence.mapper;
 
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.service.AccountValidatorService;
+import com.desafio.pixpay.infra.persistence.entity.AccountEntity;
 
 public class AccountMapper {
     private static AccountValidatorService accountValidatorService;
@@ -12,7 +13,7 @@ public class AccountMapper {
         AccountMapper.accountValidatorService = accountValidatorService;
     }
 
-    public AccountEntity fromDomainToEntity(Account account) {
+    public static AccountEntity fromDomainToEntity(Account account) {
         if (!accountValidatorService.validateAccount(account)){
             throw  new IllegalArgumentException("Invalid account");
         }
@@ -29,7 +30,7 @@ public class AccountMapper {
         return accountEntity;
     }
 
-    public Account fromEntityToDomain(AccountEntity accountEntity) {
+    public static Account fromEntityToDomain(AccountEntity accountEntity) {
         Account account = new Account(
             accountEntity.getId(),
             AccountTypeEnum.fromValue(accountEntity.getAccountType()),
