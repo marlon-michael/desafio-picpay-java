@@ -5,8 +5,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.desafio.pixpay.infra.persistence.AccountEntity;
-import com.desafio.pixpay.infra.persistence.AccountRepository;
+import com.desafio.pixpay.infra.persistence.entity.AccountEntity;
+import com.desafio.pixpay.infra.persistence.repository.AccountRepository;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{

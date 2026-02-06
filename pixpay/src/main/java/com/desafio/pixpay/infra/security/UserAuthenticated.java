@@ -7,7 +7,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.desafio.pixpay.infra.persistence.AccountEntity;
+import com.desafio.pixpay.infra.persistence.entity.AccountEntity;
 
 public class UserAuthenticated implements UserDetails {
 
