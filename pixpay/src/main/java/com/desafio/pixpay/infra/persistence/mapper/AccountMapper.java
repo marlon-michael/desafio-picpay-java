@@ -15,7 +15,7 @@ public class AccountMapper {
 
     public static AccountEntity fromDomainToEntity(Account account) {
         if (!accountValidatorService.validateAccount(account)){
-            throw  new IllegalArgumentException("Invalid account");
+            throw  new IllegalArgumentException("Invalid account.");
         }
         AccountEntity accountEntity = new AccountEntity(
             account.getId(),

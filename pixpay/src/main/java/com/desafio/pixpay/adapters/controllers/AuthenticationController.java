@@ -38,13 +38,13 @@ public class AuthenticationController {
             .sameSite("Lax")
             .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.ok().body("Authenticated");
+        return ResponseEntity.ok().body("Authenticated.");
     }
     
     @PostMapping("signup")
     public ResponseEntity<String> createAccount(@RequestBody SaveAccountDTO saveAccountDTO) {
         Account createdAccount = createAccountUseCase.execute(saveAccountDTO);
-        return ResponseEntity.status(201).body("Account " + createdAccount.getFullName() + " created successfully");
+        return ResponseEntity.status(201).body("Account " + createdAccount.getFullName() + " created successfully.");
     }
     
 

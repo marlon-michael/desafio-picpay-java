@@ -50,7 +50,7 @@ public class Account {
         String validPasswordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$.,&%?_+]).+$";
         boolean isValid = password.matches(validPasswordRegex);
         if (!isValid){
-            throw new IllegalArgumentException("The password must contain one uppercase letter, one lowercase letter, one number and at least one of this special character: , . ! @ # $ & % ? _ +");
+            throw new IllegalArgumentException("The password must contain one uppercase letter, one lowercase letter, one number and at least one of this special character: , . ! @ # $ & % ? _ +.");
         }
         return isValid;
     }
@@ -74,7 +74,7 @@ public class Account {
         String invalidRegex = ".*[\\s\\\\;\"'<>/|\\-\\-\\*\\(\\)\\[\\]{}].*";
         boolean isValid = !string.matches(invalidRegex);
         if (!isValid) {
-            throw new IllegalArgumentException("The fields cannot contain this special character: \\ / | * ( ) [ ] { } ; ' \" < > or spaces");
+            throw new IllegalArgumentException("The fields cannot contain this special character: \\ / | * ( ) [ ] { } ; ' \" < > or spaces.");
         }
         return isValid;
     }
