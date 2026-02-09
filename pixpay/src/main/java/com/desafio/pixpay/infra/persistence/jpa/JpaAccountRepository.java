@@ -15,6 +15,8 @@ public interface JpaAccountRepository extends JpaRepository<AccountEntity, UUID>
 
     AccountEntity findByEmail(String email);
 
+    AccountEntity findByIdentificationNumber(String identificationNumber);
+
     @Modifying
     @Transactional
     @Query("UPDATE AccountEntity a SET a.balanceInPipsOfReal = :balance WHERE a.id = :id")

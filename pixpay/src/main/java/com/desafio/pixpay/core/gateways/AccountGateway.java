@@ -8,5 +8,6 @@ import com.desafio.pixpay.core.domain.money.Money;
 public interface AccountGateway {
     void createAccount(Account account);
     Account findAccountById(UUID id);
+    Account findAccountByIdentificationNumber(String identificationNumber);
     int updateAccountBalanceById(UUID id, Money money);
 }

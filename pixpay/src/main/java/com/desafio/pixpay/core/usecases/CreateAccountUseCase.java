@@ -35,6 +35,9 @@ public class CreateAccountUseCase {
         if(!account.isValidated()) {
             throw new IllegalArgumentException("Account coudn't be validated, check all fields and try again.");
         }
+        if(accountGateway.findAccountByIdentificationNumber(account.getIdentificationNumber()) != null){
+            throw new IllegalArgumentException("Account identification number already in use.");
+        }
 
         accountGateway.createAccount(account);
         return account;

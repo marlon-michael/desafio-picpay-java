@@ -51,5 +51,12 @@ public class AccountRepository implements AccountGateway {
     public List<AccountEntity> findAll() {
         return jpaAccountRepository.findAll();
     }
+
+    @Override
+    public Account findAccountByIdentificationNumber(String identificationNumber) {
+        Optional<AccountEntity> optional = Optional.ofNullable(jpaAccountRepository.findByIdentificationNumber(identificationNumber));
+        if (optional.isEmpty()) return null;
+        return AccountMapper.fromEntityToDomain(optional.get());
+    }
     
 }
