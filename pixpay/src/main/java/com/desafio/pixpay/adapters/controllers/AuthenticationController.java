@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.desafio.pixpay.adapters.dtos.SaveAccountDTO;
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
+import com.desafio.pixpay.core.usecases.input.CreateAccountInput;
 import com.desafio.pixpay.infra.security.AuthenticationService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,8 +43,16 @@ public class AuthenticationController {
     }
     
     @PostMapping("signup")
-    public ResponseEntity<String> createAccount(@RequestBody SaveAccountDTO saveAccountDTO) {
-        Account createdAccount = createAccountUseCase.execute(saveAccountDTO);
+    public ResponseEntity<String> createAccount(@RequestBody SaveAccountDTO createAccountDTO) {
+        CreateAccountInput createAccountInput = new CreateAccountInput(
+            createAccountDTO.accountType(),
+            createAccountDTO.identificationType(),
+            createAccountDTO.identificationNumber(),
+            createAccountDTO.fullName(),
+            createAccountDTO.email(),
+            createAccountDTO.password()
+        );
+        Account createdAccount = createAccountUseCase.execute(createAccountInput);
         return ResponseEntity.status(201).body("Account " + createdAccount.getFullName() + " created successfully.");
     }
     
