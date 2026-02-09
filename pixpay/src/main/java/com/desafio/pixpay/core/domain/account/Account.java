@@ -98,7 +98,7 @@ public class Account {
     }
 
     public String getIdentificationNumber() {
-        return identificationNumber.getIdentificationCode();
+        return identificationNumber.getIdentificationNumber();
     }
 
     public void setIdentificationNumber(IdentificationTypeEnum identificationType, String identificationNumber) {
