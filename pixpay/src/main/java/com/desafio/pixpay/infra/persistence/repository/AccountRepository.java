@@ -22,7 +22,7 @@ public class AccountRepository implements AccountGateway {
     }
 
     @Override
-    public void saveAccount(Account account) {
+    public void createAccount(Account account) {
         jpaAccountRepository.save(AccountMapper.fromDomainToEntity(account));
     }
 
