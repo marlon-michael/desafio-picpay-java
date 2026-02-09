@@ -1,15 +1,15 @@
 package com.desafio.pixpay.core.domain.identification;
 
 public abstract class IdentificationNumber {
-    String identificationCode;
+    String identificationNumber;
 
     protected IdentificationNumber() {}
 
     public IdentificationNumber(String identificationCode){
-        this.identificationCode = identificationCode;
+        this.identificationNumber = identificationCode;
     }
 
-    public String getIdentificationCode() {
-        return identificationCode;
+    public String getIdentificationNumber() {
+        return identificationNumber;
     }
 }
