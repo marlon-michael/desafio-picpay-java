@@ -1,30 +1,25 @@
 package com.desafio.pixpay.infra.persistence.mapper;
 
 import com.desafio.pixpay.core.domain.account.Account;
-import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
+import com.desafio.pixpay.core.domain.account.FullName;
+import com.desafio.pixpay.core.domain.account.Password;
+import com.desafio.pixpay.core.domain.common.Email;
+import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
-import com.desafio.pixpay.core.service.AccountValidatorService;
+import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.infra.persistence.entity.AccountEntity;
 
 public class AccountMapper {
-    private static AccountValidatorService accountValidatorService;
-
-    public AccountMapper(AccountValidatorService accountValidatorService) {
-        AccountMapper.accountValidatorService = accountValidatorService;
-    }
 
     public static AccountEntity fromDomainToEntity(Account account) {
-        if (!accountValidatorService.validateAccount(account)){
-            throw  new IllegalArgumentException("Invalid account.");
-        }
         AccountEntity accountEntity = new AccountEntity(
             account.getId(),
             account.getAccountType().getValue(),
             account.getIdentificationType().getValue(),
-            account.getIdentificationNumber(),
-            account.getFullName(),
-            account.getEmail(),
-            account.getPassword(),
+            account.getIdentification().getIdentificationNumber(),
+            account.getFullName().getFullName(),
+            account.getEmail().getValue(),
+            account.getPassword().getValue(),
             account.getBalanceInPipsOfReal()
         );
         return accountEntity;
@@ -33,13 +28,16 @@ public class AccountMapper {
     public static Account fromEntityToDomain(AccountEntity accountEntity) {
         Account account = new Account(
             accountEntity.getId(),
-            AccountTypeEnum.fromValue(accountEntity.getAccountType()),
-            IdentificationTypeEnum.fromValue(accountEntity.getIdentificationType()),
-            accountEntity.getIdentificationNumber(),
-            accountEntity.getFullName(),
-            accountEntity.getEmail(),
-            accountEntity.getPassword(),
-            accountEntity.getBalanceInPipsOfReal()
+            IdentificationFactory.createIdentification(
+                IdentificationTypeEnum.fromValue(
+                    accountEntity.getIdentificationType()
+                ), 
+                accountEntity.getIdentificationNumber()
+            ),
+            new FullName().fromPersistence(accountEntity.getFullName()),
+            new Email().fromPersistence(accountEntity.getEmail()),
+            new Password().fromPersistence(accountEntity.getPassword()),
+            new Money(accountEntity.getBalanceInPipsOfReal())
         );
         return account;
     }

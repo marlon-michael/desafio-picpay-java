@@ -2,40 +2,44 @@ package com.desafio.pixpay.core.usecases;
 
 
 import com.desafio.pixpay.core.domain.account.Account;
-import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
+import com.desafio.pixpay.core.domain.account.FullName;
+import com.desafio.pixpay.core.domain.account.Password;
+import com.desafio.pixpay.core.domain.common.Email;
+import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
+import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.gateways.AccountGateway;
+import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
-import com.desafio.pixpay.core.service.AccountValidatorService;
 import com.desafio.pixpay.core.usecases.input.CreateAccountInput;
 
 
 public class CreateAccountUseCase {
     private final AccountGateway accountGateway;
-    private final AccountValidatorService accountValidatorService;
     private final PasswordEncoderGateway passwordEncoder;
+    private final EmailValidatorGateway emailValidatorGateway;
 
-    public CreateAccountUseCase(AccountGateway accountGateway, AccountValidatorService accountValidatorService, PasswordEncoderGateway passwordEncoder) {
+    public CreateAccountUseCase(AccountGateway accountGateway, EmailValidatorGateway emailValidatorGateway, PasswordEncoderGateway passwordEncoder) {
         this.accountGateway = accountGateway;
-        this.accountValidatorService = accountValidatorService;
+        this.emailValidatorGateway = emailValidatorGateway;
         this.passwordEncoder = passwordEncoder;
     }
 
     public Account execute(CreateAccountInput createAccountInput) {
         Account account = new Account(
-            AccountTypeEnum.fromValue(createAccountInput.getAccountType()),
-            IdentificationTypeEnum.fromValue(createAccountInput.getIdentificationType()),
-            createAccountInput.getIdentificationNumber(),
-            createAccountInput.getFullName(),
-            createAccountInput.getEmail(),
-            createAccountInput.getPassword(),
-            passwordEncoder
+            IdentificationFactory.createIdentification(
+                IdentificationTypeEnum.fromValue(
+                    createAccountInput.getIdentificationType()
+                ), 
+                createAccountInput.getIdentificationNumber()
+            ),
+            new FullName().setFullnameAndValidate(createAccountInput.getFullName()),
+            new Email().setEmailAndValidate(createAccountInput.getEmail(), emailValidatorGateway),
+            new Password().setPasswordAndValidate(createAccountInput.getPassword(), passwordEncoder),
+            new Money(10000L)
         );
-        accountValidatorService.validateAccount(account);
-        if(!account.isValidated()) {
-            throw new IllegalArgumentException("Account coudn't be validated, check all fields and try again.");
-        }
-        if(accountGateway.findAccountByIdentificationNumber(account.getIdentificationNumber()) != null){
+
+        if(accountGateway.findAccountByIdentificationNumber(account.getIdentification().getIdentificationNumber()) != null){
             throw new IllegalArgumentException("Account identification number already in use.");
         }
 

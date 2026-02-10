@@ -18,20 +18,24 @@ public class Money {
         return Double.valueOf(valueInPips / PIPS_IN_MONEY);
     }
 
-    public void setMoneyInPips(Long value){
+    public Money setMoneyInPips(Long value){
         this.valueInPips = value;
+        return this;
     }
 
-    public void setMoneyInCurrency(Double value){
+    public Money setMoneyInCurrency(Double value){
         this.valueInPips = convertDoubleToPips(value);
+        return this;
     }
 
-    public void addValueInCurrency(Double value){
+    public Money addValueInCurrency(Double value){
         this.valueInPips += convertDoubleToPips(value);
+        return this;
     }
 
-    public void subtractValueInCurrency(Double value){
+    public Money subtractValueInCurrency(Double value){
         this.valueInPips -= convertDoubleToPips(value);
+        return this;
     }
 
     public Long convertStringToPips(String value){

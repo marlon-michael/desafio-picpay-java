@@ -26,7 +26,7 @@ public class TransferMoneyUseCase {
         Account payee = accountGateway.findAccountById(transferInput.getPayee());
         Double value = Math.ceil(transferInput.getValue()*100) / 100.0;
 
-        if (!authentication.equals(payer.getEmail())) {
+        if (!authentication.equals(payer.getEmail().getValue())) {
             throw new IllegalArgumentException("Authenticated account is different from payer account.");
         }
         
@@ -41,8 +41,7 @@ public class TransferMoneyUseCase {
         payer.getBalance().subtractValueInCurrency(value);
         payee.getBalance().addValueInCurrency(value);
 
-        Money money = new Money();
-        money.setMoneyInCurrency(value);
+        Money money = new Money().setMoneyInCurrency(value);
 
         Transfer transfer = new Transfer(money, payer, payee);
 

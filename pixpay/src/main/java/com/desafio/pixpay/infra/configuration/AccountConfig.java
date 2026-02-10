@@ -2,15 +2,14 @@ package com.desafio.pixpay.infra.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 import com.desafio.pixpay.core.service.AccountValidatorService;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
-import com.desafio.pixpay.infra.security.PasswordEncoderImpl;
 import com.desafio.pixpay.infra.validation.JMailValidator;
 import com.desafio.pixpay.infra.validation.JakartaIdentificationValidator;
 import com.desafio.pixpay.infra.persistence.jpa.JpaAccountRepository;
@@ -21,13 +20,8 @@ import com.desafio.pixpay.infra.persistence.repository.AccountRepository;
 public class AccountConfig {
 
     @Bean
-    PasswordEncoderGateway passwordEncoderGateway(PasswordEncoder passwordEncoder) {
-        return new PasswordEncoderImpl(passwordEncoder);
-    }
-
-    @Bean
-    AccountMapper accountMapper(AccountValidatorService accountValidatorService){
-        return new AccountMapper(accountValidatorService);
+    AccountMapper accountMapper(){
+        return new AccountMapper();
     }
 
     @Bean
@@ -36,22 +30,28 @@ public class AccountConfig {
     }
     
     @Bean
-    CreateAccountUseCase createAccountUseCase(AccountGateway  accountGateway, AccountValidatorService accountValidatorService, PasswordEncoderGateway passwordEncoderGateway){
-        return new CreateAccountUseCase(accountGateway, accountValidatorService, passwordEncoderGateway);
+    CreateAccountUseCase createAccountUseCase(AccountGateway  accountGateway, EmailValidatorGateway emailValidatorGateway, PasswordEncoderGateway passwordEncoderGateway){
+        return new CreateAccountUseCase(accountGateway, emailValidatorGateway, passwordEncoderGateway);
+    }
+    
+    @Bean
+    EmailValidatorGateway emailValidatorGateway(){
+        return new JMailValidator();
+    }
+    
+    @Bean
+    IdentificationValidatorGateway identificationValidatorGateway(){
+        return new JakartaIdentificationValidator();
+    }
+
+    @Bean
+    boolean identificationFactory(IdentificationValidatorGateway identificationValidatorGateway){
+        IdentificationFactory.initIdentificationFactory(identificationValidatorGateway);
+        return true;
     }
 
     @Bean
     AccountValidatorService accountValidatorService(EmailValidatorGateway emailValidatorGateway, IdentificationValidatorGateway identificationValidatorGateway){
         return new AccountValidatorService(identificationValidatorGateway, emailValidatorGateway);
-    }
-
-    @Bean
-    EmailValidatorGateway emailValidatorGateway(){
-        return new JMailValidator();
-    }
-
-    @Bean
-    IdentificationValidatorGateway identificationValidator(){
-        return new JakartaIdentificationValidator();
     }
 }

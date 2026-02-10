@@ -5,6 +5,7 @@ import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 
+@Deprecated
 public class AccountValidatorService {
     private final IdentificationValidatorGateway identificationValidator;
     private final EmailValidatorGateway emailValidator;
@@ -15,11 +16,8 @@ public class AccountValidatorService {
     }
 
     public boolean validateAccount(Account account) {
-        boolean isEmailValid = isAccountEmailValid(account.getEmail());
-        boolean isIdentificationValid = isAccountIdentificationValid(account.getIdentificationType(), account.getIdentificationNumber());
-        if(isEmailValid && isIdentificationValid) {
-            account.validate();
-        }
+        boolean isEmailValid = isAccountEmailValid(account.getEmail().getValue());
+        boolean isIdentificationValid = isAccountIdentificationValid(account.getIdentificationType(), account.getIdentification().getIdentificationNumber());
         return isEmailValid && isIdentificationValid;
     }
 
