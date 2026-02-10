@@ -21,6 +21,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 
+import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
+import com.desafio.pixpay.infra.security.PasswordEncoderImpl;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -40,23 +42,27 @@ public class SecurityConfig {
     private RSAPrivateKey privateKey;
 
     @Bean
+    PasswordEncoderGateway passwordEncoderGateway(PasswordEncoder passwordEncoder) {
+        return new PasswordEncoderImpl(passwordEncoder);
+    }
+
+    @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http
         .csrf(
             csrf -> csrf
+                .ignoringRequestMatchers("/authenticate", "/signup")
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                .ignoringRequestMatchers("/authenticate", "/signup")
                 
         )
-        .httpBasic(Customizer.withDefaults())
+        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> auth
-                .requestMatchers("/authenticate").permitAll()
-                .requestMatchers("/signup").permitAll()
-                .anyRequest().authenticated()
+            .requestMatchers("/authenticate", "/signup").permitAll()
+            .anyRequest().authenticated()
         )
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .httpBasic(Customizer.withDefaults())
         .oauth2ResourceServer(
             auth -> auth
                 .bearerTokenResolver(request -> {

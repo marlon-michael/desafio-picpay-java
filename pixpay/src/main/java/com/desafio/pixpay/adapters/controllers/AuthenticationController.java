@@ -53,7 +53,7 @@ public class AuthenticationController {
             createAccountDTO.password()
         );
         Account createdAccount = createAccountUseCase.execute(createAccountInput);
-        return ResponseEntity.status(201).body("Account " + createdAccount.getFullName() + " created successfully.");
+        return ResponseEntity.status(201).body("Account " + createdAccount.getFullName().getFullName() + " created successfully.");
     }
     
 
