@@ -1,15 +1,16 @@
 
 ## Tarefas
 
-- [ ] crud transacao
+- [ ] transacao
   - [ ] get
   - [x] post
   - [ ] paginação
-- [ ] crud account
+- [ ] account
   - [x] create account
   - [x] authenticate account
   - [ ] delete(disable) account
   - [ ] update account
+  - [ ] cargos
   - [x] validate account
     - [x] email
     - [x] password
