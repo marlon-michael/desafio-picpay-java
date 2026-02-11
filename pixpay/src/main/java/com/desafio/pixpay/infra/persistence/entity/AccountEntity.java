@@ -1,10 +1,15 @@
 package com.desafio.pixpay.infra.persistence.entity;
 
+import java.time.Instant;
 import java.util.UUID;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -13,6 +18,7 @@ import lombok.Data;
 @Data
 @Table(name = "accounts")
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class AccountEntity implements Persistable<UUID> {
 
     @Id()
@@ -24,6 +30,10 @@ public class AccountEntity implements Persistable<UUID> {
     private String email;
     private String password;
     private Long balanceInPipsOfReal;
+    @CreatedDate
+    private Instant createdAt;
+    @LastModifiedDate
+    private Instant lastModifiedAt;
 
     @Transient
     private boolean isNew;
