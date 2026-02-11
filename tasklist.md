@@ -10,7 +10,7 @@
   - [x] authenticate account
   - [ ] delete(disable) account
   - [ ] update account
-  - [ ] cargos
+  - [x] cargos
   - [x] validate account
     - [x] email
     - [x] password
