@@ -1,7 +1,7 @@
 package com.desafio.pixpay.core.domain.account;
 
+import java.util.Set;
 import java.util.UUID;
-
 import com.desafio.pixpay.core.domain.email.Email;
 import com.desafio.pixpay.core.domain.identification.Identification;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
@@ -10,6 +10,7 @@ import com.desafio.pixpay.core.domain.money.Money;
 
 public class Account {
     UUID id;
+    Set<Role> roles;
     Identification identification;
     FullName fullName;
     Email email;
@@ -18,8 +19,9 @@ public class Account {
 
     public Account(){}
 
-    public Account(Identification identification, FullName fullName, Email email, Password password, Money balance) {
+    public Account(Set<Role> roles, Identification identification, FullName fullName, Email email, Password password, Money balance) {
         setId(UUID.randomUUID());
+        setRoles(roles);
         setIdentification(identification);
         setFullName(fullName);
         setEmail(email);
@@ -27,13 +29,14 @@ public class Account {
         setBalance(balance);
     }
 
-    public Account(UUID id, Identification identification, FullName fullName, Email email, Password password, Money balance) {
+    public Account(UUID id, Set<Role> roles, Identification identification, FullName fullName, Email email, Password password, Money balance) {
         this.id = id;
         this.identification = identification;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.balance = balance;
+        this.roles = roles;
     }
 
     public Account setId(UUID id) {
@@ -94,18 +97,17 @@ public class Account {
         return password;
     }
 
-    public Account setBalance(Money balance){
-        this.balance = balance;
+    public Account setRoles(Set<Role> roles){
+        this.roles = roles;
         return this;
     }
 
-    public Account setBalanceInPipsOfReal(Long balanceInPips){
-        this.balance.setMoneyInPips(balanceInPips);
-        return this;
+    public Set<Role> getRoles(){
+        return this.roles;
     }
-    
-    public Account setBalanceInReal(Double balanceInReal) {
-        this.balance.setMoneyInCurrency(balanceInReal);
+
+    public Account setBalance(Money balance){
+        this.balance = balance;
         return this;
     }
 
@@ -113,8 +115,18 @@ public class Account {
         return this.balance;
     }
 
+    public Account setBalanceInPipsOfReal(Long balanceInPips){
+        this.balance.setMoneyInPips(balanceInPips);
+        return this;
+    }
+    
     public Long getBalanceInPipsOfReal() {
         return balance.getMoneyInPips();
+    }
+    
+    public Account setBalanceInReal(Double balanceInReal) {
+        this.balance.setMoneyInCurrency(balanceInReal);
+        return this;
     }
     
     public Double getBalanceInReal() {

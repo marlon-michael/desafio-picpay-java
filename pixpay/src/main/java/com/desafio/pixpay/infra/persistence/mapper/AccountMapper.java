@@ -14,6 +14,7 @@ public class AccountMapper {
     public static AccountEntity fromDomainToEntity(Account account) {
         AccountEntity accountEntity = new AccountEntity(
             account.getId(),
+            account.getRoles(),
             account.getAccountType().getValue(),
             account.getIdentificationType().getValue(),
             account.getIdentification().getIdentificationNumber(),
@@ -28,6 +29,7 @@ public class AccountMapper {
     public static Account fromEntityToDomain(AccountEntity accountEntity) {
         Account account = new Account(
             accountEntity.getId(),
+            accountEntity.getRoles(),
             IdentificationFactory.createIdentification(
                 IdentificationTypeEnum.fromValue(
                     accountEntity.getIdentificationType()
