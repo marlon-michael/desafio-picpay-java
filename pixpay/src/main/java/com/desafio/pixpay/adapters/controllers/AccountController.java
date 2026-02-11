@@ -27,8 +27,6 @@ public class AccountController {
     @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     @GetMapping()
     public List<AccountEntity> getAccounts(Authentication auth) {
-        auth.getAuthorities().forEach(i -> {System.out.println(i);});
-        // if (!accountRepository.findAccountByEmail(auth.getName()).getRoles().contains(Role.ROLE_MANAGER)) return null;
         return accountRepository.findAll();
     }
     
