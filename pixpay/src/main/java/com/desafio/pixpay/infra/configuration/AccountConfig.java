@@ -8,7 +8,6 @@ import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
-import com.desafio.pixpay.core.service.AccountValidatorService;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
 import com.desafio.pixpay.infra.validation.JMailValidator;
 import com.desafio.pixpay.infra.validation.JakartaIdentificationValidator;
@@ -48,10 +47,5 @@ public class AccountConfig {
     boolean identificationFactory(IdentificationValidatorGateway identificationValidatorGateway){
         IdentificationFactory.initIdentificationFactory(identificationValidatorGateway);
         return true;
-    }
-
-    @Bean
-    AccountValidatorService accountValidatorService(EmailValidatorGateway emailValidatorGateway, IdentificationValidatorGateway identificationValidatorGateway){
-        return new AccountValidatorService(identificationValidatorGateway, emailValidatorGateway);
     }
 }
