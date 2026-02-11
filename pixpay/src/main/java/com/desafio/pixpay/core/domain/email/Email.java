@@ -1,4 +1,4 @@
-package com.desafio.pixpay.core.domain.common;
+package com.desafio.pixpay.core.domain.email;
 
 import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 

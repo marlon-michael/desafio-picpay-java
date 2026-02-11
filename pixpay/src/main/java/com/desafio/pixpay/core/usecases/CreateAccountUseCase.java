@@ -4,7 +4,7 @@ package com.desafio.pixpay.core.usecases;
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.account.FullName;
 import com.desafio.pixpay.core.domain.account.Password;
-import com.desafio.pixpay.core.domain.common.Email;
+import com.desafio.pixpay.core.domain.email.Email;
 import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.domain.money.Money;

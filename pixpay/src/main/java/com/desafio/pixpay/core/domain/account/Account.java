@@ -2,7 +2,7 @@ package com.desafio.pixpay.core.domain.account;
 
 import java.util.UUID;
 
-import com.desafio.pixpay.core.domain.common.Email;
+import com.desafio.pixpay.core.domain.email.Email;
 import com.desafio.pixpay.core.domain.identification.Identification;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.domain.money.Money;
