@@ -2,6 +2,8 @@
 ## Tarefas
 
 - [ ] crud transacao
+  - [ ] get
+  - [x] post
   - [ ] paginação
 - [ ] crud account
   - [x] create account
