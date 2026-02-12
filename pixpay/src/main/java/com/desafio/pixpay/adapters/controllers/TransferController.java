@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.pixpay.adapters.dtos.TransferDTO;
+import com.desafio.pixpay.core.domain.transfer.Transfer;
 import com.desafio.pixpay.core.usecases.TransferMoneyUseCase;
 import com.desafio.pixpay.core.usecases.input.TransferInput;
 
@@ -26,8 +27,13 @@ public class TransferController {
             transferDTO.payer(),
             transferDTO.payee()
         );
-        transferMoneyUseCase.execute(auth.getName(), transferInput);
-        return ResponseEntity.ok().body(transferDTO.toString());
+        Transfer transfer = transferMoneyUseCase.execute(auth.getName(), transferInput);
+        TransferDTO responseTransferDTO = new TransferDTO(
+            transfer.getValue().getMoneyInCurrency(),
+            transfer.getPayer().getId(),
+            transfer.getPayee().getId()
+        );
+        return ResponseEntity.ok().body(responseTransferDTO.toString());
     }
 
 }
