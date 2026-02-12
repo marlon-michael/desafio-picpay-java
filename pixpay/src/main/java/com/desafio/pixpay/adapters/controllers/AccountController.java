@@ -25,10 +25,9 @@ public class AccountController {
     AccountController(AccountConfig accountConfig) {
     }
 
-    @Deprecated 
     @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     @GetMapping()
-    public List<ListAccountByManagerDTO> getAccounts(Authentication auth) {
+    public List<ListAccountByManagerDTO> listAccountsByManager(Authentication auth) {
         return listAccountsUseCase
             .execute()
             .stream()
