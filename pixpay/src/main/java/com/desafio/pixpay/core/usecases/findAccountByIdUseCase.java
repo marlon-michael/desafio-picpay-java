@@ -13,7 +13,7 @@ public class findAccountByIdUseCase {
     }
 
     public Account execute(UUID id){
-        return accountGateway.findAccountById(id);
+        return accountGateway.findById(id);
     }
     
 }

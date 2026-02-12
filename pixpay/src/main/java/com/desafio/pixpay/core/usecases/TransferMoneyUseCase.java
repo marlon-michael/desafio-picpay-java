@@ -22,8 +22,8 @@ public class TransferMoneyUseCase {
     }
 
     public boolean execute(String authentication, TransferInput transferInput){
-        Account payer = accountGateway.findAccountById(transferInput.getPayer());
-        Account payee = accountGateway.findAccountById(transferInput.getPayee());
+        Account payer = accountGateway.findById(transferInput.getPayer());
+        Account payee = accountGateway.findById(transferInput.getPayee());
         Double value = Math.ceil(transferInput.getValue()*100) / 100.0;
 
         if (!authentication.equals(payer.getEmail().getValue())) {
@@ -59,8 +59,8 @@ public class TransferMoneyUseCase {
             }
         }while(error);
 
-        accountGateway.updateAccountBalanceById(payer.getId(), payer.getBalance());
-        accountGateway.updateAccountBalanceById(payee.getId(), payee.getBalance());
+        accountGateway.updateBalanceById(payer.getId(), payer.getBalance());
+        accountGateway.updateBalanceById(payee.getId(), payee.getBalance());
         return true;
     }
 }

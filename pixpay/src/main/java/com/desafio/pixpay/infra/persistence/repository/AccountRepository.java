@@ -22,19 +22,19 @@ public class AccountRepository implements AccountGateway {
     }
 
     @Override
-    public void createAccount(Account account) {
+    public void create(Account account) {
         jpaAccountRepository.save(AccountMapper.fromDomainToEntity(account));
     }
 
     @Override
-    public int updateAccountBalanceById(UUID id, Money money){
+    public int updateBalanceById(UUID id, Money money){
         Long balance = money.getMoneyInPips();
         return jpaAccountRepository.updateAccountBalanceById(id, balance);
     }
 
 
     @Override
-    public Account findAccountById(UUID id) {
+    public Account findById(UUID id) {
         Optional<AccountEntity> optionalAccount = jpaAccountRepository.findById(id);
         if(optionalAccount.isEmpty()){
             throw new IllegalArgumentException("The account was not found with provided UUID.");
@@ -53,7 +53,7 @@ public class AccountRepository implements AccountGateway {
     }
 
     @Override
-    public Account findAccountByIdentificationNumber(String identificationNumber) {
+    public Account findByIdentificationNumber(String identificationNumber) {
         Optional<AccountEntity> optional = Optional.ofNullable(jpaAccountRepository.findByIdentificationNumber(identificationNumber));
         if (optional.isEmpty()) return null;
         return AccountMapper.fromEntityToDomain(optional.get());

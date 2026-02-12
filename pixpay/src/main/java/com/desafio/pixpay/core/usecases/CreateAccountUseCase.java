@@ -43,11 +43,11 @@ public class CreateAccountUseCase {
             new Money(10000L)
         );
 
-        if(accountGateway.findAccountByIdentificationNumber(account.getIdentification().getIdentificationNumber()) != null){
+        if(accountGateway.findByIdentificationNumber(account.getIdentification().getIdentificationNumber()) != null){
             throw new IllegalArgumentException("Account identification number already in use.");
         }
 
-        accountGateway.createAccount(account);
+        accountGateway.create(account);
         return account;
     }
 }
