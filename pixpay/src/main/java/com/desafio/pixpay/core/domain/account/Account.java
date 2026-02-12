@@ -122,21 +122,21 @@ public class Account {
         return this.balance;
     }
 
-    public Account setBalanceInPipsOfReal(Long balanceInPips){
+    public Account setBalanceInPips(Long balanceInPips){
         this.balance.setMoneyInPips(balanceInPips);
         return this;
     }
     
-    public Long getBalanceInPipsOfReal() {
+    public Long getBalanceInPips() {
         return balance.getMoneyInPips();
     }
     
-    public Account setBalanceInReal(Double balanceInReal) {
+    public Account setBalanceInCurrency(Double balanceInReal) {
         this.balance.setMoneyInCurrency(balanceInReal);
         return this;
     }
     
-    public Double getBalanceInReal() {
+    public Double getBalanceInCurrency() {
         return balance.getMoneyInCurrency();
     }
 

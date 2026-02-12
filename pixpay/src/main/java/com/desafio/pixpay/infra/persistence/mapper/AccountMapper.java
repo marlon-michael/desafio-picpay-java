@@ -21,7 +21,7 @@ public class AccountMapper {
             account.getFullName().getFullName(),
             account.getEmail().getValue(),
             account.getPassword().getValue(),
-            account.getBalanceInPipsOfReal()
+            account.getBalanceInPips()
         );
         return accountEntity;
     }
