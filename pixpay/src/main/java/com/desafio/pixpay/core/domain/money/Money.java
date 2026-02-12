@@ -10,6 +10,10 @@ public class Money {
         this.valueInPips = valueInPips;
     }
 
+    public static Money builder(){
+        return new Money();
+    }
+
     public Long getMoneyInPips(){
         return valueInPips;
     }
@@ -28,19 +32,19 @@ public class Money {
         return this;
     }
 
-    public Money addValueInCurrency(Double value){
-        this.valueInPips += convertDoubleToPips(value);
+    public Money addValueInCurrency(Money value){
+        this.valueInPips += value.getMoneyInPips();
         return this;
     }
 
-    public Money subtractValueInCurrency(Double value){
-        this.valueInPips -= convertDoubleToPips(value);
+    public Money subtractValueInCurrency(Money value){
+        this.valueInPips -= value.getMoneyInPips();
         return this;
     }
 
     public Long convertDoubleToPips(Double value){
         Long pips = 0L;
-        pips = (long) Math.floor(PIPS_IN_MONEY * value);
+        pips = (long) Math.round(PIPS_IN_MONEY * value);
         return pips;
     }
 }

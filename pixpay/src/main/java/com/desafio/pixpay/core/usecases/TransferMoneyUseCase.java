@@ -24,7 +24,7 @@ public class TransferMoneyUseCase {
     public Transfer execute(String authentication, TransferInput transferInput){
         Account payer = accountGateway.findById(transferInput.getPayer());
         Account payee = accountGateway.findById(transferInput.getPayee());
-        Double value = Math.ceil(transferInput.getValue()*100) / 100.0;
+        Money value = Money.builder().setMoneyInCurrency(transferInput.getValue());
 
         if (!authentication.equals(payer.getIdentification().getIdentificationNumber())) {
             throw new IllegalArgumentException("Authenticated account is different from payer account.");
@@ -34,16 +34,15 @@ public class TransferMoneyUseCase {
             throw new IllegalArgumentException("Account type business cannot transfer money to other accounts.");
         }
         
-        if (payer.getBalanceInReal() < value){
+        if (payer.getBalanceInPips() < value.getMoneyInPips()){
             throw new IllegalArgumentException("The transfer amount cannot exceed the payer's balance.");
         }
 
         payer.getBalance().subtractValueInCurrency(value);
         payee.getBalance().addValueInCurrency(value);
 
-        Money money = new Money().setMoneyInCurrency(value);
 
-        Transfer transfer = new Transfer(money, payer, payee);
+        Transfer transfer = new Transfer(value, payer, payee);
 
         boolean error = false;
         int times = 0;
