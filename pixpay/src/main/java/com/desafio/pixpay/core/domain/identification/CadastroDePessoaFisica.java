@@ -7,6 +7,11 @@ public class CadastroDePessoaFisica implements Identification {
     private String identificationNumber;
 
     @Override
+	public Identification builder() {
+		return new CadastroDePessoaFisica();
+	}
+
+    @Override
     public IdentificationTypeEnum getIdentificationType() {
         return IdentificationTypeEnum.CADASTRO_DE_PESSOA_FISICA;
     }

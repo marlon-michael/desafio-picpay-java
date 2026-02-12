@@ -7,6 +7,11 @@ public class CadastroNacionalDePessoaJuridica implements Identification {
     private String identificationNumber;
 
 	@Override
+	public Identification builder(){
+		return new CadastroNacionalDePessoaJuridica();
+	}
+
+	@Override
 	public IdentificationTypeEnum getIdentificationType() {
 		return IdentificationTypeEnum.CADASTRO_NACIONAL_DE_PESSOA_JURIDICA;
 	}

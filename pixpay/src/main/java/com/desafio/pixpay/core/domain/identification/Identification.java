@@ -4,6 +4,7 @@ import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 
 public interface Identification {
+    public Identification builder();
     public String getIdentificationNumber();
     public IdentificationTypeEnum getIdentificationType();
     public AccountTypeEnum getIdentificationAccountType();
