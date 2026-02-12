@@ -27,36 +27,41 @@ public class AccountRepository implements AccountGateway {
     }
 
     @Override
-    public int updateBalanceById(UUID id, Money money){
+    public int updateBalanceById(UUID id, Money money) {
         Long balance = money.getMoneyInPips();
         return jpaAccountRepository.updateAccountBalanceById(id, balance);
     }
 
-
     @Override
     public Account findById(UUID id) {
         Optional<AccountEntity> optionalAccount = jpaAccountRepository.findById(id);
-        if(optionalAccount.isEmpty()){
+        if (optionalAccount.isEmpty()) {
             throw new IllegalArgumentException("The account was not found with provided UUID.");
         }
-        
+
         AccountEntity account = optionalAccount.get();
         return AccountMapper.fromEntityToDomain(account);
     }
 
-    public AccountEntity findAccountByEmail(String email){
+    public AccountEntity findByEmail(String email) {
         return jpaAccountRepository.findByEmail(email);
     }
 
-    public List<AccountEntity> findAll() {
-        return jpaAccountRepository.findAll();
+    public List<Account> findAll() {
+        return jpaAccountRepository
+            .findAll()
+            .stream()
+            .map(entity -> AccountMapper.fromEntityToDomain(entity))
+            .toList();
     }
 
     @Override
     public Account findByIdentificationNumber(String identificationNumber) {
-        Optional<AccountEntity> optional = Optional.ofNullable(jpaAccountRepository.findByIdentificationNumber(identificationNumber));
-        if (optional.isEmpty()) return null;
+        Optional<AccountEntity> optional = Optional
+            .ofNullable(jpaAccountRepository.findByIdentificationNumber(identificationNumber));
+        if (optional.isEmpty())
+            return null;
         return AccountMapper.fromEntityToDomain(optional.get());
     }
-    
+
 }

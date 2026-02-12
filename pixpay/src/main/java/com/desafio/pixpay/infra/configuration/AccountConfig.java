@@ -9,6 +9,7 @@ import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
+import com.desafio.pixpay.core.usecases.ListAccountsUseCase;
 import com.desafio.pixpay.infra.validation.JMailValidator;
 import com.desafio.pixpay.infra.validation.JakartaIdentificationValidator;
 import com.desafio.pixpay.infra.persistence.jpa.JpaAccountRepository;
@@ -33,6 +34,11 @@ public class AccountConfig {
         return new CreateAccountUseCase(accountGateway, emailValidatorGateway, passwordEncoderGateway);
     }
     
+    @Bean
+    ListAccountsUseCase listAccountsUseCase(AccountGateway accountGateway){
+        return new ListAccountsUseCase(accountGateway);
+    }
+
     @Bean
     EmailValidatorGateway emailValidatorGateway(){
         return new JMailValidator();
