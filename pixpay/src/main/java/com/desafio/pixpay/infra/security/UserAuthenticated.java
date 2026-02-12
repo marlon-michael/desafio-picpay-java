@@ -32,7 +32,7 @@ public class UserAuthenticated implements UserDetails {
 
     @Override
     public String getUsername() {
-        return accountEntity.getEmail();
+        return accountEntity.getIdentificationNumber();
     }
     
 }

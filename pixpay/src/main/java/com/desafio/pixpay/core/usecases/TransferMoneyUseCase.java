@@ -21,12 +21,12 @@ public class TransferMoneyUseCase {
         this.transferGateway = transferGateway;
     }
 
-    public boolean execute(String authentication, TransferInput transferInput){
+    public Transfer execute(String authentication, TransferInput transferInput){
         Account payer = accountGateway.findById(transferInput.getPayer());
         Account payee = accountGateway.findById(transferInput.getPayee());
         Double value = Math.ceil(transferInput.getValue()*100) / 100.0;
 
-        if (!authentication.equals(payer.getEmail().getValue())) {
+        if (!authentication.equals(payer.getIdentification().getIdentificationNumber())) {
             throw new IllegalArgumentException("Authenticated account is different from payer account.");
         }
         
@@ -61,6 +61,6 @@ public class TransferMoneyUseCase {
 
         accountGateway.updateBalanceById(payer.getId(), payer.getBalance());
         accountGateway.updateBalanceById(payee.getId(), payee.getBalance());
-        return true;
+        return transfer;
     }
 }
