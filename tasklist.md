@@ -8,6 +8,7 @@
 - [ ] account
   - [x] create account
   - [x] authenticate account
+  - [x] get all accounts
   - [ ] delete(disable) account
   - [ ] update account
   - [x] cargos
