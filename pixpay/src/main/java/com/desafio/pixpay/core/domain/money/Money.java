@@ -15,7 +15,7 @@ public class Money {
     }
 
     public Double getMoneyInCurrency(){
-        return Double.valueOf(valueInPips / PIPS_IN_MONEY);
+        return Double.valueOf(valueInPips) / PIPS_IN_MONEY;
     }
 
     public Money setMoneyInPips(Long value){
@@ -36,12 +36,6 @@ public class Money {
     public Money subtractValueInCurrency(Double value){
         this.valueInPips -= convertDoubleToPips(value);
         return this;
-    }
-
-    public Long convertStringToPips(String value){
-        Long pips;
-        pips = (long) Math.floor(Double.parseDouble(value) * PIPS_IN_MONEY);
-        return pips;
     }
 
     public Long convertDoubleToPips(Double value){
