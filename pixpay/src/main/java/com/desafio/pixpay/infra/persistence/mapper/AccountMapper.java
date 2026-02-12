@@ -39,7 +39,9 @@ public class AccountMapper {
             new FullName().fromPersistence(accountEntity.getFullName()),
             new Email().fromPersistence(accountEntity.getEmail()),
             new Password().fromPersistence(accountEntity.getPassword()),
-            new Money(accountEntity.getBalanceInPipsOfReal())
+            new Money(accountEntity.getBalanceInPipsOfReal()),
+            accountEntity.getCreatedAt(),
+            accountEntity.getLastModifiedAt()
         );
         return account;
     }

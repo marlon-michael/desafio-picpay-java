@@ -48,6 +48,7 @@ public class AccountEntity implements Persistable<UUID> {
     private Set<Role> roles;
 
     @CreatedDate
+    @Column(updatable = false)
     private Instant createdAt;
 
     @LastModifiedDate

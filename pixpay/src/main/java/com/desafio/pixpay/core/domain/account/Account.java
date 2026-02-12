@@ -1,5 +1,6 @@
 package com.desafio.pixpay.core.domain.account;
 
+import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 import com.desafio.pixpay.core.domain.email.Email;
@@ -9,15 +10,17 @@ import com.desafio.pixpay.core.domain.money.Money;
 
 
 public class Account {
-    UUID id;
-    Set<Role> roles;
-    Identification identification;
-    FullName fullName;
-    Email email;
-    Password password;
-    Money balance = new Money();
+    private UUID id;
+    private Set<Role> roles;
+    private Identification identification;
+    private FullName fullName;
+    private Email email;
+    private Password password;
+    private Money balance = new Money();
+    private Instant createdAt;
+    private Instant lastModifiedAt;
 
-    public Account(){}
+	public Account(){}
 
     public Account(Set<Role> roles, Identification identification, FullName fullName, Email email, Password password, Money balance) {
         setId(UUID.randomUUID());
@@ -27,9 +30,11 @@ public class Account {
         setEmail(email);
         setPassword(password);
         setBalance(balance);
+        this.createdAt = Instant.now();
+        this.lastModifiedAt = this.createdAt;
     }
 
-    public Account(UUID id, Set<Role> roles, Identification identification, FullName fullName, Email email, Password password, Money balance) {
+    public Account(UUID id, Set<Role> roles, Identification identification, FullName fullName, Email email, Password password, Money balance, Instant createdAt, Instant lastModifiedAt) {
         this.id = id;
         this.identification = identification;
         this.fullName = fullName;
@@ -37,6 +42,8 @@ public class Account {
         this.password = password;
         this.balance = balance;
         this.roles = roles;
+        this.createdAt = createdAt;
+        this.lastModifiedAt = lastModifiedAt;
     }
 
     public Account setId(UUID id) {
@@ -132,4 +139,12 @@ public class Account {
     public Double getBalanceInReal() {
         return balance.getMoneyInCurrency();
     }
+
+    public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public Instant getLastModifiedAt() {
+		return lastModifiedAt;
+	}
 }
