@@ -2,13 +2,14 @@
 ## Tarefas
 
 - [ ] transacao
-  - [ ] get
+  - [x] get
+    - [ ] paginação
   - [x] post
-  - [ ] paginação
 - [ ] account
   - [x] create account
   - [x] authenticate account
   - [x] get all accounts
+    - [ ] paginação
   - [ ] delete(disable) account
   - [ ] update account
   - [x] cargos
