@@ -60,7 +60,7 @@ public class TransferController {
     }
 
     @PostMapping("refund/{transferId}")
-    public TransferDTO refund(Authentication auth, @PathVariable(name = "transferId", required = true) UUID transferId) {
+    public TransferDTO refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
         Transfer transfer = refundTransferUsecase.execute(auth.getName(), transferId);
         TransferDTO transferDTO = TransferDTO.fromDomain(transfer);
         return transferDTO;
