@@ -29,8 +29,8 @@ public class TransferMoneyUseCase {
         if (!authentication.equals(payer.getIdentification().getIdentificationNumber())) {
             throw new IllegalArgumentException("Authenticated account is different from payer account.");
         }
-        
-        if (payee.getAccountType() == AccountTypeEnum.BUSINESS){
+
+        if (payer.getAccountType() == AccountTypeEnum.BUSINESS){
             throw new IllegalArgumentException("Account type business cannot transfer money to other accounts.");
         }
         
