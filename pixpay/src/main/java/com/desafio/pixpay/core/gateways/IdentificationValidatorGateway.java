@@ -1,6 +1,7 @@
 package com.desafio.pixpay.core.gateways;
 
 public interface IdentificationValidatorGateway {
-    boolean isCPFValid(String cpf);
-    boolean isCNPJValid(String cnpj);
+    boolean isCpfValid(String cpf);
+    boolean isCnpjValid(String cpf);
+    boolean isAlfaNumCnpjValid(String cnpj);
 }   

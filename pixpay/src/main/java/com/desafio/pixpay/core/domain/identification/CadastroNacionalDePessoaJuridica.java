@@ -19,7 +19,7 @@ public class CadastroNacionalDePessoaJuridica implements Identification {
 	@Override
     public Identification setIdentificationNumberAndValidate(String identificationNumber, IdentificationValidatorGateway identificationValidatorGateway) {
         if (identificationValidatorGateway == null) throw new RuntimeException("IdentificationValidatorGateway should not be null.");
-		if (!identificationValidatorGateway.isCNPJValid(identificationNumber)) throw new IllegalArgumentException("Invalid Identification number.");
+		if (!identificationValidatorGateway.isAlfaNumCnpjValid(identificationNumber)) throw new IllegalArgumentException("Invalid Identification number.");
 		if (identificationNumber.length() != 14) throw new IllegalArgumentException("The identification number for Cadastro Nacional De Pessoa Juridica must be 14 characters long. Ex: 00.000.000/0000-00");
         this.identificationNumber = identificationNumber;
         
