@@ -2,7 +2,6 @@ package com.desafio.pixpay.utils;
 
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.desafio.pixpay.core.domain.account.Account;
@@ -23,10 +22,10 @@ public class AccountFactory {
     public static Account createManager(){
         return new Account(
             Set.of(Role.ROLE_MANAGER, Role.ROLE_USER),
-            new CadastroNacionalDePessoaJuridica().builder().fromPersistence("30764711000101"),
+            new CadastroNacionalDePessoaJuridica().builder().fromPersistence("CAEH9506000177"),
             new FullName().fromPersistence("Manager Manager"),
             new Email().fromPersistence("manager@manager.com"), 
-            new Password().fromPersistence(passwordEncoderGateway.encode("30764711000101")),
+            new Password().fromPersistence(passwordEncoderGateway.encode("CAEH9506000177")),
             new Money()
         );
     }

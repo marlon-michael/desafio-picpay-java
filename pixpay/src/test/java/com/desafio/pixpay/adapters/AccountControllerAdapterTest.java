@@ -28,7 +28,7 @@ import jakarta.servlet.http.Cookie;
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
 @Transactional
-@Rollback(false)
+@Rollback(true)
 public class AccountControllerAdapterTest {
 
     @Autowired
@@ -126,8 +126,8 @@ public class AccountControllerAdapterTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(accountJson)
         )
-        .andExpect(status().isCreated())
-        .andExpect(content().string("Account Marlon Michael created successfully."));
+        .andExpect(content().string("Account Marlon Michael created successfully."))
+        .andExpect(status().isCreated());
     }
 
     @Test
