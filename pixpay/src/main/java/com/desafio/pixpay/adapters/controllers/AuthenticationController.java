@@ -45,7 +45,6 @@ public class AuthenticationController {
     @PostMapping("signup")
     public ResponseEntity<String> createAccount(@RequestBody SaveAccountDTO createAccountDTO) {
         CreateAccountInput createAccountInput = new CreateAccountInput(
-            createAccountDTO.accountType(),
             createAccountDTO.identificationType(),
             createAccountDTO.identificationNumber(),
             createAccountDTO.fullName(),

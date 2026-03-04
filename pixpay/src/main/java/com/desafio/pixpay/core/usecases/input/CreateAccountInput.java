@@ -1,20 +1,11 @@
 package com.desafio.pixpay.core.usecases.input;
 
 public class CreateAccountInput {
-    private String accountType;
     private String identificationType;
     private String identificationNumber;
     private String fullName;
     private String email;
     private String password;
-
-    public String getAccountType() {
-        return accountType;
-    }
-
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
 
     public String getIdentificationType() {
         return identificationType;
@@ -57,14 +48,12 @@ public class CreateAccountInput {
     }
 
     public CreateAccountInput(
-        String accountType,
         String identificationType,
         String identificationNumber,
         String fullName,
         String email,
         String password
     ) {
-        this.accountType = accountType;
         this.identificationType = identificationType;
         this.identificationNumber = identificationNumber;
         this.fullName = fullName;
