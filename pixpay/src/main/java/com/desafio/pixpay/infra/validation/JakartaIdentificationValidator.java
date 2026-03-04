@@ -19,9 +19,14 @@ public class JakartaIdentificationValidator implements IdentificationValidatorGa
 
     @Override
     public boolean isCnpjValid(String cnpj) {
+        return isAlfaNumCnpjValid(cnpj) || isNumCnpjValid(cnpj);
+    }
+
+    public boolean isNumCnpjValid(String cnpj) {
         return validator.validateValue(DataTransferObject.class, "cnpj", cnpj).isEmpty();
     }
 
+    @Override
     public boolean isAlfaNumCnpjValid(String cnpj) {
         int[] PESOS_1 = {5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
         int[] PESOS_2 = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
