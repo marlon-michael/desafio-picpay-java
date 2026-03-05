@@ -9,16 +9,19 @@ import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
 import com.desafio.pixpay.core.exceptions.UuidAlreadyExistsException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
+import com.desafio.pixpay.core.gateways.TransferAuthorizerGateway;
 import com.desafio.pixpay.core.gateways.TransferGateway;
 import com.desafio.pixpay.core.usecases.input.TransferInput;
 
 public class TransferMoneyUseCase {
     AccountGateway accountGateway;
     TransferGateway transferGateway;
+    TransferAuthorizerGateway transferAuthorizerGateway;
 
-    public TransferMoneyUseCase(AccountGateway accountGateway, TransferGateway transferGateway){
+    public TransferMoneyUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway){
         this.accountGateway = accountGateway;
         this.transferGateway = transferGateway;
+        this.transferAuthorizerGateway = transferAuthorizerGateway;
     }
 
     public Transfer execute(String authentication, TransferInput transferInput){
@@ -36,6 +39,10 @@ public class TransferMoneyUseCase {
         
         if (payer.getBalanceInPips() < value.getMoneyInPips()){
             throw new IllegalArgumentException("The transfer amount cannot exceed the payer's balance.");
+        }
+
+        if (!transferAuthorizerGateway.isAuthorized()){
+            throw new IllegalArgumentException("Transfer not authorized.");
         }
 
         payer.getBalance().subtractValueInCurrency(value);

@@ -8,5 +8,10 @@
     "name": "jwt.public.key",
     "type": "java.lang.String",
     "description": "JWT public key"
+  },
+  {
+    "name": "comunication.external-api.authorizer-url",
+    "type": "java.lang.String",
+    "description": "A description for 'comunication.external-api.authorizer-url'"
   }
 ]}
