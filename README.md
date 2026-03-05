@@ -24,6 +24,7 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - Micrometer - Observabilidade e integração
 - Prometheus - Coleta de métricas
 - Grafana - Visualização de dashboards
+- OpenFeign - Cliente Http para requisições de API externas
 - Lombok - Redução de boilerplate code
 - JMail - Validação de emails
 - Jakarta Validation - Validações de entrada
@@ -39,6 +40,7 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [x] Testes de integração com PostgreSQL via Testcontainers
 - [x] Autenticação e autorização (JWT)
 - [x] Transferências entre contas
+- [x] Autorizador de transferencias via API externa
 
 ### Funcionalidades Planejadas
 - [ ] Notificações via POST (com retry em fila se falhar)
