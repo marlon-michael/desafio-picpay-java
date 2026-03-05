@@ -2,6 +2,7 @@
 ## Tarefas
 
 - [ ] transacao
+  - [x] requisição para autorizador
   - [x] get
     - [ ] paginação
   - [x] post
