@@ -6,6 +6,8 @@ import com.desafio.pixpay.adapters.client.TransferAuthorizerClient;
 import com.desafio.pixpay.adapters.dtos.TransferAuthorizationDTO;
 import com.desafio.pixpay.core.gateways.TransferAuthorizerGateway;
 
+import feign.FeignException;
+
 
 public class TransferAuthorizer implements TransferAuthorizerGateway {
 
@@ -20,7 +22,7 @@ public class TransferAuthorizer implements TransferAuthorizerGateway {
             System.out.println(transferAuthorization.getBody().toString());
             if (!transferAuthorization.hasBody()) return false;
             if (transferAuthorization.getBody().status().equals("success")) return true;
-        } catch (Exception e) {
+        } catch (FeignException.Forbidden e) {
             System.out.println(e.getMessage());
             return false;
         }
