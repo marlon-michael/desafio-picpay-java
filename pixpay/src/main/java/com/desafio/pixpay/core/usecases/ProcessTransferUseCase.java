@@ -7,42 +7,41 @@ import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
 import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
+import com.desafio.pixpay.core.exceptions.BusinessAccountCannotMakeTransferException;
+import com.desafio.pixpay.core.exceptions.InsufficientBalanceException;
+import com.desafio.pixpay.core.exceptions.TransferNotAuthorizedException;
 import com.desafio.pixpay.core.exceptions.UuidAlreadyExistsException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.TransferAuthorizerGateway;
 import com.desafio.pixpay.core.gateways.TransferGateway;
 import com.desafio.pixpay.core.usecases.input.TransferInput;
 
-public class TransferMoneyUseCase {
+public class ProcessTransferUseCase {
     AccountGateway accountGateway;
     TransferGateway transferGateway;
     TransferAuthorizerGateway transferAuthorizerGateway;
 
-    public TransferMoneyUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway){
+    public ProcessTransferUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway){
         this.accountGateway = accountGateway;
         this.transferGateway = transferGateway;
         this.transferAuthorizerGateway = transferAuthorizerGateway;
     }
 
-    public Transfer execute(String authentication, TransferInput transferInput){
+    public Transfer execute(TransferInput transferInput){
         Account payer = accountGateway.findById(transferInput.getPayer());
         Account payee = accountGateway.findById(transferInput.getPayee());
         Money value = Money.builder().setMoneyInCurrency(transferInput.getValue());
 
-        if (!authentication.equals(payer.getIdentification().getIdentificationNumber())) {
-            throw new IllegalArgumentException("Authenticated account is different from payer account.");
-        }
-
         if (payer.getAccountType() == AccountTypeEnum.BUSINESS){
-            throw new IllegalArgumentException("Account type business cannot transfer money to other accounts.");
+            throw new BusinessAccountCannotMakeTransferException("Business account type cannot transfer money to another account.");
         }
         
-        if (payer.getBalanceInPips() < value.getMoneyInPips()){
-            throw new IllegalArgumentException("The transfer amount cannot exceed the payer's balance.");
+        if (payer.getBalanceInPips() < value.getMoneyInCents()){
+            throw new InsufficientBalanceException("The transfer amount cannot exceed the payer's balance.");
         }
 
         if (!transferAuthorizerGateway.isAuthorized()){
-            throw new IllegalArgumentException("Transfer not authorized.");
+            throw new TransferNotAuthorizedException("Transfer not authorized.");
         }
 
         payer.getBalance().subtractValueInCurrency(value);

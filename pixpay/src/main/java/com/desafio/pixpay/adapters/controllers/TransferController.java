@@ -17,9 +17,12 @@ import com.desafio.pixpay.adapters.dtos.ListTransfersByManagerDTO;
 import com.desafio.pixpay.adapters.dtos.TransferDTO;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
 import com.desafio.pixpay.core.usecases.RefundTransferUsecase;
-import com.desafio.pixpay.core.usecases.TransferMoneyUseCase;
+import com.desafio.pixpay.core.usecases.RequestTransferUsecase;
 import com.desafio.pixpay.core.usecases.input.ListTransfersByManager;
 import com.desafio.pixpay.core.usecases.input.TransferInput;
+
+import tools.jackson.databind.ObjectMapper;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -29,7 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class TransferController {
 
     @Autowired
-    TransferMoneyUseCase transferMoneyUseCase;
+    RequestTransferUsecase requestTransferUseCase;
 
     @Autowired
     ListTransfersByManager listTransfersByManager;
@@ -44,9 +47,8 @@ public class TransferController {
             transferDTO.payer(),
             transferDTO.payee()
         );
-        Transfer transfer = transferMoneyUseCase.execute(auth.getName(), transferInput);
-        TransferDTO responseTransferDTO = TransferDTO.fromDomain(transfer);
-        return ResponseEntity.ok().body(responseTransferDTO.toString());
+        requestTransferUseCase.execute(auth.getName(), transferInput);
+        return ResponseEntity.ok().body("Transfer was requested: "+new ObjectMapper().writeValueAsString(transferInput));
     }
 
     @GetMapping

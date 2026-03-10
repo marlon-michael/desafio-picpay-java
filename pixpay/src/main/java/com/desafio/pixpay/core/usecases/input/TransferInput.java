@@ -8,6 +8,8 @@ public class TransferInput {
     private UUID payer;
     private UUID payee;
 
+    public TransferInput(){};
+
     public TransferInput(Double value, UUID payer, UUID payee){
         this.value = value;
         this.payer = payer;
