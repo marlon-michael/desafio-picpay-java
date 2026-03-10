@@ -1,5 +1,7 @@
 package com.desafio.pixpay.core.domain.account;
 
+import com.desafio.pixpay.core.exceptions.BusinessException;
+
 public enum Role {
     ROLE_USER("USER"),
     ROLE_MANAGER("MANAGER");
@@ -18,6 +20,6 @@ public enum Role {
         for (Role role : Role.values()) {
             if(role.getValue() == value) return role;
         }
-        throw new IllegalArgumentException("Invalid role.");
+        throw new BusinessException("Invalid role.");
     }
 }

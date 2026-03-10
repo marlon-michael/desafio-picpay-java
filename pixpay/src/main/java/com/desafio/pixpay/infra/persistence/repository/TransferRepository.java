@@ -8,6 +8,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.desafio.pixpay.core.domain.transfer.Transfer;
+import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.exceptions.UuidAlreadyExistsException;
 import com.desafio.pixpay.core.gateways.TransferGateway;
 import com.desafio.pixpay.infra.persistence.entity.TransferEntity;
@@ -45,7 +46,7 @@ public class TransferRepository implements TransferGateway {
     @Override
     public Transfer findById(UUID id) {
         Optional<TransferEntity> transfer = jpaTransferRepository.findById(id);
-        if (transfer.isEmpty()) throw new IllegalArgumentException("Transfer not found with privided id");
+        if (transfer.isEmpty()) throw new BusinessException("Transfer not found with privided id");
         return TransferMapper.fromEntityToDomain(transfer.get());
     }
 }

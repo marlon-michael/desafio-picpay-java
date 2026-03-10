@@ -1,5 +1,6 @@
 package com.desafio.pixpay.core.domain.identification;
 
+import com.desafio.pixpay.core.exceptions.BusinessException;
 
 public enum IdentificationTypeEnum {
     CADASTRO_DE_PESSOA_FISICA("CadastroDePessoaFisica"),
@@ -21,6 +22,6 @@ public enum IdentificationTypeEnum {
                 return identificationType;
             }
         }
-        throw new IllegalArgumentException("Invalid identification type: " + value);
+        throw new BusinessException("Invalid identification type: " + value);
     }
 }

@@ -5,6 +5,7 @@ import java.util.UUID;
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
+import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.exceptions.UuidAlreadyExistsException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.TransferGateway;
@@ -25,11 +26,11 @@ public class RefundTransferUsecase {
         Money value = refundingTransfer.getValue();
 
         if (!auth.equals(oldPayee.getIdentification().getIdentificationNumber())) {
-            throw new IllegalArgumentException("Authenticated account is different from payee account.");
+            throw new BusinessException("Authenticated account is different from payee account.");
         }
 
-        if (oldPayee.getBalanceInPips() < value.getMoneyInPips()) {
-            throw new IllegalArgumentException("The transfer amount cannot exceed the payer's balance.");
+        if (oldPayee.getBalanceInPips() < value.getMoneyInCents()) {
+            throw new BusinessException("The transfer amount cannot exceed the payer's balance.");
         }
 
         oldPayee.getBalance().subtractValueInCurrency(value);

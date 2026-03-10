@@ -11,6 +11,7 @@ import com.desafio.pixpay.core.domain.email.Email;
 import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.domain.money.Money;
+import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
@@ -44,7 +45,7 @@ public class CreateAccountUseCase {
         );
 
         if(accountGateway.findByIdentificationNumber(account.getIdentification().getIdentificationNumber()) != null){
-            throw new IllegalArgumentException("Account identification number already in use.");
+            throw new BusinessException("Account identification number already in use.");
         }
 
         accountGateway.create(account);

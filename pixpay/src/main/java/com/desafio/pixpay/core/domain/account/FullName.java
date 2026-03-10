@@ -1,5 +1,7 @@
 package com.desafio.pixpay.core.domain.account;
 
+import com.desafio.pixpay.core.exceptions.BusinessException;
+
 public class FullName {
     private String fullname;
 
@@ -7,10 +9,10 @@ public class FullName {
         String invalidRegex = ".*[\\\\;\"'<>/|\\-\\-\\*\\(\\)\\[\\]{}].*";
         boolean isValid = !fullname.matches(invalidRegex);
         if (!isValid){
-            throw new IllegalArgumentException("The full name cannot contain this special character: \\\\ / | * ( ) [ ] { } ; ' \\\" < >.");
+            throw new BusinessException("The full name cannot contain this special character: \\\\ / | * ( ) [ ] { } ; ' \\\" < >.");
         }
         if (fullname.length() < 1 || fullname.length() > 40) {
-            throw new IllegalArgumentException("The full name must be between 1 and 40 characters long.");
+            throw new BusinessException("The full name must be between 1 and 40 characters long.");
         }
         this.fullname = fullname.trim();
         return this;

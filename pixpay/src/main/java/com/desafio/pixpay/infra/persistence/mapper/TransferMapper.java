@@ -17,7 +17,7 @@ public class TransferMapper {
     public static TransferEntity fromDomainToEntity(Transfer domain){
         return new TransferEntity(
             domain.getId(), 
-            domain.getValue().getMoneyInPips(), 
+            domain.getValue().getMoneyInCents(), 
             AccountMapper.fromDomainToEntity(domain.getPayer()), 
             AccountMapper.fromDomainToEntity(domain.getPayee())
         );

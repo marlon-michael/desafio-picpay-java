@@ -1,5 +1,6 @@
 package com.desafio.pixpay.core.domain.identification;
 
+import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 
 public class IdentificationFactory {
@@ -17,6 +18,6 @@ public class IdentificationFactory {
         if (identificationType.getValue().equals("CadastroNacionalDePessoaJuridica")) {
             return new CadastroNacionalDePessoaJuridica().setIdentificationNumberAndValidate(identificationCode, IdentificationFactory.identificationValidatorGateway);
         }
-        throw new IllegalArgumentException("Unsupported identification type: " + identificationType);
+        throw new BusinessException("Unsupported identification type: " + identificationType);
     }
 }

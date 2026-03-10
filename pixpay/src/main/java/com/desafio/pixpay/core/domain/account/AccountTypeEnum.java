@@ -1,5 +1,7 @@
 package com.desafio.pixpay.core.domain.account;
 
+import com.desafio.pixpay.core.exceptions.BusinessException;
+
 public enum AccountTypeEnum {
     PERSONAL("PERSONAL"),
     BUSINESS("BUSINESS");
@@ -20,6 +22,6 @@ public enum AccountTypeEnum {
                 return accountType;
             }
         }
-        throw new IllegalArgumentException("Invalid account type: " + value);
+        throw new BusinessException("Invalid account type: " + value);
     }
 }

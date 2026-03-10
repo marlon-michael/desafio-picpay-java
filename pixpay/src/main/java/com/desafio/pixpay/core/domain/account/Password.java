@@ -1,5 +1,6 @@
 package com.desafio.pixpay.core.domain.account;
 
+import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 
 public class Password {
@@ -11,13 +12,13 @@ public class Password {
         boolean isPasswordValid = password.matches(validPasswordRegex);
         boolean isValid = !password.matches(invalidRegex);
         if (password.length() < 8 || password.length() > 18) {
-            throw new IllegalArgumentException("The password must be between 8 and 18 characters long.");
+            throw new BusinessException("The password must be between 8 and 18 characters long.");
         }
         if (!isPasswordValid){
-            throw new IllegalArgumentException("The password must contain one uppercase letter, one lowercase letter, one number and at least one of this special character: , . ! @ # $ & % ? _ +.");
+            throw new BusinessException("The password must contain one uppercase letter, one lowercase letter, one number and at least one of this special character: , . ! @ # $ & % ? _ +.");
         }
         if (!isValid) {
-            throw new IllegalArgumentException("The fields cannot contain this special character: \\ / | * ( ) [ ] { } ; ' \" < > or spaces.");
+            throw new BusinessException("The fields cannot contain this special character: \\ / | * ( ) [ ] { } ; ' \" < > or spaces.");
         }
         this.password = passwordEncoder.encode(password);
         return this;

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.money.Money;
+import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.infra.persistence.entity.AccountEntity;
 import com.desafio.pixpay.infra.persistence.jpa.JpaAccountRepository;
@@ -28,7 +29,7 @@ public class AccountRepository implements AccountGateway {
 
     @Override
     public int updateBalanceById(UUID id, Money money) {
-        Long balance = money.getMoneyInPips();
+        Long balance = money.getMoneyInCents();
         return jpaAccountRepository.updateAccountBalanceById(id, balance);
     }
 
@@ -36,7 +37,7 @@ public class AccountRepository implements AccountGateway {
     public Account findById(UUID id) {
         Optional<AccountEntity> optionalAccount = jpaAccountRepository.findById(id);
         if (optionalAccount.isEmpty()) {
-            throw new IllegalArgumentException("The account was not found with provided UUID.");
+            throw new BusinessException("The account was not found with provided UUID.");
         }
 
         AccountEntity account = optionalAccount.get();

@@ -14,7 +14,7 @@ public class Money {
         return new Money();
     }
 
-    public Long getMoneyInPips(){
+    public Long getMoneyInCents(){
         return valueInPips;
     }
 
@@ -22,27 +22,27 @@ public class Money {
         return Double.valueOf(valueInPips) / PIPS_IN_MONEY;
     }
 
-    public Money setMoneyInPips(Long value){
+    public Money setMoneyInCents(Long value){
         this.valueInPips = value;
         return this;
     }
 
     public Money setMoneyInCurrency(Double value){
-        this.valueInPips = convertDoubleToPips(value);
+        this.valueInPips = convertDoubleToCents(value);
         return this;
     }
 
     public Money addValueInCurrency(Money value){
-        this.valueInPips += value.getMoneyInPips();
+        this.valueInPips += value.getMoneyInCents();
         return this;
     }
 
     public Money subtractValueInCurrency(Money value){
-        this.valueInPips -= value.getMoneyInPips();
+        this.valueInPips -= value.getMoneyInCents();
         return this;
     }
 
-    public Long convertDoubleToPips(Double value){
+    public Long convertDoubleToCents(Double value){
         Long pips = 0L;
         pips = (long) Math.round(PIPS_IN_MONEY * value);
         return pips;

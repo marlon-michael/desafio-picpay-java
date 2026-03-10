@@ -7,6 +7,7 @@ import com.desafio.pixpay.core.domain.email.Email;
 import com.desafio.pixpay.core.domain.identification.Identification;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.domain.money.Money;
+import com.desafio.pixpay.core.exceptions.BusinessException;
 
 
 public class Account {
@@ -57,7 +58,7 @@ public class Account {
 
     public Account setIdentification(Identification identification){
         if (this.identification != null && identification.getIdentificationAccountType() != this.getAccountType()) {
-            throw new IllegalArgumentException(
+            throw new BusinessException(
                 "Account identification type cannot change: actual type: "+this.getAccountType()+", new type: "+identification.getIdentificationAccountType()
             );
         }
@@ -123,12 +124,12 @@ public class Account {
     }
 
     public Account setBalanceInPips(Long balanceInPips){
-        this.balance.setMoneyInPips(balanceInPips);
+        this.balance.setMoneyInCents(balanceInPips);
         return this;
     }
     
     public Long getBalanceInPips() {
-        return balance.getMoneyInPips();
+        return balance.getMoneyInCents();
     }
     
     public Account setBalanceInCurrency(Double balanceInReal) {
