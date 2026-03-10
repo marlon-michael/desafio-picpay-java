@@ -18,8 +18,8 @@
     - [x] email
     - [x] password
     - [x] cpf e cnpj
-- [ ] kafka
-  - [ ] registro transações
+- [x] kafka
+  - [x] registro transações
 - [x] controller
   - [ ] restful
   - [x] error handling
