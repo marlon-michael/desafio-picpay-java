@@ -5,8 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.TransferAuthorizerGateway;
 import com.desafio.pixpay.core.gateways.TransferGateway;
+import com.desafio.pixpay.core.gateways.TransferProducerGateway;
 import com.desafio.pixpay.core.usecases.RefundTransferUsecase;
-import com.desafio.pixpay.core.usecases.TransferMoneyUseCase;
+import com.desafio.pixpay.core.usecases.RequestTransferUsecase;
+import com.desafio.pixpay.core.usecases.ProcessTransferUseCase;
 import com.desafio.pixpay.core.usecases.input.ListTransfersByManager;
 import com.desafio.pixpay.infra.authorizer.TransferAuthorizer;
 import com.desafio.pixpay.infra.persistence.jpa.JpaTransferRepository;
@@ -29,9 +31,14 @@ public class TransferConfig {
     }
 
     @Bean
+    RequestTransferUsecase requestTransferUsecase(TransferProducerGateway transferProducerGateway, AccountGateway accountGateway){
+        return new RequestTransferUsecase(transferProducerGateway, accountGateway);
+    }
+
+    @Bean
     @Transactional
-    TransferMoneyUseCase transferMoneyUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway){
-        return new TransferMoneyUseCase(accountGateway, transferGateway, transferAuthorizerGateway);
+    ProcessTransferUseCase processTransferUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway){
+        return new ProcessTransferUseCase(accountGateway, transferGateway, transferAuthorizerGateway);
     }
 
     @Bean
