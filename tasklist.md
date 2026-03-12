@@ -1,6 +1,40 @@
 
+## Requisitos aplicados
+- [x] clean arch
+- [x] postgre
+- [x] lombok
+- [x] spring security
+- [x] testes
+- [x] kafka
+- [ ] reddis
+- [ ] flyway
+- [ ] swagger
+- [ ] logs?
+- [ ] micrometer, prometheus, grafana
+- [ ] nginx
+- [ ] docker
+- [ ] CI/CD
+
 ## Tarefas
 
+- [ ] Infraestrutura e Deploy
+  - [ ] uso de docker
+- [ ] Qualidade e Manutenção
+  - [x] uma cobertura de testes consistente
+    - [ ] testes mais abrangentes
+  - [x] manutenibilidade do código
+  - [x] tratamento de erros
+    - [ ] erros específicos
+- [ ] Arquitetura e Design
+  - [x] arquitetura (estruturar o pensamento antes de escrever)
+  - [x] uso de design patterns
+  - [x] modelagem de dados
+  - [x] carinho em desacoplar componentes (outras camadas, service, repository)
+  - [ ] proposta de melhoria na arquitetura
+- [ ] Segurança e Documentação
+  - [ ] cuidado com itens de segurança
+  - [ ] documentação (swagger)
+---
 - [ ] transacao
   - [x] requisição para autorizador
   - [x] get
@@ -22,27 +56,21 @@
   - [x] registro transações
 - [x] controller
   - [ ] restful
+    - [x] Interface Uniforme
+      - [x] recursos identificados por URIs (substantivos)
+      - [x] uso de métodos HTTP (GET, POST, PUT, DELETE)
+      - [ ] HATEOAS (links na resposta)
+      - [ ] Códigos de Status HTTP: Utilizar corretamente códigos como
+    - [x] Stateless (Sem Estado)
+    - [x] Client-Server
+      - [x] separação de responsabilidades
+      - [x] suporte a JSON/XML
+    - [ ] Cacheable
+      - [ ] controle de cache nos headers
+    - [x] Layered System
+      - [x] suporte a proxies e load balancers
   - [x] error handling
 - [x] spring security - jwt
   - [x] jwt http only
   - [x] implementar id-based-auth
-- [x] classe money pips
-  - [x] converter reais para pips
-  - [x] converter pips para reais
-
-
-## Requisitos
-- [x] clean arch
-- [x] postgre
-- [x] lombok
-- [x] spring security
-- [x] testes
-- [x] kafka
-- [ ] reddis
-- [ ] flyway
-- [ ] swagger
-- [ ] logs?
-- [ ] micrometer, prometheus, grafana
-- [ ] nginx
-- [ ] docker
-- [ ] CI/CD
+- [x] classe money
