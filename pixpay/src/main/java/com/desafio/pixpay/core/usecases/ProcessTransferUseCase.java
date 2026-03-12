@@ -12,25 +12,28 @@ import com.desafio.pixpay.core.exceptions.InsufficientBalanceException;
 import com.desafio.pixpay.core.exceptions.TransferNotAuthorizedException;
 import com.desafio.pixpay.core.exceptions.UuidAlreadyExistsException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
+import com.desafio.pixpay.core.gateways.NotifyTransferGateway;
 import com.desafio.pixpay.core.gateways.TransferAuthorizerGateway;
 import com.desafio.pixpay.core.gateways.TransferGateway;
-import com.desafio.pixpay.core.usecases.input.TransferInput;
+import com.desafio.pixpay.core.usecases.data.TransferData;
 
 public class ProcessTransferUseCase {
     AccountGateway accountGateway;
     TransferGateway transferGateway;
     TransferAuthorizerGateway transferAuthorizerGateway;
+    NotifyTransferGateway notifyTransferGateway;
 
-    public ProcessTransferUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway){
+    public ProcessTransferUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway, NotifyTransferGateway notifyTransferGateway){
         this.accountGateway = accountGateway;
         this.transferGateway = transferGateway;
         this.transferAuthorizerGateway = transferAuthorizerGateway;
+        this.notifyTransferGateway = notifyTransferGateway;
     }
 
-    public Transfer execute(TransferInput transferInput){
-        Account payer = accountGateway.findById(transferInput.getPayer());
-        Account payee = accountGateway.findById(transferInput.getPayee());
-        Money value = Money.builder().setMoneyInCurrency(transferInput.getValue());
+    public Transfer execute(TransferData transferData){
+        Account payer = accountGateway.findById(transferData.getPayer());
+        Account payee = accountGateway.findById(transferData.getPayee());
+        Money value = Money.builder().setMoneyInReal(transferData.getValue());
 
         if (payer.getAccountType() == AccountTypeEnum.BUSINESS){
             throw new BusinessAccountCannotMakeTransferException("Business account type cannot transfer money to another account.");
@@ -44,8 +47,8 @@ public class ProcessTransferUseCase {
             throw new TransferNotAuthorizedException("Transfer not authorized.");
         }
 
-        payer.getBalance().subtractValueInCurrency(value);
-        payee.getBalance().addValueInCurrency(value);
+        payer.getBalance().subtractValueInReal(value);
+        payee.getBalance().addValueInReal(value);
 
 
         Transfer transfer = new Transfer(value, payer, payee);
@@ -61,11 +64,36 @@ public class ProcessTransferUseCase {
                 error = true;
                 times++;
                 if (times > 5) throw exception;
+            } catch(Exception exception){
+                error = true;
+                throw exception;
             }
         }while(error);
 
         accountGateway.updateBalanceById(payer.getId(), payer.getBalance());
         accountGateway.updateBalanceById(payee.getId(), payee.getBalance());
+
+        transferData.setId(transfer.getId());
+        transferData.setValue(value.getMoneyInReal());
+
+        // TODO: implementar cliente de notifiticações
+        error = false;
+        times = 0;
+        do {
+            try {
+                System.out.println("TENTANDO NOTIFICAR");
+                var res = notifyTransferGateway.send(transferData);
+                error = false;
+                System.out.println(res);
+                System.out.println("CONSEGUIU");
+                Thread.sleep(1000);
+            } catch (Exception exception) {
+                error = true;
+                times++;
+                if (times > 3) throw new RuntimeException(exception.getMessage());
+            }
+        } while (error);
+
         return transfer;
     }
 }

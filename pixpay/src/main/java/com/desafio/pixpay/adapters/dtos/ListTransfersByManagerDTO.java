@@ -15,7 +15,7 @@ public record ListTransfersByManagerDTO(
             transfer.getId(),
             transfer.getPayer().getIdentification().getIdentificationNumber(),
             transfer.getPayee().getIdentification().getIdentificationNumber(),
-            transfer.getValue().getMoneyInCurrency()
+            transfer.getValue().getMoneyInReal()
         );
     }    
 }

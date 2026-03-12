@@ -18,5 +18,10 @@
     "name": "spring.kafka.bootstrap-servers",
     "type": "java.lang.String",
     "description": "A description for 'spring.kafka.bootstrap-servers'"
+  },
+  {
+    "name": "comunication.external-api.notify-transfer-url",
+    "type": "java.lang.String",
+    "description": "A description for 'comunication.external-api.notify-transfer-url'"
   }
 ]}

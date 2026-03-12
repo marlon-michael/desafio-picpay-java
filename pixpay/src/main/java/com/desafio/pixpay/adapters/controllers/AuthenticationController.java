@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.desafio.pixpay.adapters.dtos.SaveAccountDTO;
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
-import com.desafio.pixpay.core.usecases.input.CreateAccountInput;
+import com.desafio.pixpay.core.usecases.data.CreateAccountInput;
 import com.desafio.pixpay.infra.security.AuthenticationService;
 
 import jakarta.servlet.http.HttpServletResponse;

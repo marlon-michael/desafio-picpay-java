@@ -5,7 +5,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import com.desafio.pixpay.core.gateways.TransferProducerGateway;
-import com.desafio.pixpay.core.usecases.input.TransferInput;
+import com.desafio.pixpay.core.usecases.data.TransferData;
 
 @Component
 public class KafkaTransferProducer implements TransferProducerGateway {
@@ -14,8 +14,9 @@ public class KafkaTransferProducer implements TransferProducerGateway {
     private KafkaTemplate<String, Object> template;
 
     @Override
-    public void send(TransferInput transfer) {
-        template.send("transfer-request", transfer);
+    public void send(TransferData transferData) {
+        System.out.println("REQUEST FEITA");
+        template.send("transfer-request", transferData);
     }
     
 }

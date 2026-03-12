@@ -1,13 +1,13 @@
 package com.desafio.pixpay.core.domain.money;
 
 public class Money {
-    private final Long PIPS_IN_MONEY = 100L;
-    private Long valueInPips = 0L;
+    private final Long REAL_IN_CENTS = 100L;
+    private Long valueInCents = 0L;
 
     public Money(){}
 
-    public Money(Long valueInPips){
-        this.valueInPips = valueInPips;
+    public Money(Long valueInCents){
+        this.valueInCents = valueInCents;
     }
 
     public static Money builder(){
@@ -15,36 +15,36 @@ public class Money {
     }
 
     public Long getMoneyInCents(){
-        return valueInPips;
+        return valueInCents;
     }
 
-    public Double getMoneyInCurrency(){
-        return Double.valueOf(valueInPips) / PIPS_IN_MONEY;
+    public Double getMoneyInReal(){
+        return Double.valueOf(valueInCents) / REAL_IN_CENTS;
     }
 
     public Money setMoneyInCents(Long value){
-        this.valueInPips = value;
+        this.valueInCents = value;
         return this;
     }
 
-    public Money setMoneyInCurrency(Double value){
-        this.valueInPips = convertDoubleToCents(value);
+    public Money setMoneyInReal(Double value){
+        this.valueInCents = convertDoubleToCents(value);
         return this;
     }
 
-    public Money addValueInCurrency(Money value){
-        this.valueInPips += value.getMoneyInCents();
+    public Money addValueInReal(Money value){
+        this.valueInCents += value.getMoneyInCents();
         return this;
     }
 
-    public Money subtractValueInCurrency(Money value){
-        this.valueInPips -= value.getMoneyInCents();
+    public Money subtractValueInReal(Money value){
+        this.valueInCents -= value.getMoneyInCents();
         return this;
     }
 
     public Long convertDoubleToCents(Double value){
         Long pips = 0L;
-        pips = (long) Math.round(PIPS_IN_MONEY * value);
+        pips = (long) Math.round(REAL_IN_CENTS * value);
         return pips;
     }
 }

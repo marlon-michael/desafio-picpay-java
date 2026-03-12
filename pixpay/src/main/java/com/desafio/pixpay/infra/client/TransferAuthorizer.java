@@ -1,4 +1,4 @@
-package com.desafio.pixpay.infra.authorizer;
+package com.desafio.pixpay.infra.client;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

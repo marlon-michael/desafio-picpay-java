@@ -18,8 +18,8 @@ import com.desafio.pixpay.adapters.dtos.TransferDTO;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
 import com.desafio.pixpay.core.usecases.RefundTransferUsecase;
 import com.desafio.pixpay.core.usecases.RequestTransferUsecase;
-import com.desafio.pixpay.core.usecases.input.ListTransfersByManager;
-import com.desafio.pixpay.core.usecases.input.TransferInput;
+import com.desafio.pixpay.core.usecases.data.ListTransfersByManager;
+import com.desafio.pixpay.core.usecases.data.TransferData;
 
 import tools.jackson.databind.ObjectMapper;
 
@@ -42,7 +42,7 @@ public class TransferController {
     
     @PostMapping
     public ResponseEntity<String> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
-        TransferInput transferInput = new TransferInput(
+        TransferData transferInput = new TransferData(
             transferDTO.value(),
             transferDTO.payer(),
             transferDTO.payee()

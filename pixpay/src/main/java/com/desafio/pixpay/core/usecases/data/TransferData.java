@@ -1,19 +1,35 @@
-package com.desafio.pixpay.core.usecases.input;
+package com.desafio.pixpay.core.usecases.data;
 
 import java.util.UUID;
 
 
-public class TransferInput {
+public class TransferData {
+    private UUID id;
     private Double value;
     private UUID payer;
     private UUID payee;
 
-    public TransferInput(){};
+    public TransferData(){};
 
-    public TransferInput(Double value, UUID payer, UUID payee){
+    public TransferData(Double value, UUID payer, UUID payee){
         this.value = value;
         this.payer = payer;
         this.payee = payee;
+    }
+
+    public TransferData(UUID id, Double value, UUID payer, UUID payee){
+        this.id = id;
+        this.value = value;
+        this.payer = payer;
+        this.payee = payee;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public Double getValue() {

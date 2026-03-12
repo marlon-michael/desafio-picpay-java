@@ -1,4 +1,4 @@
-package com.desafio.pixpay.core.usecases.input;
+package com.desafio.pixpay.core.usecases.data;
 
 import java.util.List;
 

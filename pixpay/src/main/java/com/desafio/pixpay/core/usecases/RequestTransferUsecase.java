@@ -4,7 +4,7 @@ import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.TransferProducerGateway;
-import com.desafio.pixpay.core.usecases.input.TransferInput;
+import com.desafio.pixpay.core.usecases.data.TransferData;
 
 public class RequestTransferUsecase {
 
@@ -16,13 +16,13 @@ public class RequestTransferUsecase {
         this.accountGateway = accountGateway;
     }
 
-    public void execute(String authentication, TransferInput transferInput){
-        Account payer = accountGateway.findById(transferInput.getPayer());
+    public void execute(String authentication, TransferData transferData){
+        Account payer = accountGateway.findById(transferData.getPayer());
 
         if (!authentication.equals(payer.getIdentification().getIdentificationNumber())) {
             throw new BusinessException("Authenticated account is different from payer account.");
         }
 
-        transferProducerGateway.send(transferInput);
+        transferProducerGateway.send(transferData);
     }
 }

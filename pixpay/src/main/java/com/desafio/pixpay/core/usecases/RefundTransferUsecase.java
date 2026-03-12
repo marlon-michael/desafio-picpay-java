@@ -33,8 +33,8 @@ public class RefundTransferUsecase {
             throw new BusinessException("The transfer amount cannot exceed the payer's balance.");
         }
 
-        oldPayee.getBalance().subtractValueInCurrency(value);
-        oldPayer.getBalance().addValueInCurrency(value);
+        oldPayee.getBalance().subtractValueInReal(value);
+        oldPayer.getBalance().addValueInReal(value);
 
         Transfer transfer = new Transfer(value, oldPayee, oldPayer);
 

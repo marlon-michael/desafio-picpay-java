@@ -15,7 +15,7 @@ import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
-import com.desafio.pixpay.core.usecases.input.CreateAccountInput;
+import com.desafio.pixpay.core.usecases.data.CreateAccountInput;
 
 
 public class CreateAccountUseCase {

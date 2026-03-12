@@ -14,7 +14,7 @@ public record TransferDTO(
     public static TransferDTO fromDomain(Transfer transfer){
         return new TransferDTO(
             transfer.getId(),
-            transfer.getValue().getMoneyInCurrency(),
+            transfer.getValue().getMoneyInReal(),
             transfer.getPayer().getId(),
             transfer.getPayee().getId()
         );
