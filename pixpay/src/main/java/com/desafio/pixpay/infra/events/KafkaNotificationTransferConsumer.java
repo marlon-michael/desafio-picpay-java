@@ -28,6 +28,5 @@ public class KafkaNotificationTransferConsumer {
     @KafkaListener(id = "transfer-notification", topics = "transfer-notification", groupId = "pixpay-group")
     public void listen(TransferData transferData){
         notifyTransfer.send(transferData);
-        System.out.println("NOTIFICAÇÃO ENVIADA:"+transferData.getId());
     }
 }

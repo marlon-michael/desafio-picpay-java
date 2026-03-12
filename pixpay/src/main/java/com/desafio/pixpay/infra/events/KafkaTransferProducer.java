@@ -15,7 +15,6 @@ public class KafkaTransferProducer implements TransferProducerGateway {
 
     @Override
     public void send(TransferData transferData) {
-        System.out.println("REQUEST FEITA");
         template.send("transfer-request", transferData);
     }
     

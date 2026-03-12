@@ -25,9 +25,6 @@ public class NotifyTransfer implements NotifyTransferGateway {
         );
         try {
             ResponseEntity<?> response = notifyTransferClient.send(transferDTO);
-            System.out.println("id:"+transferData.getId());
-            System.out.println("value(): "+response.getStatusCode().value());
-            System.out.println("is2xxSuccessful(): "+response.getStatusCode().is2xxSuccessful());
             if (response.getStatusCode().is2xxSuccessful()) return true;
         } catch (Exception exception) {
             throw exception;

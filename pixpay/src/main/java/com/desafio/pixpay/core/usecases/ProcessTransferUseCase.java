@@ -76,17 +76,11 @@ public class ProcessTransferUseCase {
         transferData.setId(transfer.getId());
         transferData.setValue(value.getMoneyInReal());
 
-        // TODO: implementar cliente de notifiticações
         error = false;
         times = 0;
         do {
             try {
-                System.out.println("TENTANDO NOTIFICAR");
-                var res = notifyTransferGateway.send(transferData);
-                error = false;
-                System.out.println(res);
-                System.out.println("CONSEGUIU");
-                Thread.sleep(1000);
+                notifyTransferGateway.send(transferData);
             } catch (Exception exception) {
                 error = true;
                 times++;

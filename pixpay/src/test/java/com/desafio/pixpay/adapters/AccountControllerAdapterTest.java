@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -52,7 +53,6 @@ public class AccountControllerAdapterTest {
         )
         .andExpect(status().isOk())
         .andReturn();
-        System.out.println("COOKIE: "+result.getResponse().getCookie("jwt-token"));
         return result.getResponse().getCookie("jwt-token");
     }
 
@@ -71,32 +71,26 @@ public class AccountControllerAdapterTest {
         
         if (accountRepository.findByIdentificationNumber(managerAccount.getIdentification().getIdentificationNumber()) == null){
             accountRepository.create(managerAccount);
-            System.out.println("salvo 1");
         }
         if (accountRepository.findByIdentificationNumber(businessAccount.getIdentification().getIdentificationNumber()) == null){
             accountRepository.create(businessAccount);
-            System.out.println("salvo 2");
         }
         if (accountRepository.findByIdentificationNumber(personalAccount.getIdentification().getIdentificationNumber()) == null){
             accountRepository.create(personalAccount);
-            System.out.println("salvo 3");
         }
-        System.out.println("accs="+accountRepository.findByIdentificationNumber(managerAccount.getIdentification().getIdentificationNumber()).getEmail().getValue());
     }
 
     void setupLoginAccounts() throws Exception{
-        System.out.println("login 1");
         managerCookie = performLogin(managerAccount.getIdentification().getIdentificationNumber(), managerAccount.getIdentification().getIdentificationNumber());
-        System.out.println("login 2");
+        if (managerCookie.getValue() == null) throw new InvalidCookieException(null);
         businessCokie = performLogin(businessAccount.getIdentification().getIdentificationNumber(), businessAccount.getIdentification().getIdentificationNumber());
-        System.out.println("login 3");
+        if (businessCokie.getValue() == null) throw new InvalidCookieException(null);
         personalCookie = performLogin(personalAccount.getIdentification().getIdentificationNumber(), personalAccount.getIdentification().getIdentificationNumber());
-        System.out.println("cookie="+managerCookie.getValue());
+        if (personalCookie.getValue() == null) throw new InvalidCookieException(null);
     }
 
     @Test
     void shouldListAccounts() throws Exception{
-        System.out.println("shouldListAccounts()");
         mockMvc.perform(
             get("/accounts")
             .cookie(managerCookie)

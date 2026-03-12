@@ -16,7 +16,6 @@ public class KafkaTransferConsumer {
     
     @KafkaListener(id = "transfer-request", topics = "transfer-request", groupId = "pixpay-group")
     public void listen(TransferData transferData){
-        System.out.println("REQUEST PROCESSADA");
         try {
             processTransferUseCase.execute(transferData);
         } catch (BusinessException exception) {

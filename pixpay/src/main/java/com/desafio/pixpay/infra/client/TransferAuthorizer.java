@@ -19,11 +19,10 @@ public class TransferAuthorizer implements TransferAuthorizerGateway {
         ResponseEntity <TransferAuthorizationDTO> transferAuthorization;
         try {
             transferAuthorization = transferAuthorizerClient.isAuthorized();
-            System.out.println(transferAuthorization.getBody().toString());
             if (!transferAuthorization.hasBody()) return false;
             if (transferAuthorization.getBody().status().equals("success")) return true;
-        } catch (FeignException.Forbidden e) {
-            System.out.println(e.getMessage());
+        } catch (FeignException.Forbidden exception) {
+            System.out.println(exception.getMessage());
             return false;
         }
         return false;

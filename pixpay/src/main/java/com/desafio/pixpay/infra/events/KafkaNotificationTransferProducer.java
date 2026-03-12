@@ -15,7 +15,6 @@ public class KafkaNotificationTransferProducer implements NotifyTransferGateway 
 
 	@Override
 	public boolean send(TransferData transferData) {
-		System.out.println("NOTIFICAÇÃO CRIADA");
 		try {
 			template.send("transfer-notification", transferData).get();
 			return true;
