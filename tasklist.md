@@ -37,7 +37,7 @@
 - [x] lombok
 - [x] spring security
 - [x] testes
-- [ ] kafka
+- [x] kafka
 - [ ] reddis
 - [ ] flyway
 - [ ] swagger
