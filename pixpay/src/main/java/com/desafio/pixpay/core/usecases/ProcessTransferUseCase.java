@@ -35,11 +35,19 @@ public class ProcessTransferUseCase {
         Account payee = accountGateway.findById(transferData.getPayee());
         Money value = Money.builder().setMoneyInReal(transferData.getValue());
 
+        if (payer == null){
+            throw new BusinessAccountCannotMakeTransferException("Payer account not found.");
+        }
+
+        if (payee == null){
+            throw new BusinessAccountCannotMakeTransferException("Payee account not found.");
+        }
+
         if (payer.getAccountType() == AccountTypeEnum.BUSINESS){
             throw new BusinessAccountCannotMakeTransferException("Business account type cannot transfer money to another account.");
         }
         
-        if (payer.getBalanceInPips() < value.getMoneyInCents()){
+        if (payer.getBalanceInCents() < value.getMoneyInCents()){
             throw new InsufficientBalanceException("The transfer amount cannot exceed the payer's balance.");
         }
 

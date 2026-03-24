@@ -3,6 +3,7 @@ package com.desafio.pixpay.core.usecases;
 import java.util.UUID;
 
 import com.desafio.pixpay.core.domain.account.Account;
+import com.desafio.pixpay.core.exceptions.BusinessAccountCannotMakeTransferException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 
 public class findAccountByIdUseCase {
@@ -13,7 +14,13 @@ public class findAccountByIdUseCase {
     }
 
     public Account execute(UUID id){
-        return accountGateway.findById(id);
+        Account account = accountGateway.findById(id);
+
+        if (account == null){
+            throw new BusinessAccountCannotMakeTransferException("Account not found.");
+        }
+
+        return account;
     }
     
 }

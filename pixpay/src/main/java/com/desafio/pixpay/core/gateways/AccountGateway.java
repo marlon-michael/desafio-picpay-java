@@ -11,5 +11,6 @@ public interface AccountGateway {
     List<Account> findAll();
     Account findById(UUID id);
     Account findByIdentificationNumber(String identificationNumber);
+    Account findByEmail(String email);
     int updateBalanceById(UUID id, Money money);
 }
