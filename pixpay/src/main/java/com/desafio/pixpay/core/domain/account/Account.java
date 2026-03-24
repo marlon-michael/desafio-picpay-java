@@ -123,12 +123,12 @@ public class Account {
         return this.balance;
     }
 
-    public Account setBalanceInPips(Long balanceInPips){
-        this.balance.setMoneyInCents(balanceInPips);
+    public Account setBalanceInCents(Long balanceInCents){
+        this.balance.setMoneyInCents(balanceInCents);
         return this;
     }
     
-    public Long getBalanceInPips() {
+    public Long getBalanceInCents() {
         return balance.getMoneyInCents();
     }
     

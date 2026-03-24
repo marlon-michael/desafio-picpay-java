@@ -19,7 +19,7 @@ public interface JpaAccountRepository extends JpaRepository<AccountEntity, UUID>
 
     @Modifying
     @Transactional
-    @Query("UPDATE AccountEntity a SET a.balanceInPipsOfReal = :balance WHERE a.id = :id")
+    @Query("UPDATE AccountEntity a SET a.balanceInCents = :balance WHERE a.id = :id")
     int updateAccountBalanceById(@Param("id") UUID id, @Param("balance") Long balance);
 
 }

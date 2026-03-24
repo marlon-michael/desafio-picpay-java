@@ -39,7 +39,7 @@ public class AccountEntity implements Persistable<UUID> {
     private String fullName;
     private String email;
     private String password;
-    private Long balanceInPipsOfReal;
+    private Long balanceInCents;
 
     @Enumerated(EnumType.STRING)
     @ElementCollection(fetch = FetchType.EAGER)
@@ -59,7 +59,7 @@ public class AccountEntity implements Persistable<UUID> {
 
     public AccountEntity(){}
 
-    public AccountEntity(UUID id, Set<Role> roles, String accountType, String identificationType, String identificationNumber, String fullName, String email, String password, Long balanceInPipsOfReal) {
+    public AccountEntity(UUID id, Set<Role> roles, String accountType, String identificationType, String identificationNumber, String fullName, String email, String password, Long balanceInCents) {
         this.id = id;
         this.roles = roles;
         this.accountType = accountType;
@@ -68,7 +68,7 @@ public class AccountEntity implements Persistable<UUID> {
         this.fullName = fullName;
         this.email = email;
         this.password = password;
-        this.balanceInPipsOfReal = balanceInPipsOfReal;
+        this.balanceInCents = balanceInCents;
     }
 
     @Override

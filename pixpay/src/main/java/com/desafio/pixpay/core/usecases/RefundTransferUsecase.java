@@ -29,7 +29,7 @@ public class RefundTransferUsecase {
             throw new BusinessException("Authenticated account is different from payee account.");
         }
 
-        if (oldPayee.getBalanceInPips() < value.getMoneyInCents()) {
+        if (oldPayee.getBalanceInCents() < value.getMoneyInCents()) {
             throw new BusinessException("The transfer amount cannot exceed the payer's balance.");
         }
 

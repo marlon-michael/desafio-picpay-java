@@ -43,8 +43,8 @@ public class Money {
     }
 
     public Long convertDoubleToCents(Double value){
-        Long pips = 0L;
-        pips = (long) Math.round(REAL_IN_CENTS * value);
-        return pips;
+        Long cents = 0L;
+        cents = (long) Math.round(REAL_IN_CENTS * value);
+        return cents;
     }
 }
