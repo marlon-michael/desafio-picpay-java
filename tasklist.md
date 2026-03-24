@@ -6,7 +6,7 @@
 - [x] spring security
 - [x] testes
 - [x] kafka
-- [ ] reddis
+- [x] reddis
 - [ ] flyway
 - [ ] swagger
 - [ ] logs?
@@ -65,8 +65,7 @@
     - [x] Client-Server
       - [x] separação de responsabilidades
       - [x] suporte a JSON/XML
-    - [ ] Cacheable
-      - [ ] controle de cache nos headers
+    - [x] Cacheable
     - [x] Layered System
       - [x] suporte a proxies e load balancers
   - [x] error handling
