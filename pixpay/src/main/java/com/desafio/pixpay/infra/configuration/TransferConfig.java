@@ -2,6 +2,8 @@ package com.desafio.pixpay.infra.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
+
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.NotifyTransferGateway;
 import com.desafio.pixpay.core.gateways.TransferAuthorizerGateway;
@@ -15,6 +17,7 @@ import com.desafio.pixpay.infra.client.TransferAuthorizer;
 import com.desafio.pixpay.infra.events.KafkaNotificationTransferProducer;
 import com.desafio.pixpay.infra.persistence.jpa.JpaTransferRepository;
 import com.desafio.pixpay.infra.persistence.repository.TransferRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 
@@ -23,8 +26,8 @@ import jakarta.transaction.Transactional;
 public class TransferConfig {
 
     @Bean
-    TransferGateway transferGateway(JpaTransferRepository jpaTransferRepository){
-        return new TransferRepository(jpaTransferRepository);
+    TransferGateway transferGateway(JpaTransferRepository jpaTransferRepository, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper){
+        return new TransferRepository(jpaTransferRepository, redisTemplate, objectMapper);
     }
 
     @Bean

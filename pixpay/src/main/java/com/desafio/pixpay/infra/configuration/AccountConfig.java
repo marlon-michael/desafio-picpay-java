@@ -2,6 +2,7 @@ package com.desafio.pixpay.infra.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.gateways.AccountGateway;
@@ -12,6 +13,7 @@ import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
 import com.desafio.pixpay.core.usecases.ListAccountsUseCase;
 import com.desafio.pixpay.infra.validation.JMailValidator;
 import com.desafio.pixpay.infra.validation.JakartaIdentificationValidator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.desafio.pixpay.infra.persistence.jpa.JpaAccountRepository;
 import com.desafio.pixpay.infra.persistence.mapper.AccountMapper;
 import com.desafio.pixpay.infra.persistence.repository.AccountRepository;
@@ -25,8 +27,8 @@ public class AccountConfig {
     }
 
     @Bean
-    AccountGateway accountGateway(JpaAccountRepository jpaAccountRepository){
-        return new AccountRepository(jpaAccountRepository);
+    AccountGateway accountGateway(JpaAccountRepository jpaAccountRepository, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper){
+        return new AccountRepository(jpaAccountRepository, redisTemplate, objectMapper);
     }
     
     @Bean
