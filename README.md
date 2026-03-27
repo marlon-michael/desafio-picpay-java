@@ -38,17 +38,17 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [x] Validação de CPF/CNPJ
 - [x] Validação de email
 - [x] Validação de senha (requisitos de complexidade)
-- [x] Persistência de contas no banco de dados
-- [x] Testes de integração com PostgreSQL via Testcontainers
 - [x] Autenticação e autorização (JWT)
+- [x] Persistência de contas no banco de dados
 - [x] Transferências entre contas
 - [x] Autorizador de transferencias via API externa
 - [x] Filas para processamento assíncrono (Kafka)
 - [x] Notificações via POST (com retry em fila se falhar)
 - [x] Cache com Redis (salvamento de consultas)
+- [x] Documentação com Swagger
+- [x] Testes de integração com PostgreSQL
 
 ### Funcionalidades Planejadas
-- [ ] Documentação com Swagger
 - [ ] Paginação de resultados
 - [ ] Logs de erro
 - [ ] Containerização com Docker
