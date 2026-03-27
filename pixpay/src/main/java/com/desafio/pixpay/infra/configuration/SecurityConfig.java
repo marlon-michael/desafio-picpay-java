@@ -59,7 +59,7 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> auth
-            .requestMatchers("/authenticate", "/signup").permitAll()
+            .requestMatchers("/authenticate", "/signup", "/swagger-ui/**", "/swagger-ui.html", "/api/docs/**").permitAll()
             .anyRequest().authenticated()
         )
         .httpBasic(Customizer.withDefaults())

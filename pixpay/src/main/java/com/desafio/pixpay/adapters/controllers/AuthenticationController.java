@@ -13,14 +13,20 @@ import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
 import com.desafio.pixpay.core.usecases.data.CreateAccountInput;
 import com.desafio.pixpay.infra.security.AuthenticationService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-
 @RestController
+@Tag(name = "Auth", description = "Authentication and signup endpoint")
 public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
@@ -28,6 +34,11 @@ public class AuthenticationController {
     private CreateAccountUseCase createAccountUseCase;
 
     @PostMapping("authenticate")
+    @Operation(summary = "Perform login", description = "Perform login by basic auth")
+    @ApiResponses( value = {
+        @ApiResponse(responseCode = "200", description = "Authenticated successfully", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "401", description = "Unauthorized: wrong login or password", content = @Content)
+    })
     public ResponseEntity<String> login(Authentication auth, HttpServletResponse response) {
         Long durationInSeconds = 86400L;
         String token = authenticationService.authenticate(auth);
@@ -42,6 +53,12 @@ public class AuthenticationController {
         return ResponseEntity.ok().body("Authenticated.");
     }
     
+    @Operation(summary = "Perform signup", description = "Perform the creation of account and user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Sign up performed successfully", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing / Data already exists", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
+    })
     @PostMapping("signup")
     public ResponseEntity<String> createAccount(@RequestBody SaveAccountDTO createAccountDTO) {
         CreateAccountInput createAccountInput = new CreateAccountInput(

@@ -2,6 +2,14 @@ package com.desafio.pixpay.adapters.controllers;
 
 import java.util.List;
 import com.desafio.pixpay.infra.configuration.AccountConfig;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -17,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @EnableMethodSecurity
 @RestController
 @RequestMapping("accounts")
+@Tag(name = "Accounts", description = "Account management endpoint")
 public class AccountController {
 
     @Autowired
@@ -25,8 +34,19 @@ public class AccountController {
     AccountController(AccountConfig accountConfig) {
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     @GetMapping()
+    @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
+    @Operation(summary = "list all Accounts", description = "List of accounts to be seen by a manager")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List of accounts returned successfully", 
+            content = @Content(
+                mediaType = "application/json", 
+                array = @ArraySchema(schema = @Schema(implementation = ListAccountByManagerDTO.class))
+            )
+        ),
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
+        @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
+    })
     public List<ListAccountByManagerDTO> listAccountsByManager(Authentication auth) {
         return listAccountsUseCase
             .execute()
