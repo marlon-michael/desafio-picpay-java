@@ -18,6 +18,17 @@ public class RequestTransferUsecase {
     }
 
     public void execute(String authentication, TransferData transferData){
+
+        if (transferData.getValue() == null){
+            throw new BusinessAccountCannotMakeTransferException("Transfer value is missing.");
+        }
+        if (transferData.getPayer() == null){
+            throw new BusinessAccountCannotMakeTransferException("Transfer payer is missing.");
+        }
+        if (transferData.getPayee() == null){
+            throw new BusinessAccountCannotMakeTransferException("Transfer payee is missing.");
+        }
+
         Account payer = accountGateway.findById(transferData.getPayer());
 
         if (payer == null){

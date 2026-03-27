@@ -9,6 +9,7 @@ public class Password {
     public Password setPasswordAndValidate(String password, PasswordEncoderGateway passwordEncoder){
         String validPasswordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$.,&%?_+]).+$";
         String invalidRegex = ".*[\\s\\\\;\"'<>/|\\-\\-\\*\\(\\)\\[\\]{}].*";
+        if(password == null) throw new BusinessException("Empty password.");
         boolean isPasswordValid = password.matches(validPasswordRegex);
         boolean isValid = !password.matches(invalidRegex);
         if (password.length() < 8 || password.length() > 18) {

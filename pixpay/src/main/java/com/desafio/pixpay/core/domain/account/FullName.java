@@ -7,6 +7,7 @@ public class FullName {
 
     public FullName setFullnameAndValidate(String fullname){
         String invalidRegex = ".*[\\\\;\"'<>/|\\-\\-\\*\\(\\)\\[\\]{}].*";
+        if(fullname == null) throw new BusinessException("Empty name.");
         boolean isValid = !fullname.matches(invalidRegex);
         if (!isValid){
             throw new BusinessException("The full name cannot contain this special character: \\\\ / | * ( ) [ ] { } ; ' \\\" < >.");

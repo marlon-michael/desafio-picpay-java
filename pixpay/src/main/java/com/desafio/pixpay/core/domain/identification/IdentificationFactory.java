@@ -10,13 +10,15 @@ public class IdentificationFactory {
         IdentificationFactory.identificationValidatorGateway = identificationValidatorGateway;
     }
 
-    public static Identification createIdentification(IdentificationTypeEnum identificationType, String identificationCode) {
+    public static Identification createIdentification(IdentificationTypeEnum identificationType, String identificationNumber) {
         if (IdentificationFactory.identificationValidatorGateway == null) throw new RuntimeException("identificationValidatorGateway is null");
+        if (identificationType == null) throw new BusinessException("Empty identification type");
+        if (identificationNumber == null) throw new BusinessException("Empty identification number");
         if (identificationType.getValue().equals("CadastroDePessoaFisica")) {
-            return new CadastroDePessoaFisica().setIdentificationNumberAndValidate(identificationCode, IdentificationFactory.identificationValidatorGateway);
+            return new CadastroDePessoaFisica().setIdentificationNumberAndValidate(identificationNumber, IdentificationFactory.identificationValidatorGateway);
         }
         if (identificationType.getValue().equals("CadastroNacionalDePessoaJuridica")) {
-            return new CadastroNacionalDePessoaJuridica().setIdentificationNumberAndValidate(identificationCode, IdentificationFactory.identificationValidatorGateway);
+            return new CadastroNacionalDePessoaJuridica().setIdentificationNumberAndValidate(identificationNumber, IdentificationFactory.identificationValidatorGateway);
         }
         throw new BusinessException("Unsupported identification type: " + identificationType);
     }
