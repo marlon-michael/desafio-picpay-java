@@ -7,8 +7,9 @@
 - [x] testes
 - [x] kafka
 - [x] reddis
+- [x] swagger
+- [ ] hateoas
 - [ ] flyway
-- [ ] swagger
 - [ ] logs?
 - [ ] micrometer, prometheus, grafana
 - [ ] nginx
