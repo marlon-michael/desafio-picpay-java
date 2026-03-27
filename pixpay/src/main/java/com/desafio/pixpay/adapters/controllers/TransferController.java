@@ -21,6 +21,13 @@ import com.desafio.pixpay.core.usecases.RequestTransferUsecase;
 import com.desafio.pixpay.core.usecases.data.ListTransfersByManager;
 import com.desafio.pixpay.core.usecases.data.TransferData;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import tools.jackson.databind.ObjectMapper;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +36,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @EnableMethodSecurity
 @RequestMapping("transfer")
+@Tag(name = "Transfer", description = "Transfers endpoint")
 public class TransferController {
 
     @Autowired
@@ -39,20 +47,20 @@ public class TransferController {
 
     @Autowired
     RefundTransferUsecase refundTransferUsecase;
-    
-    @PostMapping
-    public ResponseEntity<String> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
-        TransferData transferInput = new TransferData(
-            transferDTO.value(),
-            transferDTO.payer(),
-            transferDTO.payee()
-        );
-        requestTransferUseCase.execute(auth.getName(), transferInput);
-        return ResponseEntity.ok().body("Transfer was requested: "+new ObjectMapper().writeValueAsString(transferInput));
-    }
 
     @GetMapping
     @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
+    @Operation(summary = "Lista all transfers", description = "List all transfers to be seen by a manager")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Transfers returned successfully", 
+        content = @Content(
+            mediaType = "application/json",
+            array = @ArraySchema(arraySchema = @Schema(implementation = ListTransfersByManagerDTO.class))
+        )),
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
+        @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
+
+    })
     public List<ListTransfersByManagerDTO> listTransfersByManager() {
         return listTransfersByManager
             .execute()
@@ -60,12 +68,37 @@ public class TransferController {
             .map(transfer -> ListTransfersByManagerDTO.fromDomain(transfer))
             .toList();
     }
+    
+    @PostMapping
+    @Operation(summary = "Transfer money", description = "Request money transfer from payer to payee")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Request registered successfully", content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = TransferData.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
+    })
+    public ResponseEntity<String> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
+        TransferData transferInput = new TransferData(
+            transferDTO.value(),
+            transferDTO.payer(),
+            transferDTO.payee()
+        );
+        requestTransferUseCase.execute(auth.getName(), transferInput);
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(transferInput));
+    }
 
     @PostMapping("refund/{transferId}")
-    public TransferDTO refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
+    @Operation(summary = "Refund transfer", description = "Request transfer refund")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Request registered successfully", content = @Content(schema = @Schema(implementation = TransferDTO.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
+    })
+    public ResponseEntity<String> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
         Transfer transfer = refundTransferUsecase.execute(auth.getName(), transferId);
         TransferDTO transferDTO = TransferDTO.fromDomain(transfer);
-        return transferDTO;
+        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(transferDTO));
     }
 
 }

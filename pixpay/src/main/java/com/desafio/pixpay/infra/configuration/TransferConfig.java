@@ -57,7 +57,7 @@ public class TransferConfig {
     }
 
     @Bean
-    RefundTransferUsecase refundTransferUsecase(AccountGateway accountGateway, TransferGateway transferGateway){
-        return new RefundTransferUsecase(accountGateway, transferGateway);
+    RefundTransferUsecase refundTransferUsecase(TransferGateway transferGateway, TransferProducerGateway transferProducerGateway){
+        return new RefundTransferUsecase(transferGateway, transferProducerGateway);
     }
 }
