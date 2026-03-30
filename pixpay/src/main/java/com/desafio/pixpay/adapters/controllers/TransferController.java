@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.pixpay.adapters.dtos.ListTransfersByManagerDTO;
@@ -60,10 +61,13 @@ public class TransferController {
         @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
 
     })
-    public ResponseEntity<List<ListTransfersByManagerDTO>> listTransfersByManager() {
+    public ResponseEntity<List<ListTransfersByManagerDTO>> listTransfersByManager(
+        @RequestParam(name = "size", defaultValue = "25") Integer pageSize, 
+        @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
+    ) {
         return ResponseEntity.ok().body(
             listTransfersByManager
-            .execute()
+            .execute(pageSize, pageNumber)
             .stream()
             .map(transfer -> ListTransfersByManagerDTO.fromDomain(transfer))
             .toList()

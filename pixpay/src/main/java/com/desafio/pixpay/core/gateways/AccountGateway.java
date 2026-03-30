@@ -8,7 +8,7 @@ import com.desafio.pixpay.core.domain.money.Money;
 
 public interface AccountGateway {
     void create(Account account);
-    List<Account> findAll();
+    List<Account> findAll(Integer pageSize, Integer pageNumber);
     Account findById(UUID id);
     Account findByIdentificationNumber(String identificationNumber);
     Account findByEmail(String email);

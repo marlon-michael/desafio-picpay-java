@@ -12,7 +12,7 @@ public class ListTransfersByManagerUseCase {
         this.transferGateway = transferGateway;
     }
 
-    public List<Transfer> execute(){
-        return transferGateway.findAll();
+    public List<Transfer> execute(Integer pageSize, Integer pageNumber) {
+        return transferGateway.findAll(pageSize, pageNumber);
     }
 }

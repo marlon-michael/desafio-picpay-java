@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.pixpay.adapters.dtos.ListAccountByManagerDTO;
@@ -48,9 +48,12 @@ public class AccountController {
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
     })
-    public ResponseEntity<List<ListAccountByManagerDTO>> listAccountsByManager(Authentication auth) {
+    public ResponseEntity<List<ListAccountByManagerDTO>> listAccountsByManager(
+        @RequestParam(name = "size", defaultValue = "25") Integer pageSize,
+        @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
+    ) {
         return ResponseEntity.ok().body(listAccountsUseCase
-            .execute()
+            .execute(pageSize, pageNumber)
             .stream()
             .map(account -> ListAccountByManagerDTO.fromAccount(account))
             .toList()

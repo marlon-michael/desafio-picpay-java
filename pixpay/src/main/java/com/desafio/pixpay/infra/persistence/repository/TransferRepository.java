@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -25,6 +27,10 @@ public class TransferRepository implements TransferGateway {
     private final ObjectMapper objectMapper;
     private final JpaTransferRepository jpaTransferRepository;
 
+    @Value("${app.pagination.default-size}")
+    private Integer DEFAULT_PAGE_SIZE;
+
+
     public TransferRepository(JpaTransferRepository jpaTransferRepository, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper) {
         this.jpaTransferRepository = jpaTransferRepository;
         this.redis = redisTemplate;
@@ -33,7 +39,7 @@ public class TransferRepository implements TransferGateway {
 
     @Override
     public Transfer create(Transfer transfer) {
-        redis.delete("transfers");
+        redis.delete("transfers:page:0");
 
         try {
             jpaTransferRepository.save(TransferMapper.fromDomainToEntity(transfer));
@@ -45,28 +51,33 @@ public class TransferRepository implements TransferGateway {
     }
 
     @Override
-    public List<Transfer> findAll() {
+    public List<Transfer> findAll(Integer size, Integer page) {
         List<TransferEntity> transfers;
-        String json = redis.opsForValue().get("transfers");
 
-        if (json != null) {
-            try {
-                transfers = objectMapper.readValue(json, new TypeReference<List<TransferEntity>>() {});
-                return transfers
-                    .stream()
-                    .map(entity -> TransferMapper.fromEntityToDomain(entity))
-                    .toList(); 
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (size == DEFAULT_PAGE_SIZE && page == 0){
+            String json = redis.opsForValue().get("transfers:page:0");
+            if (json != null) {
+                try {
+                    transfers = objectMapper.readValue(json, new TypeReference<List<TransferEntity>>() {});
+                    return transfers
+                        .stream()
+                        .map(entity -> TransferMapper.fromEntityToDomain(entity))
+                        .toList(); 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
 
-        transfers = jpaTransferRepository.findAll();
+        PageRequest pagination = PageRequest.of(page, size);
+        transfers = jpaTransferRepository.findAll(pagination).toList();
 
-        try {
-            redis.opsForValue().set("transfers", objectMapper.writeValueAsString(transfers));
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (size == DEFAULT_PAGE_SIZE && page == 0){
+            try {
+                redis.opsForValue().set("transfers:page:0", objectMapper.writeValueAsString(transfers));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return transfers

@@ -13,7 +13,7 @@ public class ListAccountsByManagerUseCase {
         this.accountGateway = accountGateway;
     }
 
-    public List<Account> execute(){
-        return accountGateway.findAll();
+    public List<Account> execute(Integer pageSize, Integer pageNumber){
+        return accountGateway.findAll(pageSize, pageNumber);
     }
 }
