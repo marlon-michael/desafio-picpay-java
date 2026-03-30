@@ -18,7 +18,6 @@
 
 ## Tarefas
 
-- [ ] PADRONIZAR RESULTADOS POR RESPONSE ENTITY
 - [ ] Infraestrutura e Deploy
   - [ ] uso de docker
 - [ ] Qualidade e Manutenção
