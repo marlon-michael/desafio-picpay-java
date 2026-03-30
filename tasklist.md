@@ -18,6 +18,7 @@
 
 ## Tarefas
 
+- [ ] PADRONIZAR RESULTADOS POR RESPONSE ENTITY
 - [ ] Infraestrutura e Deploy
   - [ ] uso de docker
 - [ ] Qualidade e Manutenção
@@ -31,10 +32,9 @@
   - [x] uso de design patterns
   - [x] modelagem de dados
   - [x] carinho em desacoplar componentes (outras camadas, service, repository)
-  - [ ] proposta de melhoria na arquitetura
 - [ ] Segurança e Documentação
   - [ ] cuidado com itens de segurança
-  - [ ] documentação (swagger)
+  - [x] documentação (swagger)
 ---
 - [ ] transacao
   - [x] requisição para autorizador
