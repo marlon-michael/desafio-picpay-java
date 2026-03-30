@@ -28,7 +28,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import tools.jackson.databind.ObjectMapper;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,12 +60,14 @@ public class TransferController {
         @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
 
     })
-    public List<ListTransfersByManagerDTO> listTransfersByManager() {
-        return listTransfersByManager
+    public ResponseEntity<List<ListTransfersByManagerDTO>> listTransfersByManager() {
+        return ResponseEntity.ok().body(
+            listTransfersByManager
             .execute()
             .stream()
             .map(transfer -> ListTransfersByManagerDTO.fromDomain(transfer))
-            .toList();
+            .toList()
+        );
     }
     
     @PostMapping
@@ -78,14 +79,14 @@ public class TransferController {
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
     })
-    public ResponseEntity<String> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
+    public ResponseEntity<TransferData> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
         TransferData transferInput = new TransferData(
             transferDTO.value(),
             transferDTO.payer(),
             transferDTO.payee()
         );
         requestTransferUseCase.execute(auth.getName(), transferInput);
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(transferInput));
+        return ResponseEntity.ok().body(transferInput);
     }
 
     @PostMapping("refund/{transferId}")
@@ -95,10 +96,10 @@ public class TransferController {
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
     })
-    public ResponseEntity<String> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
+    public ResponseEntity<TransferDTO> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
         Transfer transfer = refundTransferUsecase.execute(auth.getName(), transferId);
         TransferDTO transferDTO = TransferDTO.fromDomain(transfer);
-        return ResponseEntity.ok().body(new ObjectMapper().writeValueAsString(transferDTO));
+        return ResponseEntity.ok().body(transferDTO);
     }
 
 }

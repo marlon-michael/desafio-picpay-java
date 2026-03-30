@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.core.Authentication;
@@ -47,12 +48,13 @@ public class AccountController {
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
     })
-    public List<ListAccountByManagerDTO> listAccountsByManager(Authentication auth) {
-        return listAccountsUseCase
+    public ResponseEntity<List<ListAccountByManagerDTO>> listAccountsByManager(Authentication auth) {
+        return ResponseEntity.ok().body(listAccountsUseCase
             .execute()
             .stream()
             .map(account -> ListAccountByManagerDTO.fromAccount(account))
-            .toList();
+            .toList()
+        );
     }
     
 }
