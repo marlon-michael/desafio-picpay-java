@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.pixpay.adapters.dtos.ListAccountByManagerDTO;
-import com.desafio.pixpay.core.usecases.ListAccountsUseCase;
+import com.desafio.pixpay.core.usecases.ListAccountsByManagerUseCase;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AccountController {
 
     @Autowired
-    private ListAccountsUseCase listAccountsUseCase;
+    private ListAccountsByManagerUseCase listAccountsUseCase;
 
     AccountController(AccountConfig accountConfig) {
     }

@@ -1,14 +1,14 @@
-package com.desafio.pixpay.core.usecases.data;
+package com.desafio.pixpay.core.usecases;
 
 import java.util.List;
 
 import com.desafio.pixpay.core.domain.transfer.Transfer;
 import com.desafio.pixpay.core.gateways.TransferGateway;
 
-public class ListTransfersByManager {
+public class ListTransfersByManagerUseCase {
     private final TransferGateway transferGateway;
 
-    public ListTransfersByManager(TransferGateway transferGateway){
+    public ListTransfersByManagerUseCase(TransferGateway transferGateway){
         this.transferGateway = transferGateway;
     }
 

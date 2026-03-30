@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.desafio.pixpay.adapters.dtos.ListTransfersByManagerDTO;
 import com.desafio.pixpay.adapters.dtos.TransferDTO;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
+import com.desafio.pixpay.core.usecases.ListTransfersByManagerUseCase;
 import com.desafio.pixpay.core.usecases.RefundTransferUsecase;
 import com.desafio.pixpay.core.usecases.RequestTransferUsecase;
-import com.desafio.pixpay.core.usecases.data.ListTransfersByManager;
 import com.desafio.pixpay.core.usecases.data.TransferData;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +42,7 @@ public class TransferController {
     RequestTransferUsecase requestTransferUseCase;
 
     @Autowired
-    ListTransfersByManager listTransfersByManager;
+    ListTransfersByManagerUseCase listTransfersByManager;
 
     @Autowired
     RefundTransferUsecase refundTransferUsecase;

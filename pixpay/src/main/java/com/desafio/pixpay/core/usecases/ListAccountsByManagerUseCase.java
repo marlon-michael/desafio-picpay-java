@@ -5,11 +5,11 @@ import java.util.List;
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 
-public class ListAccountsUseCase {
+public class ListAccountsByManagerUseCase {
 
     private final AccountGateway accountGateway;
 
-    public ListAccountsUseCase(AccountGateway accountGateway){
+    public ListAccountsByManagerUseCase(AccountGateway accountGateway){
         this.accountGateway = accountGateway;
     }
 
