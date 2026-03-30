@@ -7,7 +7,9 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -31,6 +33,7 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Configuration
 @EnableWebSecurity
@@ -48,10 +51,11 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
+        String[] publicRoutes = {"/authenticate", "/signup", "/swagger-ui/**", "/swagger-ui.html", "/api/docs/**"};
         http
         .csrf(
             csrf -> csrf
-                .ignoringRequestMatchers("/authenticate", "/signup")
+                .ignoringRequestMatchers(publicRoutes)
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                 
@@ -59,27 +63,30 @@ public class SecurityConfig {
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> auth
-            .requestMatchers("/authenticate", "/signup", "/swagger-ui/**", "/swagger-ui.html", "/api/docs/**").permitAll()
-            .anyRequest().authenticated()
+                .requestMatchers(publicRoutes).permitAll()
+                .anyRequest().authenticated()
         )
-        .httpBasic(Customizer.withDefaults())
         .oauth2ResourceServer(
             auth -> auth
-                .bearerTokenResolver(request -> {
-                    String cookieToken = null;
-                    if (request.getCookies() != null){
-                        cookieToken = Arrays
-                            .stream(request.getCookies())
-                            .filter(cookie -> cookie.getName().equals("jwt-token"))
-                            .findFirst()
-                            .map(Cookie::getValue)
-                            .orElse(null);
-                    }
-                    return cookieToken;
-                })
+                .bearerTokenResolver(request -> extractTokenFromCookie(request))
                 .jwt(Customizer.withDefaults())
         );
         return http.build();
+    }
+
+    private String extractTokenFromCookie(HttpServletRequest request) {
+    if (request.getCookies() == null) return null;
+    
+    return Arrays.stream(request.getCookies())
+            .filter(cookie -> "jwt-token".equals(cookie.getName()))
+            .findFirst()
+            .map(Cookie::getValue)
+            .orElse(null);
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration){
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean

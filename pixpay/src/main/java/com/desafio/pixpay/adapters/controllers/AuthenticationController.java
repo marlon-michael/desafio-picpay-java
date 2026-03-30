@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.desafio.pixpay.adapters.dtos.AuthenticationDTO;
 import com.desafio.pixpay.adapters.dtos.SaveAccountDTO;
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
@@ -32,16 +35,21 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
     @Autowired
     private CreateAccountUseCase createAccountUseCase;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     @PostMapping("authenticate")
-    @Operation(summary = "Perform login", description = "Perform login by basic auth")
+    @Operation(summary = "Perform login", description = "Perform login by body with authenticationDTO")
     @ApiResponses( value = {
         @ApiResponse(responseCode = "200", description = "Authenticated successfully", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Unauthorized: wrong login or password", content = @Content)
     })
-    public ResponseEntity<String> login(Authentication auth, HttpServletResponse response) {
+    public ResponseEntity<String> login(@RequestBody AuthenticationDTO auth, HttpServletResponse response) {
+
         Long durationInSeconds = 86400L;
-        String token = authenticationService.authenticate(auth);
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(auth.username(), auth.password()));
+        String token = authenticationService.authenticate(authentication);
         ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
             .secure(false) // Em produção, deve ser true
             .httpOnly(true)
