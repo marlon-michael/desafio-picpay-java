@@ -47,10 +47,10 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [x] Cache com Redis (salvamento de consultas)
 - [x] Documentação com Swagger
 - [x] Testes de integração
+- [x] Paginação de resultados
+- [x] Lançamento e tratamento de erros detalhados
 
 ### Funcionalidades Planejadas
-- [ ] Paginação de resultados
-- [ ] Lançamento e tratamento de erros detalhados + objeto de resposta padrão
 - [ ] Testes unitários
 - [ ] Logs de eventos
 - [ ] Links com HATEOAS
