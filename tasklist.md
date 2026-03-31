@@ -18,22 +18,18 @@
 
 ## Tarefas
 
-- [ ] Infraestrutura e Deploy
-  - [ ] uso de docker
-- [ ] Qualidade e Manutenção
-  - [x] uma cobertura de testes consistente
-    - [ ] testes mais abrangentes
-  - [x] manutenibilidade do código
-  - [x] tratamento de erros
-    - [ ] erros específicos
-- [ ] Arquitetura e Design
-  - [x] arquitetura (estruturar o pensamento antes de escrever)
-  - [x] uso de design patterns
-  - [x] modelagem de dados
-  - [x] carinho em desacoplar componentes (outras camadas, service, repository)
-- [ ] Segurança e Documentação
-  - [ ] cuidado com itens de segurança
-  - [x] documentação (swagger)
+- [ ] uso de docker
+- [x] uma cobertura de testes consistente
+  - [ ] testes mais abrangentes
+- [x] manutenibilidade do código
+- [x] tratamento de erros
+  - [ ] erros específicos
+- [x] arquitetura (estruturar o pensamento antes de escrever)
+- [x] uso de design patterns
+- [x] modelagem de dados
+- [x] carinho em desacoplar componentes (outras camadas, service, repository)
+- [ ] cuidado com itens de segurança
+- [x] documentação (swagger)
 ---
 - [ ] transacao
   - [x] requisição para autorizador
@@ -60,7 +56,7 @@
       - [x] recursos identificados por URIs (substantivos)
       - [x] uso de métodos HTTP (GET, POST, PUT, DELETE)
       - [ ] HATEOAS (links na resposta)
-      - [ ] Códigos de Status HTTP: Utilizar corretamente códigos como
+      - [x] Códigos de Status HTTP: Utilizar corretamente códigos como
     - [x] Stateless (Sem Estado)
     - [x] Client-Server
       - [x] separação de responsabilidades
