@@ -23,8 +23,8 @@ public class Account {
 
 	public Account(){}
 
-    public Account(Set<Role> roles, Identification identification, FullName fullName, Email email, Password password, Money balance) {
-        setId(UUID.randomUUID());
+    public Account(UUID id, Set<Role> roles, Identification identification, FullName fullName, Email email, Password password, Money balance) {
+        setId(id);
         setRoles(roles);
         setIdentification(identification);
         setFullName(fullName);

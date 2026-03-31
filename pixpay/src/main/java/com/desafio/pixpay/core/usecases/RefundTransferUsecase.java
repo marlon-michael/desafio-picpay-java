@@ -6,6 +6,7 @@ import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
 import com.desafio.pixpay.core.exceptions.BusinessException;
+import com.desafio.pixpay.core.exceptions.NotFoundException;
 import com.desafio.pixpay.core.gateways.TransferGateway;
 import com.desafio.pixpay.core.gateways.TransferProducerGateway;
 import com.desafio.pixpay.core.usecases.data.TransferData;
@@ -26,7 +27,7 @@ public class RefundTransferUsecase {
         Transfer refundingTransfer = transferGateway.findById(id);
 
         if (refundingTransfer == null){
-            throw new BusinessException("Transfer not found.");
+            throw new NotFoundException("Transfer not found.");
         }
 
         refundRecipient = refundingTransfer.getPayer();

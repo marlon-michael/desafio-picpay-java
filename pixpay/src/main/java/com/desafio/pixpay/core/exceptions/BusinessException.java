@@ -1,7 +1,9 @@
 package com.desafio.pixpay.core.exceptions;
 
-public class BusinessException extends RuntimeException {
-    public BusinessException(String message){
+public class BusinessException extends DefaultException {
+
+    public BusinessException(String message) {
         super(message);
     }
+    
 }

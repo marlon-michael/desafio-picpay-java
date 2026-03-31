@@ -2,6 +2,7 @@ package com.desafio.pixpay.core.usecases;
 
 
 import java.util.Set;
+import java.util.UUID;
 
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.account.FullName;
@@ -12,6 +13,8 @@ import com.desafio.pixpay.core.domain.identification.IdentificationFactory;
 import com.desafio.pixpay.core.domain.identification.IdentificationTypeEnum;
 import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.exceptions.BusinessException;
+import com.desafio.pixpay.core.exceptions.InternalServerException;
+import com.desafio.pixpay.core.exceptions.UuidAlreadyExistsException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
@@ -30,7 +33,9 @@ public class CreateAccountUseCase {
     }
 
     public Account execute(CreateAccountInput createAccountInput) {
+
         Account account = new Account(
+            UUID.randomUUID(),
             Set.of(Role.ROLE_USER),
             IdentificationFactory.createIdentification(
                 IdentificationTypeEnum.fromValue(
@@ -48,7 +53,24 @@ public class CreateAccountUseCase {
             throw new BusinessException("Account identification number already in use.");
         }
 
-        accountGateway.create(account);
+        boolean error = false;
+        int times = 0;
+        do{
+            try {
+                accountGateway.create(account);
+                error = false;
+            } catch (UuidAlreadyExistsException exception) {
+                account.setId(UUID.randomUUID());
+                error = true;
+                times++;
+                if (times > 5) throw new InternalServerException("Internar error");
+            } catch(Exception exception){
+                error = true;
+                times++;
+                if (times > 5) throw new InternalServerException("Internar error");
+            }
+        }while(error);
+
         return account;
     }
 }

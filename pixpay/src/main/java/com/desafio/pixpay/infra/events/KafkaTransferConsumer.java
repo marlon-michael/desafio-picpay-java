@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
-import com.desafio.pixpay.core.exceptions.BusinessException;
+import com.desafio.pixpay.core.exceptions.DefaultException;
 import com.desafio.pixpay.core.usecases.ProcessTransferUseCase;
 import com.desafio.pixpay.core.usecases.data.TransferData;
 
@@ -18,7 +18,7 @@ public class KafkaTransferConsumer {
     public void listen(TransferData transferData){
         try {
             processTransferUseCase.execute(transferData);
-        } catch (BusinessException exception) {
+        } catch (DefaultException exception) {
             System.out.println(exception.getMessage());
         }
     }

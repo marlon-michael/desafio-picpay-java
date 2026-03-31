@@ -81,7 +81,8 @@ public class TransferController {
             mediaType = "application/json",
             schema = @Schema(implementation = TransferData.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
-        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
+        @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<TransferData> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
         TransferData transferInput = new TransferData(
@@ -96,9 +97,13 @@ public class TransferController {
     @PostMapping("refund/{transferId}")
     @Operation(summary = "Refund transfer", description = "Request transfer refund")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Request registered successfully", content = @Content(schema = @Schema(implementation = TransferDTO.class))),
+        @ApiResponse(responseCode = "200", description = "Request registered successfully", content = @Content(
+            mediaType = "application/json",
+            schema = @Schema(implementation = TransferDTO.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
-        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
+        @ApiResponse(responseCode = "404", description = "Transfer not found", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class))),
     })
     public ResponseEntity<TransferDTO> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
         Transfer transfer = refundTransferUsecase.execute(auth.getName(), transferId);

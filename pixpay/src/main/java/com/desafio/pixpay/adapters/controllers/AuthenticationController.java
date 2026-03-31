@@ -42,6 +42,7 @@ public class AuthenticationController {
     @Operation(summary = "Perform login", description = "Perform login by body with authenticationDTO")
     @ApiResponses( value = {
         @ApiResponse(responseCode = "200", description = "Authenticated successfully", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Unauthorized: wrong login or password", content = @Content)
     })
     public ResponseEntity<String> login(@RequestBody AuthenticationDTO auth, HttpServletResponse response) {
@@ -64,10 +65,12 @@ public class AuthenticationController {
     @Operation(summary = "Perform signup", description = "Perform the creation of account and user")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Sign up performed successfully", content = @Content(schema = @Schema(implementation = String.class))),
-        @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing / Data already exists", content = @Content(schema = @Schema(implementation = String.class))),
-        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
+        @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
+        @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = String.class)))
     })
-    @PostMapping("signup")
+    @PostMapping("register")
     public ResponseEntity<String> createAccount(@RequestBody SaveAccountDTO createAccountDTO) {
         CreateAccountInput createAccountInput = new CreateAccountInput(
             createAccountDTO.identificationType(),

@@ -1,7 +1,7 @@
 package com.desafio.pixpay.core.domain.identification;
 
 import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
-import com.desafio.pixpay.core.exceptions.BusinessException;
+import com.desafio.pixpay.core.exceptions.InvalidDataException;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 
 public class CadastroDePessoaFisica implements Identification {
@@ -20,10 +20,10 @@ public class CadastroDePessoaFisica implements Identification {
     @Override
     public Identification setIdentificationNumberAndValidate(String identificationNumber, IdentificationValidatorGateway identificationValidatorGateway){
         if(identificationValidatorGateway == null) throw new RuntimeException("IdentificationValidatorGateway should not be null.");
-        if (identificationNumber == null) throw new BusinessException("Empty Identification number.");
-        if (!identificationValidatorGateway.isCpfValid(identificationNumber)) throw new BusinessException("Invalid Identification number.");
-        if (identificationNumber.length() != 11) throw new BusinessException("The identification number for Cadastro De Pessoa Fisica must be 11 characters long. Ex: 000.000.000-00.");
-        if (!identificationNumber.matches("^[0-9]{11}$")) throw new BusinessException("The identification number for Cadastro De Pessoa Fisica must contain only numbers.");
+        if (identificationNumber == null) throw new InvalidDataException("Empty Identification number.");
+        if (identificationNumber.length() != 11) throw new InvalidDataException("The identification number for Cadastro De Pessoa Fisica must be 11 characters long. Ex: 000.000.000-00.");
+        if (!identificationNumber.matches("^[0-9]{11}$")) throw new InvalidDataException("The identification number for Cadastro De Pessoa Fisica must contain only numbers.");
+        if (!identificationValidatorGateway.isCpfValid(identificationNumber)) throw new InvalidDataException("Invalid Identification number.");
         this.identificationNumber = identificationNumber;
         return this;
     }

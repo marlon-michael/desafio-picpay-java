@@ -11,7 +11,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.desafio.pixpay.core.domain.transfer.Transfer;
-import com.desafio.pixpay.core.exceptions.BusinessException;
+import com.desafio.pixpay.core.exceptions.NotFoundException;
 import com.desafio.pixpay.core.exceptions.UuidAlreadyExistsException;
 import com.desafio.pixpay.core.gateways.TransferGateway;
 import com.desafio.pixpay.infra.persistence.entity.TransferEntity;
@@ -101,7 +101,7 @@ public class TransferRepository implements TransferGateway {
             }
         }
 
-        if (transferOptional.isEmpty()) throw new BusinessException("Transfer not found with privided id");
+        if (transferOptional.isEmpty()) throw new NotFoundException("Transfer not found with privided id");
         transfer = transferOptional.get();
 
         try {

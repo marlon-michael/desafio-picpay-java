@@ -7,9 +7,7 @@ import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
 import com.desafio.pixpay.core.domain.money.Money;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
-import com.desafio.pixpay.core.exceptions.BusinessAccountCannotMakeTransferException;
-import com.desafio.pixpay.core.exceptions.InsufficientBalanceException;
-import com.desafio.pixpay.core.exceptions.TransferNotAuthorizedException;
+import com.desafio.pixpay.core.exceptions.BusinessException;
 import com.desafio.pixpay.core.exceptions.UuidAlreadyExistsException;
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.NotifyTransferGateway;
@@ -31,28 +29,29 @@ public class ProcessTransferUseCase {
     }
 
     public Transfer execute(TransferData transferData){
+
         Account payer = accountGateway.findById(transferData.getPayer());
         Account payee = accountGateway.findById(transferData.getPayee());
         Money value = Money.builder().setMoneyInReal(transferData.getValue());
 
         if (payer == null){
-            throw new BusinessAccountCannotMakeTransferException("Payer account not found.");
+            throw new BusinessException("Payer account not found.");
         }
 
         if (payee == null){
-            throw new BusinessAccountCannotMakeTransferException("Payee account not found.");
+            throw new BusinessException("Payee account not found.");
         }
 
         if (payer.getAccountType() == AccountTypeEnum.BUSINESS){
-            throw new BusinessAccountCannotMakeTransferException("Business account type cannot transfer money to another account.");
+            throw new BusinessException("Business account type cannot transfer money to another account.");
         }
         
         if (payer.getBalanceInCents() < value.getMoneyInCents()){
-            throw new InsufficientBalanceException("The transfer amount cannot exceed the payer's balance.");
+            throw new BusinessException("The transfer amount cannot exceed the payer's balance.");
         }
 
         if (!transferAuthorizerGateway.isAuthorized()){
-            throw new TransferNotAuthorizedException("Transfer not authorized.");
+            throw new BusinessException("Transfer not authorized.");
         }
 
         payer.getBalance().subtractValueInReal(value);
@@ -74,7 +73,8 @@ public class ProcessTransferUseCase {
                 if (times > 5) throw exception;
             } catch(Exception exception){
                 error = true;
-                throw exception;
+                times++;
+                if (times > 5) throw exception;
             }
         }while(error);
 
@@ -92,7 +92,7 @@ public class ProcessTransferUseCase {
             } catch (Exception exception) {
                 error = true;
                 times++;
-                if (times > 3) throw new RuntimeException(exception.getMessage());
+                if (times > 3) System.out.println(exception.getMessage());
             }
         } while (error);
 

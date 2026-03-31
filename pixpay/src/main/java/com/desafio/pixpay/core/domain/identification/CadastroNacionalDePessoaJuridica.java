@@ -1,7 +1,7 @@
 package com.desafio.pixpay.core.domain.identification;
 
 import com.desafio.pixpay.core.domain.account.AccountTypeEnum;
-import com.desafio.pixpay.core.exceptions.BusinessException;
+import com.desafio.pixpay.core.exceptions.InvalidDataException;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 
 public class CadastroNacionalDePessoaJuridica implements Identification {
@@ -19,10 +19,10 @@ public class CadastroNacionalDePessoaJuridica implements Identification {
 
 	@Override
     public Identification setIdentificationNumberAndValidate(String identificationNumber, IdentificationValidatorGateway identificationValidatorGateway) {
-        if (identificationValidatorGateway == null) throw new RuntimeException("IdentificationValidatorGateway should not be null.");
-		if (identificationNumber == null) throw new BusinessException("Empty Identification number.");
-		if (!identificationValidatorGateway.isCnpjValid(identificationNumber)) throw new BusinessException("Invalid Identification number.");
-		if (identificationNumber.length() != 14) throw new BusinessException("The identification number for Cadastro Nacional De Pessoa Juridica must be 14 characters long. Ex: 00.000.000/0000-00");
+        if (identificationValidatorGateway == null) throw new InvalidDataException("IdentificationValidatorGateway should not be null.");
+		if (identificationNumber == null) throw new InvalidDataException("Empty Identification number.");
+		if (identificationNumber.length() != 14) throw new InvalidDataException("The identification number for Cadastro Nacional De Pessoa Juridica must be 14 characters long. Ex: 00.000.000/0000-00");
+		if (!identificationValidatorGateway.isCnpjValid(identificationNumber)) throw new InvalidDataException("Invalid Identification number.");
         this.identificationNumber = identificationNumber;
         
         return this;

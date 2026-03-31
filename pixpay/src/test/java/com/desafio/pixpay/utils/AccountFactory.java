@@ -1,6 +1,7 @@
 package com.desafio.pixpay.utils;
 
 import java.util.Set;
+import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -21,6 +22,7 @@ public class AccountFactory {
 
     public static Account createManager(){
         return new Account(
+            UUID.randomUUID(),
             Set.of(Role.ROLE_MANAGER, Role.ROLE_USER),
             new CadastroNacionalDePessoaJuridica().builder().fromPersistence("CAEH9506000177"),
             new FullName().fromPersistence("Manager Manager"),
@@ -32,6 +34,7 @@ public class AccountFactory {
 
     public static Account createBusiness(){
         return new Account(
+            UUID.randomUUID(),
             Set.of(Role.ROLE_USER),
             new CadastroNacionalDePessoaJuridica().builder().fromPersistence("34547820000110"),
             new FullName().fromPersistence("Business Business"),
@@ -43,6 +46,7 @@ public class AccountFactory {
 
     public static Account createPersonal(){
         return new Account(
+            UUID.randomUUID(),
             Set.of(Role.ROLE_USER),
             new CadastroDePessoaFisica().builder().fromPersistence("94900666050"),
             new FullName().fromPersistence("Personal Personal"),

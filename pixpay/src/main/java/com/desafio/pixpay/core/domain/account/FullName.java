@@ -1,19 +1,19 @@
 package com.desafio.pixpay.core.domain.account;
 
-import com.desafio.pixpay.core.exceptions.BusinessException;
+import com.desafio.pixpay.core.exceptions.InvalidDataException;
 
 public class FullName {
     private String fullname;
 
     public FullName setFullnameAndValidate(String fullname){
         String invalidRegex = ".*[\\\\;\"'<>/|\\-\\-\\*\\(\\)\\[\\]{}].*";
-        if(fullname == null) throw new BusinessException("Empty name.");
+        if(fullname == null) throw new InvalidDataException("Empty name.");
         boolean isValid = !fullname.matches(invalidRegex);
         if (!isValid){
-            throw new BusinessException("The full name cannot contain this special character: \\\\ / | * ( ) [ ] { } ; ' \\\" < >.");
+            throw new InvalidDataException("The full name cannot contain this special character: \\\\ / | * ( ) [ ] { } ; ' \\\" < >.");
         }
         if (fullname.length() < 1 || fullname.length() > 40) {
-            throw new BusinessException("The full name must be between 1 and 40 characters long.");
+            throw new InvalidDataException("The full name must be between 1 and 40 characters long.");
         }
         this.fullname = fullname.trim();
         return this;

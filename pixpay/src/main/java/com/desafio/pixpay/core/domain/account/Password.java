@@ -1,6 +1,6 @@
 package com.desafio.pixpay.core.domain.account;
 
-import com.desafio.pixpay.core.exceptions.BusinessException;
+import com.desafio.pixpay.core.exceptions.InvalidDataException;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 
 public class Password {
@@ -9,17 +9,17 @@ public class Password {
     public Password setPasswordAndValidate(String password, PasswordEncoderGateway passwordEncoder){
         String validPasswordRegex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#$.,&%?_+]).+$";
         String invalidRegex = ".*[\\s\\\\;\"'<>/|\\-\\-\\*\\(\\)\\[\\]{}].*";
-        if(password == null) throw new BusinessException("Empty password.");
+        if(password == null) throw new InvalidDataException("Empty password.");
         boolean isPasswordValid = password.matches(validPasswordRegex);
         boolean isValid = !password.matches(invalidRegex);
         if (password.length() < 8 || password.length() > 18) {
-            throw new BusinessException("The password must be between 8 and 18 characters long.");
+            throw new InvalidDataException("The password must be between 8 and 18 characters long.");
         }
         if (!isPasswordValid){
-            throw new BusinessException("The password must contain one uppercase letter, one lowercase letter, one number and at least one of this special character: , . ! @ # $ & % ? _ +.");
+            throw new InvalidDataException("The password must contain one uppercase letter, one lowercase letter, one number and at least one of this special character: , . ! @ # $ & % ? _ +.");
         }
         if (!isValid) {
-            throw new BusinessException("The fields cannot contain this special character: \\ / | * ( ) [ ] { } ; ' \" < > or spaces.");
+            throw new InvalidDataException("The fields cannot contain this special character: \\ / | * ( ) [ ] { } ; ' \" < > or spaces.");
         }
         this.password = passwordEncoder.encode(password);
         return this;

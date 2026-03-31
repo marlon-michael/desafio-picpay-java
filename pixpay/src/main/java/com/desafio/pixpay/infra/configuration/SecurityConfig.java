@@ -51,7 +51,7 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        String[] publicRoutes = {"/authenticate", "/signup", "/swagger-ui/**", "/swagger-ui.html", "/api/docs/**"};
+        String[] publicRoutes = {"/authenticate", "/register", "/swagger-ui/**", "/swagger-ui.html", "/api/docs/**"};
         http
         .csrf(
             csrf -> csrf
