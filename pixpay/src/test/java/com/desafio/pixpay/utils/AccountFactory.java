@@ -20,39 +20,47 @@ public class AccountFactory {
     
     private static PasswordEncoderGateway passwordEncoderGateway = new PasswordEncoderImpl(new BCryptPasswordEncoder());
 
+    public static String defaultPassword = "Abcd1234?";
+
+    private static Account managerAccount = new Account(
+        UUID.randomUUID(),
+        Set.of(Role.ROLE_MANAGER, Role.ROLE_USER),
+        new CadastroNacionalDePessoaJuridica().builder().fromPersistence("CAEH9506000177"),
+        new FullName().fromPersistence("Manager Manager"),
+        new Email().fromPersistence("manager@manager.com"), 
+        new Password().fromPersistence(passwordEncoderGateway.encode(defaultPassword)),
+        new Money()
+    );
+
+    private static Account businessAccount = new Account(
+        UUID.randomUUID(),
+        Set.of(Role.ROLE_USER),
+        new CadastroNacionalDePessoaJuridica().builder().fromPersistence("34547820000110"),
+        new FullName().fromPersistence("Business Business"),
+        new Email().fromPersistence("business@business.com"), 
+        new Password().fromPersistence(passwordEncoderGateway.encode(defaultPassword)),
+        new Money(100000L)
+    );
+
+    private static Account personalAccount = new Account(
+        UUID.randomUUID(),
+        Set.of(Role.ROLE_USER),
+        new CadastroDePessoaFisica().builder().fromPersistence("94900666050"),
+        new FullName().fromPersistence("Personal Personal"),
+        new Email().fromPersistence("personal@personal.com"), 
+        new Password().fromPersistence(passwordEncoderGateway.encode(defaultPassword)),
+        new Money(10000L)
+    );
+
     public static Account createManager(){
-        return new Account(
-            UUID.randomUUID(),
-            Set.of(Role.ROLE_MANAGER, Role.ROLE_USER),
-            new CadastroNacionalDePessoaJuridica().builder().fromPersistence("CAEH9506000177"),
-            new FullName().fromPersistence("Manager Manager"),
-            new Email().fromPersistence("manager@manager.com"), 
-            new Password().fromPersistence(passwordEncoderGateway.encode("CAEH9506000177")),
-            new Money()
-        );
+        return managerAccount;
     }
 
     public static Account createBusiness(){
-        return new Account(
-            UUID.randomUUID(),
-            Set.of(Role.ROLE_USER),
-            new CadastroNacionalDePessoaJuridica().builder().fromPersistence("34547820000110"),
-            new FullName().fromPersistence("Business Business"),
-            new Email().fromPersistence("business@business.com"), 
-            new Password().fromPersistence(passwordEncoderGateway.encode("34547820000110")),
-            new Money(100000L)
-        );
+        return businessAccount;
     }
 
     public static Account createPersonal(){
-        return new Account(
-            UUID.randomUUID(),
-            Set.of(Role.ROLE_USER),
-            new CadastroDePessoaFisica().builder().fromPersistence("94900666050"),
-            new FullName().fromPersistence("Personal Personal"),
-            new Email().fromPersistence("personal@personal.com"), 
-            new Password().fromPersistence(passwordEncoderGateway.encode("94900666050")),
-            new Money(10000L)
-        );
+        return personalAccount;
     }
 }
