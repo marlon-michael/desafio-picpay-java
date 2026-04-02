@@ -77,7 +77,7 @@ public class TransferController {
     @PostMapping
     @Operation(summary = "Transfer money", description = "Request money transfer from payer to payee")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Request registered successfully", content = @Content(
+        @ApiResponse(responseCode = "203", description = "Request registered successfully", content = @Content(
             mediaType = "application/json",
             schema = @Schema(implementation = TransferData.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
@@ -91,13 +91,13 @@ public class TransferController {
             transferDTO.payee()
         );
         requestTransferUseCase.execute(auth.getName(), transferInput);
-        return ResponseEntity.ok().body(transferInput);
+        return ResponseEntity.accepted().body(transferInput);
     }
 
     @PostMapping("refund/{transferId}")
     @Operation(summary = "Refund transfer", description = "Request transfer refund")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Request registered successfully", content = @Content(
+        @ApiResponse(responseCode = "203", description = "Request registered successfully", content = @Content(
             mediaType = "application/json",
             schema = @Schema(implementation = TransferDTO.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
@@ -108,7 +108,7 @@ public class TransferController {
     public ResponseEntity<TransferDTO> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
         Transfer transfer = refundTransferUsecase.execute(auth.getName(), transferId);
         TransferDTO transferDTO = TransferDTO.fromDomain(transfer);
-        return ResponseEntity.ok().body(transferDTO);
+        return ResponseEntity.accepted().body(transferDTO);
     }
 
 }
