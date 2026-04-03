@@ -77,7 +77,7 @@ public class TransferController {
     @PostMapping
     @Operation(summary = "Transfer money", description = "Request money transfer from payer to payee")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "203", description = "Request registered successfully", content = @Content(
+        @ApiResponse(responseCode = "202", description = "Request registered successfully", content = @Content(
             mediaType = "application/json",
             schema = @Schema(implementation = TransferData.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
@@ -97,7 +97,7 @@ public class TransferController {
     @PostMapping("refund/{transferId}")
     @Operation(summary = "Refund transfer", description = "Request transfer refund")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "203", description = "Request registered successfully", content = @Content(
+        @ApiResponse(responseCode = "202", description = "Request registered successfully", content = @Content(
             mediaType = "application/json",
             schema = @Schema(implementation = TransferDTO.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
