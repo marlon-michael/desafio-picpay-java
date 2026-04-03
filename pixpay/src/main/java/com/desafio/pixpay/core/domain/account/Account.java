@@ -132,12 +132,12 @@ public class Account {
         return balance.getMoneyInCents();
     }
     
-    public Account setBalanceInCurrency(Double balanceInReal) {
+    public Account setBalanceInReal(Double balanceInReal) {
         this.balance.setMoneyInReal(balanceInReal);
         return this;
     }
     
-    public Double getBalanceInCurrency() {
+    public Double getBalanceInReal() {
         return balance.getMoneyInReal();
     }
 

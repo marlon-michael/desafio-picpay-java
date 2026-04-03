@@ -25,7 +25,7 @@ public record ListAccountByManagerDTO(
                 account.getIdentification().getIdentificationNumber(),
                 account.getFullName().getFullName(),
                 account.getEmail().getValue(),
-                account.getBalanceInCurrency(),
+                account.getBalanceInReal(),
                 account.getCreatedAt().toString(),
                 account.getLastModifiedAt().toString()
             );
