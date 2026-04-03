@@ -20,27 +20,27 @@
 
 - [ ] uso de docker
 - [x] uma cobertura de testes consistente
-  - [ ] testes mais abrangentes
+  - [x] testes mais abrangentes
 - [x] manutenibilidade do código
 - [x] tratamento de erros
-  - [ ] erros específicos
+  - [x] erros específicos
 - [x] arquitetura (estruturar o pensamento antes de escrever)
 - [x] uso de design patterns
 - [x] modelagem de dados
 - [x] carinho em desacoplar componentes (outras camadas, service, repository)
-- [ ] cuidado com itens de segurança
+- [x] cuidado com itens de segurança
 - [x] documentação (swagger)
 ---
-- [ ] transacao
+- [x] transacao
   - [x] requisição para autorizador
   - [x] get
-    - [ ] paginação
+    - [x] paginação
   - [x] post
 - [ ] account
   - [x] create account
   - [x] authenticate account
   - [x] get all accounts
-    - [ ] paginação
+    - [x] paginação
   - [ ] delete(disable) account
   - [ ] update account
   - [x] cargos
