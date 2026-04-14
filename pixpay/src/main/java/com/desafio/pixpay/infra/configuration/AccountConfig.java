@@ -10,6 +10,7 @@ import com.desafio.pixpay.core.gateways.EmailValidatorGateway;
 import com.desafio.pixpay.core.gateways.IdentificationValidatorGateway;
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
+import com.desafio.pixpay.core.usecases.FindAccountByIdentificationNumberUseCase;
 import com.desafio.pixpay.core.usecases.ListAccountsByManagerUseCase;
 import com.desafio.pixpay.infra.validation.JMailValidator;
 import com.desafio.pixpay.infra.validation.JakartaIdentificationValidator;
@@ -34,6 +35,11 @@ public class AccountConfig {
     @Bean
     CreateAccountUseCase createAccountUseCase(AccountGateway  accountGateway, EmailValidatorGateway emailValidatorGateway, PasswordEncoderGateway passwordEncoderGateway){
         return new CreateAccountUseCase(accountGateway, emailValidatorGateway, passwordEncoderGateway);
+    }
+
+    @Bean
+    FindAccountByIdentificationNumberUseCase findAccountByIdentificationNumberUseCase(AccountGateway accountGateway){
+        return new FindAccountByIdentificationNumberUseCase(accountGateway);
     }
     
     @Bean
