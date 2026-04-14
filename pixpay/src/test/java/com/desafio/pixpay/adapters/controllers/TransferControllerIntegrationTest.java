@@ -20,7 +20,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.desafio.pixpay.adapters.dtos.TransferDTO;
+import com.desafio.pixpay.adapters.dtos.TransferInputDTO;
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.domain.account.FullName;
 import com.desafio.pixpay.core.domain.email.Email;
@@ -104,7 +104,7 @@ public class TransferControllerIntegrationTest {
     @Test
     void ShouldRequestTransfer() throws Exception{
         getBusinessCookie();
-        TransferDTO transfer = new TransferDTO(
+        TransferInputDTO transfer = new TransferInputDTO(
             null,
             10.0, 
             personalAccount.getId(), 
@@ -175,7 +175,7 @@ public class TransferControllerIntegrationTest {
             .setFullName(new FullName().fromPersistence("Wrong Person"))
             .setIdentification(new CadastroDePessoaFisica().fromPersistence("16683008000"));
         accountManager.register(wrongAccountPayer);
-        TransferDTO transfer = new TransferDTO(
+        TransferInputDTO transfer = new TransferInputDTO(
             null,
             10.0, 
             wrongAccountPayer.getId(), 
@@ -197,7 +197,7 @@ public class TransferControllerIntegrationTest {
     @Test
     void ShouldRefuseTransferByBusinessAccountCantTransfer() throws Exception{
         getPersonalCookie();
-        TransferDTO transfer = new TransferDTO(
+        TransferInputDTO transfer = new TransferInputDTO(
             null,
             10.0, 
             businessAccount.getId(),

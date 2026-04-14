@@ -4,14 +4,14 @@ import java.util.UUID;
 
 import com.desafio.pixpay.core.domain.transfer.Transfer;
 
-public record TransfersDTO(
+public record TransferOutputDTO(
     UUID idDaTransacao,
     String payer,
     String payee,
     Double value
 ) {
-    public static TransfersDTO fromDomain(Transfer transfer){
-        return new TransfersDTO(
+    public static TransferOutputDTO fromDomain(Transfer transfer){
+        return new TransferOutputDTO(
             transfer.getId(),
             transfer.getPayer().getIdentification().getIdentificationNumber(),
             transfer.getPayee().getIdentification().getIdentificationNumber(),

@@ -20,7 +20,7 @@ public class RefundTransferUsecase {
         this.transferProducerGateway = transferProducerGateway;
     }
 
-    public Transfer execute(String auth, UUID id) {
+    public TransferData execute(String auth, UUID id) {
         Account refundRecipient;
         Account refundIssuer;
         Money value;
@@ -49,6 +49,6 @@ public class RefundTransferUsecase {
 
         transferProducerGateway.send(transfer);
 
-        return refundingTransfer;
+        return transfer;
     }
 }

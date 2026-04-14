@@ -14,9 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.desafio.pixpay.adapters.dtos.TransfersDTO;
-import com.desafio.pixpay.adapters.dtos.TransferDTO;
-import com.desafio.pixpay.core.domain.transfer.Transfer;
+import com.desafio.pixpay.adapters.dtos.TransferOutputDTO;
+import com.desafio.pixpay.adapters.dtos.TransferInputDTO;
 import com.desafio.pixpay.core.usecases.ListTransfersByManagerUseCase;
 import com.desafio.pixpay.core.usecases.ListTransfersByUserUseCase;
 import com.desafio.pixpay.core.usecases.RefundTransferUsecase;
@@ -59,20 +58,20 @@ public class TransferController {
         @ApiResponse(responseCode = "200", description = "List returned successfully", 
         content = @Content(
             mediaType = "application/json",
-            array = @ArraySchema(arraySchema = @Schema(implementation = TransfersDTO.class))
+            array = @ArraySchema(arraySchema = @Schema(implementation = TransferOutputDTO.class))
         )),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
 
     })
-    public ResponseEntity<List<TransfersDTO>> listTransfersByManager(
+    public ResponseEntity<List<TransferOutputDTO>> listTransfersByManager(
         @RequestParam(name = "size", defaultValue = "25") Integer pageSize, 
         @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
     ) {
-        List<TransfersDTO> transfers = listTransfersByManagerUseCase
+        List<TransferOutputDTO> transfers = listTransfersByManagerUseCase
             .execute(pageSize, pageNumber)
             .stream()
-            .map(transfer -> TransfersDTO.fromDomain(transfer))
+            .map(transfer -> TransferOutputDTO.fromDomain(transfer))
             .toList();
         return ResponseEntity.ok().body(transfers);
     }
@@ -83,21 +82,21 @@ public class TransferController {
         @ApiResponse(responseCode = "200", description = "List returned successfully",
             content = @Content(
                 mediaType = "application/json",
-                array = @ArraySchema(arraySchema = @Schema(implementation = TransfersDTO.class))
+                array = @ArraySchema(arraySchema = @Schema(implementation = TransferOutputDTO.class))
             )
         ),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
     })
-    public ResponseEntity<List<TransfersDTO>> listTransfersFromAccount(
+    public ResponseEntity<List<TransferOutputDTO>> listTransfersFromAccount(
         Authentication auth,
         @RequestParam(name = "size", defaultValue = "25") Integer pageSize, 
         @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
     ) {
         String identificationNumber = auth.getName();
-        List<TransfersDTO> transfers = listTransfersByUserUseCase
+        List<TransferOutputDTO> transfers = listTransfersByUserUseCase
             .execute(identificationNumber, pageSize, pageNumber)
             .stream()
-            .map(transfer -> TransfersDTO.fromDomain(transfer))
+            .map(transfer -> TransferOutputDTO.fromDomain(transfer))
             .toList();
         return ResponseEntity.ok().body(transfers);
     }
@@ -112,14 +111,15 @@ public class TransferController {
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class)))
     })
-    public ResponseEntity<TransferData> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
+    public ResponseEntity<TransferInputDTO> transferMoney(Authentication auth, @RequestBody TransferInputDTO transferDTO){
         TransferData transferData = new TransferData(
             transferDTO.value(),
             transferDTO.payer(),
             transferDTO.payee()
         );
-        requestTransferUseCase.execute(auth.getName(), transferData);
-        return ResponseEntity.accepted().body(transferData);
+        TransferData transfer = requestTransferUseCase.execute(auth.getName(), transferData);
+        transferDTO = TransferInputDTO.fromDomain(transfer);
+        return ResponseEntity.accepted().body(transferDTO);
     }
 
     @PostMapping("refund/{transferId}")
@@ -127,15 +127,15 @@ public class TransferController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "202", description = "Request registered successfully", content = @Content(
             mediaType = "application/json",
-            schema = @Schema(implementation = TransferDTO.class))),
+            schema = @Schema(implementation = TransferInputDTO.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "404", description = "Transfer not found", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class))),
     })
-    public ResponseEntity<TransferDTO> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
-        Transfer transfer = refundTransferUsecase.execute(auth.getName(), transferId);
-        TransferDTO transferDTO = TransferDTO.fromDomain(transfer);
+    public ResponseEntity<TransferInputDTO> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
+        TransferData transfer = refundTransferUsecase.execute(auth.getName(), transferId);
+        TransferInputDTO transferDTO = TransferInputDTO.fromDomain(transfer);
         return ResponseEntity.accepted().body(transferDTO);
     }
 

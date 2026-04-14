@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import com.desafio.pixpay.core.domain.account.Account;
 
-public record ListAccountByManagerDTO(
+public record AccountDTO(
         UUID id,
         List<String> roles,
         String accountType,
@@ -16,8 +16,8 @@ public record ListAccountByManagerDTO(
         Double balanceInReal,
         String createdAt,
         String lastModifiedAt) {
-    public static ListAccountByManagerDTO fromAccount(Account account) {
-        return new ListAccountByManagerDTO(
+    public static AccountDTO fromAccount(Account account) {
+        return new AccountDTO(
                 account.getId(),
                 account.getRoles().stream().map(role -> role.getValue()).toList(),
                 account.getAccountType().getValue(),

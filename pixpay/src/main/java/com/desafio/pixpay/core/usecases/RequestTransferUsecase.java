@@ -18,7 +18,7 @@ public class RequestTransferUsecase {
         this.accountGateway = accountGateway;
     }
 
-    public void execute(String authentication, TransferData transferData){
+    public TransferData execute(String authentication, TransferData transferData){
 
         if (transferData.getValue() == null){
             throw new InvalidDataException("Transfer value is missing.");
@@ -45,5 +45,6 @@ public class RequestTransferUsecase {
         }
 
         transferProducerGateway.send(transferData);
+        return transferData;
     }
 }

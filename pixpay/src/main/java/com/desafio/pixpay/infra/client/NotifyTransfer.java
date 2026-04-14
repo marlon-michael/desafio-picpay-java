@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.desafio.pixpay.adapters.client.NotifyTransferClient;
-import com.desafio.pixpay.adapters.dtos.TransferDTO;
+import com.desafio.pixpay.adapters.dtos.TransferInputDTO;
 import com.desafio.pixpay.core.gateways.NotifyTransferGateway;
 import com.desafio.pixpay.core.usecases.data.TransferData;
 
@@ -17,7 +17,7 @@ public class NotifyTransfer implements NotifyTransferGateway {
 
     @Override
     public boolean send(TransferData transferData) {
-        TransferDTO transferDTO = new TransferDTO(
+        TransferInputDTO transferDTO = new TransferInputDTO(
             transferData.getId(),
             transferData.getValue(),
             transferData.getPayer(),

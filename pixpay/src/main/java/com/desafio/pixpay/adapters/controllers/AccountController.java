@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.desafio.pixpay.adapters.dtos.ListAccountByManagerDTO;
+import com.desafio.pixpay.adapters.dtos.AccountDTO;
 import com.desafio.pixpay.core.usecases.ListAccountsByManagerUseCase;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -42,20 +42,20 @@ public class AccountController {
         @ApiResponse(responseCode = "200", description = "List of accounts returned successfully", 
             content = @Content(
                 mediaType = "application/json", 
-                array = @ArraySchema(schema = @Schema(implementation = ListAccountByManagerDTO.class))
+                array = @ArraySchema(schema = @Schema(implementation = AccountDTO.class))
             )
         ),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
     })
-    public ResponseEntity<List<ListAccountByManagerDTO>> listAccountsByManager(
+    public ResponseEntity<List<AccountDTO>> listAccountsByManager(
         @RequestParam(name = "size", defaultValue = "25") Integer pageSize,
         @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
     ) {
         return ResponseEntity.ok().body(listAccountsUseCase
             .execute(pageSize, pageNumber)
             .stream()
-            .map(account -> ListAccountByManagerDTO.fromAccount(account))
+            .map(account -> AccountDTO.fromAccount(account))
             .toList()
         );
     }
