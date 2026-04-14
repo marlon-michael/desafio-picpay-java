@@ -66,6 +66,7 @@ public class AccountRepository implements AccountGateway {
                     return accounts;
                 } catch (Exception exception) {
                     System.out.println(exception.getMessage());
+                    redis.delete("accounts:page:0");
                 }
             }
         }
@@ -99,13 +100,13 @@ public class AccountRepository implements AccountGateway {
                 return AccountMapper.fromEntityToDomain(account);
             } catch (Exception exception) {
                 System.out.println(exception.getMessage());
+                redis.delete("account:"+id);
             }
         }
 
         Optional<AccountEntity> optionalAccount = jpaAccountRepository.findById(id);
-        if (optionalAccount.isEmpty()) {
-            return null;
-        }
+        if (optionalAccount.isEmpty()) return null;
+
         account = optionalAccount.get();
         setCacheForAccount(account);
 
@@ -115,29 +116,8 @@ public class AccountRepository implements AccountGateway {
     @Override
     public Account findByEmail(String email) {
         AccountEntity account;
-        String json;
-        String accountId = redis.opsForValue().get("account:"+email);
-
-        if (accountId != null) {
-            try {
-                json = redis.opsForValue().get("account:"+accountId);
-                account = objectMapper.readValue(json, AccountEntity.class);
-                return AccountMapper.fromEntityToDomain(account);
-            } catch (Exception exception) {
-                System.out.println(exception.getMessage());
-            }
-        }
-
-        account = jpaAccountRepository.findByEmail(email);
-        if (account == null) return null;
-        setCacheForAccount(account);
-        return AccountMapper.fromEntityToDomain(account);
-    }
-
-    @Override
-    public Account findByIdentificationNumber(String identificationNumber) {
-        AccountEntity account;
-        String json = redis.opsForValue().get("account:"+identificationNumber);
+        Optional<String> accountId = Optional.ofNullable(redis.opsForValue().get("account:"+email));
+        String json = redis.opsForValue().get("account:"+accountId.orElse(""));
 
         if (json != null) {
             try {
@@ -145,6 +125,30 @@ public class AccountRepository implements AccountGateway {
                 return AccountMapper.fromEntityToDomain(account);
             } catch (Exception exception) {
                 System.out.println(exception.getMessage());
+                redis.delete("account:"+accountId);
+            }
+        }
+
+        account = jpaAccountRepository.findByEmail(email);
+        if (account == null) return null;
+
+        setCacheForAccount(account);
+        return AccountMapper.fromEntityToDomain(account);
+    }
+
+    @Override
+    public Account findByIdentificationNumber(String identificationNumber) {
+        AccountEntity account;
+        Optional<String> accountId = Optional.ofNullable(redis.opsForValue().get("account:"+identificationNumber));
+        String json = redis.opsForValue().get("account:"+accountId.orElse(""));
+
+        if (json != null) {
+            try {
+                account = objectMapper.readValue(json, AccountEntity.class);
+                return AccountMapper.fromEntityToDomain(account);
+            } catch (Exception exception) {
+                System.out.println(exception.getMessage());
+                redis.delete("account:"+identificationNumber);
             }
         }
 
