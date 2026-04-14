@@ -64,6 +64,7 @@ public class TransferRepository implements TransferGateway {
                         .map(entity -> TransferMapper.fromEntityToDomain(entity))
                         .toList(); 
                 } catch (Exception e) {
+                    redis.delete("transfers:page:0");
                     e.printStackTrace();
                 }
             }
@@ -75,6 +76,42 @@ public class TransferRepository implements TransferGateway {
         if (size == DEFAULT_PAGE_SIZE && page == 0){
             try {
                 redis.opsForValue().set("transfers:page:0", objectMapper.writeValueAsString(transfers));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return transfers
+            .stream()
+            .map(entity -> TransferMapper.fromEntityToDomain(entity))
+            .toList();
+    }
+
+    @Override
+    public List<Transfer> findAllByAccountId(UUID id, Integer size, Integer page) {
+        List<TransferEntity> transfers;
+        if (size == DEFAULT_PAGE_SIZE && page == 0){
+            String json = redis.opsForValue().get("transfers:account:"+id+":page:0");
+            if (json != null) {
+                try {
+                    transfers = objectMapper.readValue(json, new TypeReference<List<TransferEntity>>() {});
+                    return transfers
+                        .stream()
+                        .map(entity -> TransferMapper.fromEntityToDomain(entity))
+                        .toList(); 
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    redis.delete("transfers:account:"+id+":page:0");
+                }
+            }
+        }
+
+        PageRequest pagination = PageRequest.of(page, size);
+        transfers = jpaTransferRepository.findAllByPayerId(id, pagination).toList();
+
+        if (size == DEFAULT_PAGE_SIZE && page == 0){
+            try {
+                redis.opsForValue().set("transfers:account:"+id+":page:0", objectMapper.writeValueAsString(transfers));
             } catch (Exception e) {
                 e.printStackTrace();
             }

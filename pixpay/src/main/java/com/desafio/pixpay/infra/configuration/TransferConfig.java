@@ -12,6 +12,7 @@ import com.desafio.pixpay.core.gateways.TransferProducerGateway;
 import com.desafio.pixpay.core.usecases.RefundTransferUsecase;
 import com.desafio.pixpay.core.usecases.RequestTransferUsecase;
 import com.desafio.pixpay.core.usecases.ListTransfersByManagerUseCase;
+import com.desafio.pixpay.core.usecases.ListTransfersByUserUseCase;
 import com.desafio.pixpay.core.usecases.ProcessTransferUseCase;
 import com.desafio.pixpay.infra.client.TransferAuthorizer;
 import com.desafio.pixpay.infra.events.KafkaNotificationTransferProducer;
@@ -54,6 +55,11 @@ public class TransferConfig {
     @Bean
     ListTransfersByManagerUseCase listTransfersByManager(TransferGateway transferGateway){
         return new ListTransfersByManagerUseCase(transferGateway);
+    }
+
+    @Bean
+    ListTransfersByUserUseCase listTransfersByUserUseCase(TransferGateway transferGateway, AccountGateway accountGateway){
+        return new ListTransfersByUserUseCase(transferGateway, accountGateway);
     }
 
     @Bean

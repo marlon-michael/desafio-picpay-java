@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.desafio.pixpay.adapters.dtos.ListTransfersByManagerDTO;
+import com.desafio.pixpay.adapters.dtos.TransfersDTO;
 import com.desafio.pixpay.adapters.dtos.TransferDTO;
 import com.desafio.pixpay.core.domain.transfer.Transfer;
 import com.desafio.pixpay.core.usecases.ListTransfersByManagerUseCase;
+import com.desafio.pixpay.core.usecases.ListTransfersByUserUseCase;
 import com.desafio.pixpay.core.usecases.RefundTransferUsecase;
 import com.desafio.pixpay.core.usecases.RequestTransferUsecase;
 import com.desafio.pixpay.core.usecases.data.TransferData;
@@ -38,40 +39,67 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("transfer")
 @Tag(name = "Transfer", description = "Transfers endpoint")
 public class TransferController {
+    @Autowired
+    ListTransfersByManagerUseCase listTransfersByManagerUseCase;
+    
+    @Autowired
+    ListTransfersByUserUseCase listTransfersByUserUseCase;
 
     @Autowired
     RequestTransferUsecase requestTransferUseCase;
 
     @Autowired
-    ListTransfersByManagerUseCase listTransfersByManager;
-
-    @Autowired
     RefundTransferUsecase refundTransferUsecase;
 
-    @GetMapping
+
+    @GetMapping("all")
     @PreAuthorize("hasAuthority('SCOPE_MANAGER')")
     @Operation(summary = "Lista all transfers", description = "List all transfers to be seen by a manager")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Transfers returned successfully", 
+        @ApiResponse(responseCode = "200", description = "List returned successfully", 
         content = @Content(
             mediaType = "application/json",
-            array = @ArraySchema(arraySchema = @Schema(implementation = ListTransfersByManagerDTO.class))
+            array = @ArraySchema(arraySchema = @Schema(implementation = TransfersDTO.class))
         )),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
 
     })
-    public ResponseEntity<List<ListTransfersByManagerDTO>> listTransfersByManager(
+    public ResponseEntity<List<TransfersDTO>> listTransfersByManager(
         @RequestParam(name = "size", defaultValue = "25") Integer pageSize, 
         @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
     ) {
-        return ResponseEntity.ok().body(
-            listTransfersByManager
+        List<TransfersDTO> transfers = listTransfersByManagerUseCase
             .execute(pageSize, pageNumber)
             .stream()
-            .map(transfer -> ListTransfersByManagerDTO.fromDomain(transfer))
-            .toList()
-        );
+            .map(transfer -> TransfersDTO.fromDomain(transfer))
+            .toList();
+        return ResponseEntity.ok().body(transfers);
+    }
+
+    @GetMapping
+    @Operation(summary = "List transfers from current account", description = "List all transfers details from current account")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List returned successfully",
+            content = @Content(
+                mediaType = "application/json",
+                array = @ArraySchema(arraySchema = @Schema(implementation = TransfersDTO.class))
+            )
+        ),
+        @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
+    })
+    public ResponseEntity<List<TransfersDTO>> listTransfersFromAccount(
+        Authentication auth,
+        @RequestParam(name = "size", defaultValue = "25") Integer pageSize, 
+        @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
+    ) {
+        String identificationNumber = auth.getName();
+        List<TransfersDTO> transfers = listTransfersByUserUseCase
+            .execute(identificationNumber, pageSize, pageNumber)
+            .stream()
+            .map(transfer -> TransfersDTO.fromDomain(transfer))
+            .toList();
+        return ResponseEntity.ok().body(transfers);
     }
     
     @PostMapping
@@ -85,13 +113,13 @@ public class TransferController {
         @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class)))
     })
     public ResponseEntity<TransferData> transferMoney(Authentication auth, @RequestBody TransferDTO transferDTO){
-        TransferData transferInput = new TransferData(
+        TransferData transferData = new TransferData(
             transferDTO.value(),
             transferDTO.payer(),
             transferDTO.payee()
         );
-        requestTransferUseCase.execute(auth.getName(), transferInput);
-        return ResponseEntity.accepted().body(transferInput);
+        requestTransferUseCase.execute(auth.getName(), transferData);
+        return ResponseEntity.accepted().body(transferData);
     }
 
     @PostMapping("refund/{transferId}")
