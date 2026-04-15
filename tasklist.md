@@ -8,7 +8,7 @@
 - [x] kafka
 - [x] reddis
 - [x] swagger
-- [ ] hateoas
+- [x] hateoas
 - [ ] flyway
 - [ ] logs?
 - [ ] micrometer, prometheus, grafana
@@ -32,11 +32,13 @@
 - [x] documentação (swagger)
 ---
 - [x] transacao
+  - [x] listar transações da conta
   - [x] requisição para autorizador
   - [x] get
     - [x] paginação
   - [x] post
 - [ ] account
+  - [x] listar dados da conta
   - [x] create account
   - [x] authenticate account
   - [x] get all accounts
@@ -51,11 +53,11 @@
 - [x] kafka
   - [x] registro transações
 - [x] controller
-  - [ ] restful
+  - [x] restful
     - [x] Interface Uniforme
       - [x] recursos identificados por URIs (substantivos)
       - [x] uso de métodos HTTP (GET, POST, PUT, DELETE)
-      - [ ] HATEOAS (links na resposta)
+      - [x] HATEOAS (links na resposta)
       - [x] Códigos de Status HTTP: Utilizar corretamente códigos como
     - [x] Stateless (Sem Estado)
     - [x] Client-Server
