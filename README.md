@@ -49,11 +49,11 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [x] Testes de integração
 - [x] Paginação de resultados
 - [x] Lançamento e tratamento de erros detalhados
+- [x] Links com HATEOAS
 
 ### Funcionalidades Planejadas
-- [ ] Testes unitários
 - [ ] Logs de eventos
-- [ ] Links com HATEOAS
+- [ ] Testes unitários
 - [ ] Containerização com Docker
 - [ ] Balanceamento de carga com Nginx (ativo/reserva)
 - [ ] Integração com front-end (Angular/React)
