@@ -1,9 +1,14 @@
 package com.desafio.pixpay.adapters.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.pixpay.adapters.dtos.TransferOutputDTO;
+import com.desafio.pixpay.adapters.dtos.ResponseData;
 import com.desafio.pixpay.adapters.dtos.TransferInputDTO;
 import com.desafio.pixpay.core.usecases.ListTransfersByManagerUseCase;
 import com.desafio.pixpay.core.usecases.ListTransfersByUserUseCase;
@@ -26,6 +32,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,15 +63,20 @@ public class TransferController {
     @Operation(summary = "Lista all transfers", description = "List all transfers to be seen by a manager")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "List returned successfully", 
-        content = @Content(
-            mediaType = "application/json",
-            array = @ArraySchema(arraySchema = @Schema(implementation = TransferOutputDTO.class))
-        )),
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(allOf = ResponseData.class),
+                schemaProperties = @SchemaProperty(
+                    name = "content", 
+                    array = @ArraySchema(schema = @Schema(implementation = TransferOutputDTO.class))
+                )
+            )
+        ),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
 
     })
-    public ResponseEntity<List<TransferOutputDTO>> listTransfersByManager(
+    public ResponseEntity<EntityModel<?>> listTransfersByManager(
         @RequestParam(name = "size", defaultValue = "25") Integer pageSize, 
         @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
     ) {
@@ -73,7 +85,11 @@ public class TransferController {
             .stream()
             .map(transfer -> TransferOutputDTO.fromDomain(transfer))
             .toList();
-        return ResponseEntity.ok().body(transfers);
+        ResponseData<?> responseData = new ResponseData<>(transfers, null, LocalDateTime.now());
+        EntityModel<ResponseData<?>> model = EntityModel.of(responseData,
+            linkTo(methodOn(AccountController.class).listAccountsByManager(null, null)).withRel("list accounts")
+        );
+        return ResponseEntity.ok().body(model);
     }
 
     @GetMapping
@@ -82,12 +98,16 @@ public class TransferController {
         @ApiResponse(responseCode = "200", description = "List returned successfully",
             content = @Content(
                 mediaType = "application/json",
-                array = @ArraySchema(arraySchema = @Schema(implementation = TransferOutputDTO.class))
+                schema = @Schema(allOf = ResponseData.class),
+                schemaProperties = @SchemaProperty(
+                    name = "content", 
+                    array = @ArraySchema(schema = @Schema(implementation = TransferOutputDTO.class))
+                )
             )
         ),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content)
     })
-    public ResponseEntity<List<TransferOutputDTO>> listTransfersFromAccount(
+    public ResponseEntity<EntityModel<?>> listTransfersFromAccount(
         Authentication auth,
         @RequestParam(name = "size", defaultValue = "25") Integer pageSize, 
         @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
@@ -98,20 +118,33 @@ public class TransferController {
             .stream()
             .map(transfer -> TransferOutputDTO.fromDomain(transfer))
             .toList();
-        return ResponseEntity.ok().body(transfers);
+        ResponseData<?> responseData = new ResponseData<>(transfers, "Authenticated", LocalDateTime.now());
+        EntityModel<ResponseData<?>> model = EntityModel.of(responseData, 
+            linkTo(methodOn(AccountController.class).getAccountDatails(null)).withRel("account details"),
+            linkTo(methodOn(TransferController.class).transferMoney(null, null)).withRel("request transfer"),
+            linkTo(methodOn(TransferController.class).refund(null, null)).withRel("refund transfer made to you")
+        );
+        return ResponseEntity.ok().body(model);
     }
     
     @PostMapping
     @Operation(summary = "Transfer money", description = "Request money transfer from payer to payee")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "202", description = "Request registered successfully", content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = TransferData.class))),
+        @ApiResponse(responseCode = "202", description = "Request registered successfully", 
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(allOf = ResponseData.class),
+                schemaProperties = @SchemaProperty(
+                    name = "content", 
+                    schema = @Schema(implementation = TransferInputDTO.class)
+                )
+            )
+        ),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class)))
     })
-    public ResponseEntity<TransferInputDTO> transferMoney(Authentication auth, @RequestBody TransferInputDTO transferDTO){
+    public ResponseEntity<EntityModel<?>> transferMoney(Authentication auth, @RequestBody TransferInputDTO transferDTO){
         TransferData transferData = new TransferData(
             transferDTO.value(),
             transferDTO.payer(),
@@ -119,24 +152,43 @@ public class TransferController {
         );
         TransferData transfer = requestTransferUseCase.execute(auth.getName(), transferData);
         transferDTO = TransferInputDTO.fromDomain(transfer);
-        return ResponseEntity.accepted().body(transferDTO);
+        ResponseData<?> responseData = new ResponseData<>(transferDTO, null, LocalDateTime.now());
+        EntityModel<ResponseData<?>> model = EntityModel.of(responseData, 
+            linkTo(methodOn(AccountController.class).getAccountDatails(null)).withRel("account details"),
+            linkTo(methodOn(TransferController.class).listTransfersFromAccount(null, null,null)).withRel("account transfers"),
+            linkTo(methodOn(TransferController.class).refund(null, null)).withRel("refund transfer made to you")
+        );
+        return ResponseEntity.accepted().body(model);
     }
 
     @PostMapping("refund/{transferId}")
     @Operation(summary = "Refund transfer", description = "Request transfer refund")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "202", description = "Request registered successfully", content = @Content(
-            mediaType = "application/json",
-            schema = @Schema(implementation = TransferInputDTO.class))),
+        @ApiResponse(responseCode = "202", description = "Request registered successfully", 
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(allOf = ResponseData.class),
+                schemaProperties = @SchemaProperty(
+                    name = "content", 
+                    schema = @Schema(implementation = TransferInputDTO.class)
+                )
+            )
+        ),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "404", description = "Transfer not found", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class))),
     })
-    public ResponseEntity<TransferInputDTO> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
+    public ResponseEntity<EntityModel<?>> refund(Authentication auth, @PathVariable(required = true) UUID transferId) {
         TransferData transfer = refundTransferUsecase.execute(auth.getName(), transferId);
         TransferInputDTO transferDTO = TransferInputDTO.fromDomain(transfer);
-        return ResponseEntity.accepted().body(transferDTO);
+        ResponseData<?> responseData = new ResponseData<>(transferDTO, null, LocalDateTime.now());
+        EntityModel<ResponseData<?>> model = EntityModel.of(responseData, 
+            linkTo(methodOn(AccountController.class).getAccountDatails(null)).withRel("account details"),
+            linkTo(methodOn(TransferController.class).listTransfersFromAccount(null, null,null)).withRel("account transfers"),
+            linkTo(methodOn(TransferController.class).transferMoney(null, null)).withRel("make a transfer")
+        );
+        return ResponseEntity.accepted().body(model);
     }
 
 }

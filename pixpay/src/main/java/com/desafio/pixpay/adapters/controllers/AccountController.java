@@ -1,15 +1,21 @@
 package com.desafio.pixpay.adapters.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -19,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.pixpay.adapters.dtos.AccountDTO;
+import com.desafio.pixpay.adapters.dtos.ResponseData;
 import com.desafio.pixpay.core.usecases.FindAccountByIdentificationNumberUseCase;
 import com.desafio.pixpay.core.usecases.ListAccountsByManagerUseCase;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,22 +50,30 @@ public class AccountController {
         @ApiResponse(responseCode = "200", description = "List of accounts returned successfully", 
             content = @Content(
                 mediaType = "application/json", 
-                array = @ArraySchema(schema = @Schema(implementation = AccountDTO.class))
+                schema = @Schema(allOf = ResponseData.class), 
+                schemaProperties = @SchemaProperty(
+                    name = "content", 
+                    array = @ArraySchema(schema = @Schema(implementation = AccountDTO.class))
+                )                
             )
         ),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
-        @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content)
+        @ApiResponse(responseCode = "403", description = "User doesn't have access to this method", content = @Content),
     })
-    public ResponseEntity<List<AccountDTO>> listAccountsByManager(
+    public ResponseEntity<EntityModel<?>> listAccountsByManager(
         @RequestParam(name = "size", defaultValue = "25") Integer pageSize,
         @RequestParam(name = "page", defaultValue = "0") Integer pageNumber
     ) {
-        return ResponseEntity.ok().body(listAccountsUseCase
+        List<AccountDTO> accounts = listAccountsUseCase
             .execute(pageSize, pageNumber)
             .stream()
             .map(account -> AccountDTO.fromAccount(account))
-            .toList()
+            .toList();
+        ResponseData<?> responseData = new ResponseData<>(accounts, null, LocalDateTime.now());
+        EntityModel<ResponseData<?>> model = EntityModel.of(responseData,
+            linkTo(methodOn(TransferController.class).listTransfersByManager(null, null)).withRel("list transfer")
         );
+        return ResponseEntity.ok().body(model);
     }
 
     @GetMapping
@@ -66,16 +81,27 @@ public class AccountController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "account details returned successfully",
             content = @Content(
-                schema = @Schema(implementation = AccountDTO.class)
+                mediaType = "application/json", 
+                schema = @Schema(allOf = ResponseData.class),
+                schemaProperties = {
+                    @SchemaProperty(
+                        name = "content", 
+                        schema = @Schema(implementation = AccountDTO.class)
+                    )
+                }
             )
         ),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class)))
     })
-    public ResponseEntity<AccountDTO> getAccountDatails(Authentication auth) {
+    public ResponseEntity<EntityModel<?>> getAccountDatails(Authentication auth) {
         String identificationNumber = auth.getName();
         AccountDTO account = AccountDTO.fromAccount(findAccountByIdentificationNumberUseCase.execute(identificationNumber));
-        return ResponseEntity.ok().body(account);
+        ResponseData<?> responseData = new ResponseData<>(account, null, LocalDateTime.now());
+        EntityModel<ResponseData<?>> model = EntityModel.of(responseData,
+            linkTo(methodOn(TransferController.class).listTransfersByManager(null, null)).withRel("list transfer")
+        );
+        return ResponseEntity.ok().body(model);
     }
     
 }

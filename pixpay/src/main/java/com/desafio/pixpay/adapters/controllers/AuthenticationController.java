@@ -1,6 +1,12 @@
 package com.desafio.pixpay.adapters.controllers;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.desafio.pixpay.adapters.dtos.AuthenticationDTO;
+import com.desafio.pixpay.adapters.dtos.ResponseData;
 import com.desafio.pixpay.adapters.dtos.SaveAccountDTO;
 import com.desafio.pixpay.core.domain.account.Account;
 import com.desafio.pixpay.core.usecases.CreateAccountUseCase;
@@ -41,14 +48,12 @@ public class AuthenticationController {
     @PostMapping("authenticate")
     @Operation(summary = "Perform login", description = "Perform login by body with authenticationDTO")
     @ApiResponses( value = {
-        @ApiResponse(responseCode = "200", description = "Authenticated successfully", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "200", description = "Authenticated successfully", content = @Content(schema = @Schema(allOf = ResponseData.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Unauthorized: wrong login or password", content = @Content)
     })
-    public ResponseEntity<String> login(@RequestBody AuthenticationDTO auth, HttpServletResponse response) {
-
+    public ResponseEntity<EntityModel<?>> authenticate(@RequestBody AuthenticationDTO auth, HttpServletResponse response) {
         Long durationInSeconds = 86400L;
-
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(auth.username(), auth.password()));
         String token = authenticationService.authenticate(authentication);
         ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
@@ -59,19 +64,26 @@ public class AuthenticationController {
             .sameSite("Lax")
             .build();
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return ResponseEntity.ok().body("Authenticated.");
+        ResponseData<?> responseData = new ResponseData<>(null, "Authenticated", LocalDateTime.now());
+        EntityModel<ResponseData<?>> model = EntityModel.of(responseData, 
+            linkTo(methodOn(AccountController.class).getAccountDatails(null)).withRel("account details"),
+            linkTo(methodOn(TransferController.class).listTransfersFromAccount(null, null,null)).withRel("account transfers"),
+            linkTo(methodOn(TransferController.class).transferMoney(null, null)).withRel("request transfer"),
+            linkTo(methodOn(TransferController.class).refund(null, null)).withRel("refund transfer made to you")
+        );
+        return ResponseEntity.ok().body(model);
     }
     
     @Operation(summary = "Perform signup", description = "Perform the creation of account and user")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Sign up performed successfully", content = @Content(schema = @Schema(implementation = String.class))),
+        @ApiResponse(responseCode = "201", description = "Sign up performed successfully", content = @Content(schema = @Schema(allOf = ResponseData.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Not authenticated", content = @Content),
         @ApiResponse(responseCode = "422", description = "Unprocessable  / Business error", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping("register")
-    public ResponseEntity<String> createAccount(@RequestBody SaveAccountDTO createAccountDTO) {
+    public ResponseEntity<EntityModel<?>> register(@RequestBody SaveAccountDTO createAccountDTO) {
         CreateAccountInput createAccountInput = new CreateAccountInput(
             createAccountDTO.identificationType(),
             createAccountDTO.identificationNumber(),
@@ -80,7 +92,11 @@ public class AuthenticationController {
             createAccountDTO.password()
         );
         Account createdAccount = createAccountUseCase.execute(createAccountInput);
-        return ResponseEntity.status(201).body("Account " + createdAccount.getFullName().getFullName() + " created successfully.");
+        ResponseData<?> responseData = new ResponseData<>(null, "Account " + createdAccount.getFullName().getFullName() + " created successfully.", LocalDateTime.now());
+        EntityModel<ResponseData<?>> model = EntityModel.of(responseData, 
+            linkTo(methodOn(AuthenticationController.class).authenticate(null, null)).withRel("authenticate")
+        );
+        return ResponseEntity.status(201).body(model);
     }
     
 
