@@ -53,6 +53,7 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 
 ### Funcionalidades Planejadas
 - [ ] Logs de eventos
+- [ ] Observabilidade
 - [ ] Testes unitários
 - [ ] Containerização com Docker
 - [ ] Balanceamento de carga com Nginx (ativo/reserva)
