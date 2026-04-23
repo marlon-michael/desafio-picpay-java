@@ -119,10 +119,10 @@ public class TransferControllerIntegrationTest {
             .content(json)
         )
         .andExpect(status().isAccepted())
-        .andExpect(jsonPath("$.id").isEmpty())
-        .andExpect(jsonPath("$.payer").exists())
-        .andExpect(jsonPath("$.payee").exists())
-        .andExpect(jsonPath("$.value").exists());
+        .andExpect(jsonPath("$.content.id").isEmpty())
+        .andExpect(jsonPath("$.content.payer").exists())
+        .andExpect(jsonPath("$.content.payee").exists())
+        .andExpect(jsonPath("$.content.value").exists());
     }
     
     @Test

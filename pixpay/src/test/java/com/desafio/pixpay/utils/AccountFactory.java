@@ -28,7 +28,7 @@ public class AccountFactory {
             Set.of(Role.ROLE_MANAGER, Role.ROLE_USER),
             new CadastroNacionalDePessoaJuridica().builder().fromPersistence("CAEH9506000177"),
             new FullName().fromPersistence("Manager Manager"),
-            new Email().fromPersistence("manager@manager.com"), 
+            new Email().fromPersistence("CAEH9506000177@manager.com"), 
             new Password().fromPersistence(passwordEncoderGateway.encode(defaultPassword)),
             new Money()
         );
@@ -40,7 +40,7 @@ public class AccountFactory {
             Set.of(Role.ROLE_USER),
             new CadastroNacionalDePessoaJuridica().builder().fromPersistence("34547820000110"),
             new FullName().fromPersistence("Business Business"),
-            new Email().fromPersistence("business@business.com"), 
+            new Email().fromPersistence("34547820000110@business.com"), 
             new Password().fromPersistence(passwordEncoderGateway.encode(defaultPassword)),
             new Money(100000L)
         );
@@ -52,7 +52,7 @@ public class AccountFactory {
             Set.of(Role.ROLE_USER),
             new CadastroDePessoaFisica().builder().fromPersistence("94900666050"),
             new FullName().fromPersistence("Personal Personal"),
-            new Email().fromPersistence("personal@personal.com"), 
+            new Email().fromPersistence("94900666050@personal.com"), 
             new Password().fromPersistence(passwordEncoderGateway.encode(defaultPassword)),
             new Money(10000L)
         );

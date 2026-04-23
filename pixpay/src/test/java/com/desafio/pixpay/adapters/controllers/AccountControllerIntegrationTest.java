@@ -47,14 +47,15 @@ public class AccountControllerIntegrationTest {
     @Test
     void shouldListAccounts() throws Exception{
         mockMvc.perform(
-            get("/accounts")
+            get("/accounts/all")
             .cookie(getManagerCookie())
         )
-        .andExpect(jsonPath("$").isArray())
-        .andExpect(jsonPath("$[0].id").exists())
-        .andExpect(jsonPath("$[0].fullName").exists())
-        .andExpect(jsonPath("$[0].email").exists())
-        .andExpect(jsonPath("$[0].roles").exists())
+        .andExpect(jsonPath("$.content").exists())
+        .andExpect(jsonPath("$.content").isArray())
+        .andExpect(jsonPath("$.content[0].id").exists())
+        .andExpect(jsonPath("$.content[0].fullName").exists())
+        .andExpect(jsonPath("$.content[0].email").exists())
+        .andExpect(jsonPath("$.content[0].roles").exists())
         .andExpect(status().isOk());
     }
 }

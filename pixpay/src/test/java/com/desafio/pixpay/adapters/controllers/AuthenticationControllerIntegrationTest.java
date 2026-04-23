@@ -52,7 +52,8 @@ public class AuthenticationControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(accountJson)
         )
-        .andExpect(content().string("Account Business Account created successfully."))
+        .andExpect(jsonPath("$.message").exists())
+        .andExpect(jsonPath("$.message").value("Account Business Account created successfully."))
         .andExpect(status().isCreated());
     }
 
@@ -73,7 +74,8 @@ public class AuthenticationControllerIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(accountJson)
         )
-        .andExpect(content().string("Account Personal Account created successfully."))
+        .andExpect(jsonPath("$.message").exists())
+        .andExpect(jsonPath("$.message").value("Account Personal Account created successfully."))
         .andExpect(status().isCreated());
     }
 
