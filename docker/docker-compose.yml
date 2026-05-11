@@ -1,0 +1,119 @@
+services:
+
+### banco de dados
+
+  db:
+    image: postgres:15
+    container_name: postgres-container
+    environment:
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+      POSTGRES_DB: pixpay_production
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/dev/_postgresql/data:/var/lib/postgresql/data
+
+### filas
+
+  broker:
+    image: apache/kafka:latest
+    container_name: broker
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+    ports:
+      - "9092:9092"
+    volumes:
+      - /home/dev/_kafka-data:/var/lib/kafka/data
+
+### cache redis
+
+  redis-master:
+    image: bitnami/redis:latest
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_ADVERTISED_HOSTNAME=host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  redis-slave:
+    image: bitnami/redis:latest
+    ports:
+      - "6380:6379"
+    depends_on:
+      - redis-master
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_ADVERTISED_HOSTNAME=host.docker.internal
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  sentinel-1:
+    image: bitnami/redis-sentinel:latest
+    ports:
+      - "26379:26379"
+    depends_on:
+      - redis-master
+    environment:
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_SET=mymaster
+      - REDIS_SENTINEL_QUORUM=2
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_SENTINEL_RESOLVE_HOSTNAMES=yes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  sentinel-2:
+    image: bitnami/redis-sentinel:latest
+    ports:
+      - "26380:26379"
+    depends_on:
+      - redis-master
+    environment:
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_SET=mymaster
+      - REDIS_SENTINEL_QUORUM=2
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_SENTINEL_RESOLVE_HOSTNAMES=yes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  sentinel-3:
+    image: bitnami/redis-sentinel:latest
+    ports:
+      - "26381:26379"
+    depends_on:
+      - redis-master
+    environment:
+      - REDIS_MASTER_HOST=redis-master
+      - REDIS_MASTER_SET=mymaster
+      - REDIS_SENTINEL_QUORUM=2
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_SENTINEL_RESOLVE_HOSTNAMES=yes
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+### observabilidade
+
+  grafana-lgtm:
+    image: 'grafana/otel-lgtm:latest'
+    ports:
+      - '3000:3000'
+      - '4317:4317'
+      - '4318:4318'  
