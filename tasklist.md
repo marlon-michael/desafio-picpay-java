@@ -9,9 +9,8 @@
 - [x] reddis
 - [x] swagger
 - [x] hateoas
+- [x] OTLP stack
 - [ ] flyway
-- [ ] logs?
-- [ ] micrometer, prometheus, grafana
 - [ ] nginx
 - [ ] docker
 - [ ] CI/CD
