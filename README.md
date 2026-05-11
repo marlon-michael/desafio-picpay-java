@@ -50,10 +50,10 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [x] Paginação de resultados
 - [x] Lançamento e tratamento de erros detalhados
 - [x] Links com HATEOAS
+- [x] Observabilidade
 
 ### Funcionalidades Planejadas
 - [ ] Logs de eventos
-- [ ] Observabilidade
 - [ ] Testes unitários
 - [ ] Containerização com Docker
 - [ ] Balanceamento de carga com Nginx (ativo/reserva)
