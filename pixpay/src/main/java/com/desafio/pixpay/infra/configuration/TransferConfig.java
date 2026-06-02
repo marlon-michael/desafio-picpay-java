@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import com.desafio.pixpay.core.gateways.AccountGateway;
+import com.desafio.pixpay.core.gateways.LoggerGateway;
 import com.desafio.pixpay.core.gateways.NotifyTransferGateway;
 import com.desafio.pixpay.core.gateways.TransferAuthorizerGateway;
 import com.desafio.pixpay.core.gateways.TransferGateway;
@@ -16,6 +17,7 @@ import com.desafio.pixpay.core.usecases.ListTransfersByUserUseCase;
 import com.desafio.pixpay.core.usecases.ProcessTransferUseCase;
 import com.desafio.pixpay.infra.client.TransferAuthorizer;
 import com.desafio.pixpay.infra.events.KafkaNotificationTransferProducer;
+import com.desafio.pixpay.infra.log.Slf4jLogger;
 import com.desafio.pixpay.infra.persistence.jpa.JpaTransferRepository;
 import com.desafio.pixpay.infra.persistence.repository.TransferRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +27,11 @@ import jakarta.transaction.Transactional;
 
 @Configuration
 public class TransferConfig {
+
+    @Bean
+    LoggerGateway loggerGateway(){
+        return new Slf4jLogger();
+    }
 
     @Bean
     TransferGateway transferGateway(JpaTransferRepository jpaTransferRepository, RedisTemplate<String, String> redisTemplate, ObjectMapper objectMapper){
@@ -42,14 +49,14 @@ public class TransferConfig {
     }
 
     @Bean
-    RequestTransferUsecase requestTransferUsecase(TransferProducerGateway transferProducerGateway, AccountGateway accountGateway){
-        return new RequestTransferUsecase(transferProducerGateway, accountGateway);
+    RequestTransferUsecase requestTransferUsecase(TransferProducerGateway transferProducerGateway, AccountGateway accountGateway, LoggerGateway logger){
+        return new RequestTransferUsecase(transferProducerGateway, accountGateway, logger);
     }
 
     @Bean
     @Transactional
-    ProcessTransferUseCase processTransferUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway, NotifyTransferGateway notifyTransferGateway){
-        return new ProcessTransferUseCase(accountGateway, transferGateway, transferAuthorizerGateway, notifyTransferGateway);
+    ProcessTransferUseCase processTransferUseCase(AccountGateway accountGateway, TransferGateway transferGateway, TransferAuthorizerGateway transferAuthorizerGateway, NotifyTransferGateway notifyTransferGateway, LoggerGateway logger){
+        return new ProcessTransferUseCase(accountGateway, transferGateway, transferAuthorizerGateway, notifyTransferGateway, logger);
     }
 
     @Bean
@@ -63,7 +70,7 @@ public class TransferConfig {
     }
 
     @Bean
-    RefundTransferUsecase refundTransferUsecase(TransferGateway transferGateway, TransferProducerGateway transferProducerGateway){
-        return new RefundTransferUsecase(transferGateway, transferProducerGateway);
+    RefundTransferUsecase refundTransferUsecase(TransferGateway transferGateway, TransferProducerGateway transferProducerGateway, LoggerGateway logger){
+        return new RefundTransferUsecase(transferGateway, transferProducerGateway, logger);
     }
 }
