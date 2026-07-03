@@ -60,9 +60,6 @@ public class RefundTransferUsecase {
             throw new BusinessException("The transfer amount cannot exceed the refund issuer's balance.");
         }
 
-        refundingTransfer.setId(null);
-        refundingTransfer.setPayer(refundIssuer);
-        refundingTransfer.setPayee(refundRecipient);
         TransferData transfer = new TransferData(value.getMoneyInReal(), refundIssuer.getId(), refundRecipient.getId());
 
         transferProducerGateway.send(transfer);
