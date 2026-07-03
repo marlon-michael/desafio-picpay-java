@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisPassword;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
@@ -41,6 +42,9 @@ public class RedisConfig {
     @Value("${app.redis.sentinel.ttl-minutes}")
     private String TTL_MINUTES;
 
+    @Value("${app.redis.sentinel.password}")
+    private String PASSWORD;
+
     @Bean
     @Primary
     RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
@@ -52,6 +56,10 @@ public class RedisConfig {
         RedisSentinelConfiguration sentinelConfiguration = new RedisSentinelConfiguration();
 
         sentinelConfiguration.master(MASTER);
+        if (PASSWORD != null && !PASSWORD.isBlank()){
+            sentinelConfiguration.setPassword(RedisPassword.of(PASSWORD));
+            sentinelConfiguration.setSentinelPassword(RedisPassword.of(PASSWORD));
+        }
 
         for (String nodeString : NODES.split(",")) {
             String[] node = nodeString.split(":");
