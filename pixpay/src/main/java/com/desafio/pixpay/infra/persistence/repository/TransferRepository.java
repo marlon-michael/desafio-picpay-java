@@ -40,6 +40,7 @@ public class TransferRepository implements TransferGateway {
     @Override
     public Transfer create(Transfer transfer) {
         redis.delete("transfers:page:0");
+        redis.delete("transfers:account:"+transfer.getId()+":page:0");
 
         try {
             jpaTransferRepository.save(TransferMapper.fromDomainToEntity(transfer));
