@@ -57,6 +57,38 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [ ] Migrações com Flyway
 - [ ] Integração com front-end (Angular)
 
+### Rodando o projeto
+- dentro da pasta onde contem os arquivos Dockerfile e docker-compose.yml
+    - rode no terminal
+    ```javascript
+    docker compose up -d
+    ```
+    - verificar containers
+        - pixpay-backend-app-1
+        - pixpay-backend-app-2
+        - nginx
+        - postgres
+        - broker
+        - redis-master
+        - redis-slave
+        - redis-sentinel-1
+        - redis-sentinel-2
+        - redis-sentinel-3
+        - grafana-lgtm
+    ```javascript
+    docker ps
+    ```
+    - verificar terminal das aplicações 
+    ```javascript
+    docker logs pixpay-backend-app-1
+    ```
+
+### Rotas 
+http://localhost/swagger-ui/index.html [desativado no perfil prod (Arquivo Docker Compose)]
+
+### Observabilidade
+http://localhost:3000/drilldown
+
 ---
 ### Fontes e Referências:
 - Desafio PicPay Java
