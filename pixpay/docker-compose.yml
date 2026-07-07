@@ -3,7 +3,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: nginx-loadbalancer
+    container_name: nginx
     ports:
       - "80:80"
     volumes:
