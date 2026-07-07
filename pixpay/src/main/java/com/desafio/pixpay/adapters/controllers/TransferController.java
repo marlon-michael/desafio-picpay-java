@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,17 +44,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("transfer")
 @Tag(name = "Transfer", description = "Transfers endpoint")
 public class TransferController {
-    @Autowired
-    ListTransfersByManagerUseCase listTransfersByManagerUseCase;
     
-    @Autowired
-    ListTransfersByUserUseCase listTransfersByUserUseCase;
+    final ListTransfersByManagerUseCase listTransfersByManagerUseCase;
+    final ListTransfersByUserUseCase listTransfersByUserUseCase;
+    final RequestTransferUsecase requestTransferUseCase;
+    final RefundTransferUsecase refundTransferUsecase;
 
-    @Autowired
-    RequestTransferUsecase requestTransferUseCase;
-
-    @Autowired
-    RefundTransferUsecase refundTransferUsecase;
+    TransferController(ListTransfersByManagerUseCase listTransfersByManagerUseCase, ListTransfersByUserUseCase listTransfersByUserUseCase, RequestTransferUsecase requestTransferUseCase, RefundTransferUsecase refundTransferUsecase) {
+        this.listTransfersByManagerUseCase = listTransfersByManagerUseCase;
+        this.listTransfersByUserUseCase = listTransfersByUserUseCase;
+        this.requestTransferUseCase = requestTransferUseCase;
+        this.refundTransferUsecase = refundTransferUsecase;
+    }
 
 
     @GetMapping("all")

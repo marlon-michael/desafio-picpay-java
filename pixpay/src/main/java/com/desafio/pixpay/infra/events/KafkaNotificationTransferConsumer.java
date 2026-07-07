@@ -1,6 +1,5 @@
 package com.desafio.pixpay.infra.events;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.BackOff;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.RetryableTopic;
@@ -16,8 +15,11 @@ import feign.FeignException;
 @Component
 public class KafkaNotificationTransferConsumer {
 
-    @Autowired
-    private NotifyTransfer notifyTransfer;
+    private final NotifyTransfer notifyTransfer;
+
+    KafkaNotificationTransferConsumer(NotifyTransfer notifyTransfer) {
+        this.notifyTransfer = notifyTransfer;
+    }
 
     @RetryableTopic(
         attempts = "3",

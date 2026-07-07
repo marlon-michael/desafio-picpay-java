@@ -1,6 +1,5 @@
 package com.desafio.pixpay.infra.events;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +11,14 @@ import com.desafio.pixpay.core.usecases.data.TransferData;
 @Component
 public class KafkaTransferConsumer {
 
-    @Autowired
-    private ProcessTransferUseCase processTransferUseCase;
+    private final ProcessTransferUseCase processTransferUseCase;
 
-    @Autowired
-    private LoggerGateway logger;
+    private final LoggerGateway logger;
+
+    KafkaTransferConsumer(ProcessTransferUseCase processTransferUseCase, LoggerGateway logger) {
+        this.processTransferUseCase = processTransferUseCase;
+        this.logger = logger;
+    }
     
     @KafkaListener(id = "transfer-request", topics = "transfer-request", groupId = "pixpay-group")
     public void listen(TransferData transferData){

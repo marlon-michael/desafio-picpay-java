@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,12 +35,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("accounts")
 @Tag(name = "Accounts", description = "Account management endpoint")
 public class AccountController {
+    
+    private final ListAccountsByManagerUseCase listAccountsUseCase;
+    private final FindAccountByIdentificationNumberUseCase findAccountByIdentificationNumberUseCase;
 
-    @Autowired
-    private ListAccountsByManagerUseCase listAccountsUseCase;
-
-    @Autowired
-    private FindAccountByIdentificationNumberUseCase findAccountByIdentificationNumberUseCase;
+    AccountController(ListAccountsByManagerUseCase listAccountsUseCase, FindAccountByIdentificationNumberUseCase findAccountByIdentificationNumberUseCase) {
+        this.listAccountsUseCase = listAccountsUseCase;
+        this.findAccountByIdentificationNumberUseCase = findAccountByIdentificationNumberUseCase;
+    }
 
     @GetMapping("all")
     @PreAuthorize("hasAuthority('SCOPE_MANAGER')")

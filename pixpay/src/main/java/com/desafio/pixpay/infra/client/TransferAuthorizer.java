@@ -1,6 +1,5 @@
 package com.desafio.pixpay.infra.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import com.desafio.pixpay.adapters.client.TransferAuthorizerClient;
 import com.desafio.pixpay.adapters.dtos.TransferAuthorizationDTO;
@@ -11,8 +10,11 @@ import feign.FeignException;
 
 public class TransferAuthorizer implements TransferAuthorizerGateway {
 
-    @Autowired
-    private TransferAuthorizerClient transferAuthorizerClient;
+    private final TransferAuthorizerClient transferAuthorizerClient;
+
+    public TransferAuthorizer(TransferAuthorizerClient transferAuthorizerClient) {
+        this.transferAuthorizerClient = transferAuthorizerClient;
+    }
 
     @Override
     public boolean isAuthorized() {
