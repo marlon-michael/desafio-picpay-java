@@ -24,6 +24,7 @@ import com.desafio.pixpay.infra.security.AuthenticationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -49,7 +50,28 @@ public class AuthenticationController {
     }
 
     @PostMapping("authenticate")
-    @Operation(summary = "Perform login", description = "Perform login by body with authenticationDTO")
+    @Operation(summary = "Perform login", description = "Perform login by body with authenticationDTO",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Credentials for authentication",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = AuthenticationDTO.class),
+                examples = {
+                    @ExampleObject(
+                        summary = "Personal",
+                        name = "Authenticate with CPF",
+                        value = "{\"username\": \"22833025017\", \"password\": \"Abcd1234?\"}"
+                    ),
+                    @ExampleObject(
+                        summary = "Business",
+                        name = "Authenticate with CNPJ",
+                        value = "{\"username\": \"CAEH9506000177\", \"password\": \"Abcd1234?\"}"
+                    )
+                }
+            )
+        )
+    )
     @ApiResponses( value = {
         @ApiResponse(responseCode = "200", description = "Authenticated successfully", content = @Content(schema = @Schema(allOf = ResponseData.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
@@ -77,7 +99,28 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(model);
     }
     
-    @Operation(summary = "Perform signup", description = "Perform the creation of account and user")
+    @Operation(summary = "Perform signup", description = "Perform the creation of account and user", 
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Credentials for registering",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = SaveAccountDTO.class),
+                examples = {
+                    @ExampleObject(
+                        summary = "Personal",
+                        name = "Register with CPF",
+                        value = "{\"identificationType\": \"CadastroDePessoaFisica\", \"identificationNumber\": \"22833025017\", \"fullName\": \"Marlon\", \"email\": \"marlon@email.com\", \"password\": \"Abcd1234?\"}"
+                    ),
+                    @ExampleObject(
+                        summary = "Business",
+                        name = "Register with CNPJ",
+                        value = "{\"identificationType\": \"CadastroNacionalDePessoaJuridica\", \"identificationNumber\": \"CAEH9506000177\", \"fullName\": \"Zé\", \"email\": \"ze@email.com\", \"password\": \"Abcd1234?\"}"
+                    )
+                }
+            )
+        )
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Sign up performed successfully", content = @Content(schema = @Schema(allOf = ResponseData.class))),
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),

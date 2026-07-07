@@ -30,6 +30,7 @@ import com.desafio.pixpay.core.usecases.data.TransferData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.media.SchemaProperty;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -128,7 +129,20 @@ public class TransferController {
     }
     
     @PostMapping
-    @Operation(summary = "Transfer money", description = "Request money transfer from payer to payee")
+    @Operation(summary = "Transfer money", description = "Request money transfer from payer to payee",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Credentials for authentication",
+            required = true,
+            content = @Content(
+                mediaType = "application/json",
+                schema = @Schema(implementation = TransferInputDTO.class),
+                examples = @ExampleObject(
+                    summary = "Transfer",
+                    name = "Transfer from personal account id to business account id",
+                    value = "{\"value\": 1.99, \"payer\": \"ddba5b36-9312-4ad8-a214-51e48fa8ad46\", \"payee\": \"a5fdca10-2b5e-4ea4-ac83-52e4c7a4a7a0\"}"                )
+            )
+        )
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "202", description = "Request registered successfully", 
             content = @Content(
