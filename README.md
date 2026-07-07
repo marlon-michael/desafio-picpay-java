@@ -17,8 +17,8 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 ### Ferramentas e Tecnologias
 - Maven - Gerenciamento de dependências e build
 - Java 17 - Linguagem de programação
-- Spring Boot 4.0.1 - Framework principal
-- Spring Security + Oauth2 + JWT - Segurança e autenticação
+- Spring Boot 4 - Framework principal
+- Spring Security + JWT - Segurança e autenticação
 - PostgreSQL - Banco de dados
 - Flyway - Migrações de banco de dados
 - Redis - Cache e armazenamento temporário (cluster)
@@ -35,9 +35,7 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 
 ### Funcionalidades Implementadas
 - [x] Criação de contas (pessoal/empresarial) com validações
-- [x] Validação de CPF/CNPJ
-- [x] Validação de email
-- [x] Validação de senha (requisitos de complexidade)
+- [x] Validação de CPF/CNPJ, email, senha
 - [x] Autenticação e autorização (JWT)
 - [x] Persistência de contas no banco de dados
 - [x] Transferências entre contas
@@ -52,10 +50,11 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [x] Links com HATEOAS
 - [x] Observabilidade
 - [x] Logs estruturados
+- [x] Containerização com Docker
+- [x] Balanceamento de carga com Nginx
 
 ### Funcionalidades Planejadas
-- [ ] Containerização com Docker
-- [ ] Balanceamento de carga com Nginx (ativo/reserva)
+- [ ] Migrações com Flyway
 - [ ] Integração com front-end (Angular/React)
 
 ---

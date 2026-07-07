@@ -10,14 +10,14 @@
 - [x] swagger
 - [x] hateoas
 - [x] OTLP stack
+- [x] nginx
+- [x] docker
 - [ ] flyway
-- [ ] nginx
-- [ ] docker
 - [ ] CI/CD
 
 ## Tarefas
 
-- [ ] uso de docker
+- [x] uso de docker
 - [x] uma cobertura de testes consistente
   - [x] testes mais abrangentes
 - [x] manutenibilidade do código
