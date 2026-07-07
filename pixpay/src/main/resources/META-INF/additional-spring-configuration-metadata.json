@@ -53,5 +53,10 @@
     "name": "org.springframework.boot.context.TypeExcludeFilter",
     "type": "java.lang.String",
     "description": "A description for 'org.springframework.boot.context.TypeExcludeFilter'"
+  },
+  {
+    "name": "app.redis.sentinel.password",
+    "type": "java.lang.String",
+    "description": "A description for 'app.redis.sentinel.password'"
   }
 ]}
