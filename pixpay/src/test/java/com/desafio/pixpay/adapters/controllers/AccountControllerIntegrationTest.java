@@ -8,11 +8,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.desafio.pixpay.infra.TestContainers;
 import com.desafio.pixpay.utils.AccountFactory;
 import com.desafio.pixpay.utils.AccountManager;
 
@@ -21,6 +23,7 @@ import jakarta.servlet.http.Cookie;
 @SpringBootTest
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
+@Import(TestContainers.class)
 @Transactional
 @Rollback(true)
 public class AccountControllerIntegrationTest {
