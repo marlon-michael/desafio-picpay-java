@@ -3,6 +3,7 @@ package com.desafio.pixpay.infra.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import com.desafio.pixpay.core.gateways.AccountGateway;
 import com.desafio.pixpay.core.gateways.LoggerGateway;
@@ -15,6 +16,7 @@ import com.desafio.pixpay.core.usecases.RequestTransferUsecase;
 import com.desafio.pixpay.core.usecases.ListTransfersByManagerUseCase;
 import com.desafio.pixpay.core.usecases.ListTransfersByUserUseCase;
 import com.desafio.pixpay.core.usecases.ProcessTransferUseCase;
+import com.desafio.pixpay.adapters.client.TransferAuthorizerClient;
 import com.desafio.pixpay.infra.client.TransferAuthorizer;
 import com.desafio.pixpay.infra.events.KafkaNotificationTransferProducer;
 import com.desafio.pixpay.infra.log.Slf4jLogger;
@@ -39,13 +41,13 @@ public class TransferConfig {
     }
 
     @Bean
-    TransferAuthorizerGateway transferAuthorizerGateway(){
-        return new TransferAuthorizer();
+    TransferAuthorizerGateway transferAuthorizerGateway(TransferAuthorizerClient transferAuthorizerClient){
+        return new TransferAuthorizer(transferAuthorizerClient);
     }
 
     @Bean
-    NotifyTransferGateway notifyTransferGateway(){
-        return new KafkaNotificationTransferProducer();
+    NotifyTransferGateway notifyTransferGateway(KafkaTemplate<String, Object> kafkaTemplate){
+        return new KafkaNotificationTransferProducer(kafkaTemplate);
     }
 
     @Bean

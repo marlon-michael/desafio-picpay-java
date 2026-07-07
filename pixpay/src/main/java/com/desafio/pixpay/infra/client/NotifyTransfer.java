@@ -1,6 +1,5 @@
 package com.desafio.pixpay.infra.client;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +11,11 @@ import com.desafio.pixpay.core.usecases.data.TransferData;
 @Component
 public class NotifyTransfer implements NotifyTransferGateway {
 
-    @Autowired
-    private NotifyTransferClient notifyTransferClient;
+    private final NotifyTransferClient notifyTransferClient;
+
+    NotifyTransfer(NotifyTransferClient notifyTransferClient) {
+        this.notifyTransferClient = notifyTransferClient;
+    }
 
     @Override
     public boolean send(TransferData transferData) {

@@ -5,7 +5,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.time.LocalDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -38,12 +37,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @Tag(name = "Auth", description = "Authentication and signup endpoint")
 public class AuthenticationController {
-    @Autowired
-    private AuthenticationService authenticationService;
-    @Autowired
-    private CreateAccountUseCase createAccountUseCase;
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    
+    private final AuthenticationService authenticationService;
+    private final CreateAccountUseCase createAccountUseCase;
+    private final AuthenticationManager authenticationManager;
+
+    AuthenticationController(AuthenticationService authenticationService, CreateAccountUseCase createAccountUseCase, AuthenticationManager authenticationManager) {
+        this.authenticationService = authenticationService;
+        this.createAccountUseCase = createAccountUseCase;
+        this.authenticationManager = authenticationManager;
+    }
 
     @PostMapping("authenticate")
     @Operation(summary = "Perform login", description = "Perform login by body with authenticationDTO")
