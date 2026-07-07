@@ -55,7 +55,7 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 
 ### Funcionalidades Planejadas
 - [ ] Migrações com Flyway
-- [ ] Integração com front-end (Angular/React)
+- [ ] Integração com front-end (Angular)
 
 ---
 ### Fontes e Referências:
