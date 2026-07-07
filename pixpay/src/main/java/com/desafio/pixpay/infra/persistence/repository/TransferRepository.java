@@ -40,7 +40,6 @@ public class TransferRepository implements TransferGateway {
     @Override
     public Transfer create(Transfer transfer) {
         redis.delete("transfers:page:0");
-        redis.delete("transfers:account:"+transfer.getId()+":page:0");
 
         try {
             jpaTransferRepository.save(TransferMapper.fromDomainToEntity(transfer));
@@ -128,25 +127,9 @@ public class TransferRepository implements TransferGateway {
     public Transfer findById(UUID id) {
         TransferEntity transfer;
         Optional<TransferEntity> transferOptional = jpaTransferRepository.findById(id);
-        String json = redis.opsForValue().get("transfer:"+id);
-
-        if (json != null) {
-            try {
-                transfer = objectMapper.readValue(json, TransferEntity.class);
-                return TransferMapper.fromEntityToDomain(transfer);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
 
         if (transferOptional.isEmpty()) throw new NotFoundException("Transfer not found with privided id");
         transfer = transferOptional.get();
-
-        try {
-            redis.opsForValue().set("transfer:"+transfer.getId(), objectMapper.writeValueAsString(transfer));
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
         
         return TransferMapper.fromEntityToDomain(transfer);
     }
