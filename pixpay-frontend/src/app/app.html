@@ -1,0 +1,12 @@
+<nav>
+  <div style="display: flex;">
+    <a routerLink="/"><img loading="lazy" class="nav-logo" routerLink="/" src="../resources/images/pixpay-logo.png"></a>
+    <a routerLink="/">Início</a>
+  </div>
+  <div style="display: flex; margin-left: auto">
+    <a routerLink="/register">cadastrar</a>
+    @if(inPrivateRoutes()){ <a routerLink="/" (click)="logout()">sair</a> }
+  </div>
+</nav>
+
+<router-outlet />
