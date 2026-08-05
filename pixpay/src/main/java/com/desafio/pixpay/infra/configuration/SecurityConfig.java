@@ -22,7 +22,6 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-
 import com.desafio.pixpay.core.gateways.PasswordEncoderGateway;
 import com.desafio.pixpay.infra.security.PasswordEncoderImpl;
 import com.nimbusds.jose.jwk.JWK;
@@ -51,8 +50,9 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        String[] publicRoutes = {"/authenticate", "/register", "/swagger-ui/**", "/swagger-ui.html", "/api/docs/**"};
+        String[] publicRoutes = {"/authenticate", "/register", "/unauthenticate", "/swagger-ui/**", "/swagger-ui.html", "/api/docs/**"};
         http
+        .cors(cors -> cors.disable())
         .csrf(
             csrf -> csrf
                 .ignoringRequestMatchers(publicRoutes)
@@ -71,38 +71,39 @@ public class SecurityConfig {
                 .bearerTokenResolver(request -> extractTokenFromCookie(request))
                 .jwt(Customizer.withDefaults())
         );
+
         return http.build();
+    }
+    
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration){
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+    
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+    
+    @Bean
+    JwtDecoder jwtDecoder(){
+        return NimbusJwtDecoder.withPublicKey(publicKey).build();
+    }
+    
+    @Bean
+    JwtEncoder jwtEncoder(){
+        JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
+        JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(jwkSource);
     }
 
     private String extractTokenFromCookie(HttpServletRequest request) {
     if (request.getCookies() == null) return null;
     
     return Arrays.stream(request.getCookies())
-            .filter(cookie -> "jwt-token".equals(cookie.getName()))
-            .findFirst()
-            .map(Cookie::getValue)
-            .orElse(null);
-    }
-
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration){
-        return authenticationConfiguration.getAuthenticationManager();
-    }
-
-    @Bean
-    PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    JwtDecoder jwtDecoder(){
-        return NimbusJwtDecoder.withPublicKey(publicKey).build();
-    }
-
-    @Bean
-    JwtEncoder jwtEncoder(){
-        JWK jwk = new RSAKey.Builder(publicKey).privateKey(privateKey).build();
-        JWKSource<SecurityContext> jwkSource = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwkSource);
+        .filter(cookie -> "jwt-token".equals(cookie.getName()))
+        .findFirst()
+        .map(Cookie::getValue)
+        .orElse(null);
     }
 }
