@@ -31,6 +31,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -49,7 +50,6 @@ public class AuthenticationController {
         this.authenticationManager = authenticationManager;
     }
 
-    @PostMapping("authenticate")
     @Operation(summary = "Perform login", description = "Perform login by body with authenticationDTO",
         requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
             description = "Credentials for authentication",
@@ -77,12 +77,13 @@ public class AuthenticationController {
         @ApiResponse(responseCode = "400", description = "Invalid data / Data field missing", content = @Content(schema = @Schema(implementation = String.class))),
         @ApiResponse(responseCode = "401", description = "Unauthorized: wrong login or password", content = @Content)
     })
+    @PostMapping("authenticate")
     public ResponseEntity<EntityModel<?>> authenticate(@RequestBody AuthenticationDTO auth, HttpServletResponse response) {
         Long durationInSeconds = 86400L;
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(auth.username(), auth.password()));
         String token = authenticationService.authenticate(authentication);
         ResponseCookie cookie = ResponseCookie.from("jwt-token", token)
-            .secure(false) // Em produção, deve ser true
+            .secure(false) // Em produção com HTTPS, deve ser true
             .httpOnly(true)
             .path("/")
             .maxAge(durationInSeconds)
@@ -144,6 +145,23 @@ public class AuthenticationController {
         );
         return ResponseEntity.status(201).body(model);
     }
-    
+
+    @Operation(summary = "Perform logout", description = "Perform logout of account and user")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Sign out performed successfully", content = @Content),
+        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping("/unauthenticate")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("jwt-token", null)
+            .secure(false) // Em produção com HTTPS, deve ser true
+            .httpOnly(true)
+            .path("/")
+            .maxAge(0)
+            .sameSite("Lax")
+            .build();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok(null);
+    }
 
 }
