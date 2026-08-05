@@ -1,0 +1,56 @@
+.box {
+  min-height: 70vh;
+}
+
+.container,
+.container-1 {
+  display: flex;
+}
+
+.container-1 {
+  border: 0;
+  border-color: var(--secondary-color) !important;
+  border-bottom: 0.3rem;
+  border-style: solid;
+}
+
+.content {
+  width: 50%;
+}
+
+.profile {
+  width: 90%;
+}
+
+.balance {
+  text-align: right;
+}
+
+.dates {
+  min-width: fit-content;
+  display: flex;
+  margin-top: auto !important;
+}
+
+h2{
+  color: rgb(108, 108, 108);
+}
+
+button {
+  max-width: 10% !important;
+}
+
+@media screen and (max-width: 750px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .content {
+    margin: 1rem;
+    width: calc(100% - 2rem);
+  }
+
+  .balance {
+    text-align: left;
+  }
+}

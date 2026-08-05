@@ -1,0 +1,39 @@
+<main class="main">
+  <div class="box content">
+    @if (errorMessage() != null) {
+    <h2>{{errorMessage()}}</h2>
+    }
+    @else {
+
+    <section class="container-1">
+      <div class="profile">
+        <h2>Seja bem vindo, {{account()?.fullName}}</h2>
+        <br>
+        <h3>{{account()?.email}}</h3>
+      </div>
+      <button class="button" style="max-width: max-content !important;" (click)="findAccount()">
+        <svg width="20" height="20" viewBox="-0.038 -0.063 0.6 0.6" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMinYMin" class="jam jam-refresh"><path d="M.446.105.457.071a.025.025 0 1 1 .048.015L.476.182a.025.025 0 0 1-.031.017L.349.17A.025.025 0 1 1 .364.122l.042.013a.185.185 0 0 0-.326.03L.073.181A.025.025 0 1 1 .027.162L.034.146A.235.235 0 0 1 .446.105M.058.37.05.403A.025.025 0 1 1 .001.391L.025.294A.025.025 0 0 1 .057.276L.153.3a.025.025 0 0 1-.012.049L.096.338a.185.185 0 0 0 .33-.045.025.025 0 1 1 .048.015.24.24 0 0 1-.135.146.235.235 0 0 1-.282-.083"/></svg>
+      </button>
+    </section>
+
+    <section class="container">
+      <div class="content account">
+        <h5>Chave da conta</h5>
+        <h5>{{account()?.id}}</h5>
+      </div>
+      <div class="balance content">
+        <h5>Saldo em conta</h5>
+        @if(account()?.balanceInReal! > 0){<h5 style="color: green;">R${{account()?.balanceInReal?.toFixed(2)}}</h5>}
+        @else{<h5>R${{account()?.balanceInReal?.toFixed(2)}}</h5>}
+      </div>
+    </section>
+
+    <div class="dates content">
+      <h5>Ultima movimentação: {{account()?.lastModifiedAt?.substring(0,16)}}</h5>
+      <h5>Abertura da conta: {{account()?.createdAt?.substring(0,16)}}</h5>
+    </div>
+
+    }
+  </div>
+
+</main>

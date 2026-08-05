@@ -1,0 +1,76 @@
+<main class="main">
+
+  <dialog #modal >
+    <h2>{{modalMessage().title}}</h2>
+    <p>{{modalMessage().message}}</p>
+    <button (click)="modal.close()">Fechar</button>
+  </dialog>
+
+  <div class="box content">
+    @if(identificationType() == null){
+    <label>Selecione o tipo de conta e identificador</label>
+    <button type="button" (click)="setAccountTypeAsPF()">pessoa física: CPF</button>
+    <button type="button" (click)="setAccountTypeAsPJ()">pessoa júridica: CNPJ</button>
+    }
+    @else {
+    <form (submit)="onSubmit($event);">
+      <div class="container row">
+        <button type="button" (click)="unsetAccountType()"> ← Trocar método de identificação</button>
+      </div>
+      <h2>
+        Registrar conta pessoa {{IdentificationType.CadastroDePessoaFisica==identificationType()?'física':'júridica'}}
+      </h2>
+      <label>Nome completo</label>
+      <input [formControl]="fullName" name="fullname" placeholder="nome completo" type="text">
+      <label>Email</label>
+      <input [formControl]="email" name="email" placeholder="pixpay@email.com" type="email">
+
+      <label>Identificação</label>
+      @if(identificationType() == IdentificationType.CadastroDePessoaFisica){
+      <input [formControl]="identificationNumberCpf" name="identificação" placeholder="00011122233" type="text">
+      @if(identificationNumberCpf.hasError('invalidCpf')){
+      <small class="error">• número digitado não é um CPF válido</small>
+      }
+      @if(identificationNumberCpf.hasError('pattern')){
+      <small class="error">• identificação não deve conter espaços ou pontuação</small>
+      <small>ex: 00011122233</small>
+      }
+      }
+
+      @if(identificationType() == IdentificationType.CadastroNacionalDePessoaJuridica){
+      <input [formControl]="identificationNumberCnpj" name="identificação" placeholder="AB123CDE000100" type="text">
+      @if(identificationNumberCnpj.hasError('invalidCpf')){
+      <small class="error">• número digitado não é um CNPJ válido</small>
+      }
+      @if(identificationNumberCnpj.hasError('pattern')){
+      <small class="error">• identificação não deve conter espaços ou pontuação</small>
+      <small>ex: AB123CDE000100</small>
+      }
+      }
+
+      <label>Senha</label>
+      <input [formControl]="password" name="password" placeholder="senha" type="password">
+      @if (password.invalid) {
+      <small class="error">• senha inválida</small>
+      }
+      @if(password.hasError('maxlength') || password.hasError('minlength')){
+      <small class="error">• deve conter entre 8 e 18 caracteres</small>
+      }
+      @if (password.hasError('pattern')) {
+      <small class="error">• deve conter entre 8 e 18 caracteres</small>
+      <small class="error">• caracteres proibidos: \ / | * ( ) [ ] &#123; &#125; ; ' " &lt;&gt; ou espaços</small>
+      <small class="error">• caracteres obrigatórios: ao menos uma letra maiúscula, uma minúscula,</small>
+      <small class="error">um número e um caractere especial: , . ! @ # $ & % ? _ +.</small>
+      }
+
+      <label>Confirme sua senha</label>
+      <input [formControl]="confirmPassword" name="confirmPassword" placeholder="confirmar senha" type="password">
+      @if(registerForm.hasError('differentValue') || password.hasError('minlength')){
+      <small class="error">• senhas não coincidem</small>
+      }
+
+      <button class="button" type="submit">Registrar</button>
+    </form>
+    }
+  </div>
+</main>

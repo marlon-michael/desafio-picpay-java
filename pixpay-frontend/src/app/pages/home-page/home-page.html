@@ -1,0 +1,38 @@
+<main class="main">
+
+  <div class="content" style="min-width: calc(60vw - 2rem);">
+
+    <img loading="lazy" class="landing-page-logo" src="../resources/images/pixpay-logo.png">
+    <h1>Seu futuro</h1>
+    <h1>começa aqui</h1>
+
+  </div>
+
+  <div class="content box" style="min-width: calc(40vw - 2rem);">
+
+    <form class="login-form" (submit)="onSubmit($event);">
+      <h2>Autentique aqui</h2>
+      <label>Número de identificação</label>
+      <input [formControl]="username" name="username" placeholder="00011122233" type="text">
+
+      @if(username.hasError('invalidIdentification')){
+      <small class="error">• identificação não é um CPF ou CNPJ válido</small>
+      }
+
+      @if(username.hasError('pattern')){
+      <small class="error">• identificação não deve conter espaços ou pontuação</small>
+      <small>ex: 00011122233 ou AB123CDE000100</small>
+      }
+
+      <label>Senha</label>
+      <input [formControl]="password" name="password" placeholder="senha" type="password">
+
+      @if(password.hasError('pattern')){
+      <small class="error">• senha inválida</small>
+      }
+
+      <button class="button" type="submit">Entrar</button>
+    </form>
+
+  </div>
+</main>
