@@ -17,7 +17,7 @@ services:
     build: .
     # container_name: pixpay-backend-app-x
     deploy:
-      replicas: 2 # Round Robin via Docker Compose
+      replicas: 1 # Round Robin via Docker Compose
     networks:
       - backend-net
       - data-net
