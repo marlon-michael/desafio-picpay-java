@@ -57,6 +57,9 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [ ] Migrações com Flyway
 - [ ] Integração com front-end (Angular)
 
+### Segurança
+- as chaves de criptografia e variaveis de ambiente declaradas em qualquer parte deste projeto não devem ser publicadas em qualquer repositório, e devem estar configuradas como secrets do repositorio ou como variaveis de ambiente dentro do proprio servidor para evitar vazamento de chaves.
+
 ### Rodando o projeto
 - dentro da pasta onde contem os arquivos Dockerfile e docker-compose.yml
     - rode no terminal
