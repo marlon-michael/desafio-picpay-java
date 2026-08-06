@@ -52,10 +52,10 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
 - [x] Logs estruturados
 - [x] Containerização com Docker
 - [x] Balanceamento de carga com Nginx
+- [x] Integração com front-end (Angular)
 
 ### Funcionalidades Planejadas
 - [ ] Migrações com Flyway
-- [ ] Integração com front-end (Angular)
 
 ### Segurança
 - as chaves de criptografia e variaveis de ambiente declaradas em qualquer parte deste projeto não devem ser publicadas em qualquer repositório, e devem estar configuradas como secrets do repositorio ou como variaveis de ambiente dentro do proprio servidor para evitar vazamento de chaves.
