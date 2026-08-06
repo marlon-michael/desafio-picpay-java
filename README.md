@@ -83,11 +83,32 @@ Sistema de pagamentos instantâneos similar ao PicPay, desenvolvido em Java com 
     docker logs pixpay-backend-app-1
     ```
 
+### Definir usuário gerente
+- abrir terminal PostgreSQL
+```javascript
+# docker exec -it postgres psql [nome_db] [nome_usuario]
+docker exec -it postgres psql pixpay_db pixpay_admin
+```
+- listar usuários e selecionar ID (UUID) da conta para promoção
+```javascript
+select * from accounts;
+```
+
+- adicionar função 'ROLE_MANAGER' para o ID da conta selecionada
+```javascript
+# insert into account_roles (account_id, role) values ('[UUID_DA_CONTA]', 'ROLE_MANAGER');
+insert into account_roles (account_id, role) values ('ddba5b36-9312-4ad8-a214-51e48fa8ad46', 'ROLE_MANAGER');
+```
+
+##### - tempo para efetivação da função gerente pode variar de acordo com a configuração do cache.
+
+
 ### Rotas 
-http://localhost/swagger-ui/index.html [desativado no perfil prod (Arquivo Docker Compose)]
+- Documentação Swagger - http://localhost/swagger-ui/index.html [desativado no perfil prod (Arquivo Docker Compose)]
+- Front-end Angular - http://localhost:4200
 
 ### Observabilidade
-http://localhost:3000/drilldown
+- Grafana - http://localhost:3000/drilldown
 
 ---
 ### Fontes e Referências:
